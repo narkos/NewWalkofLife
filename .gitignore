@@ -26,3 +26,25 @@
 *.exe
 *.out
 *.app
+
+# Added by Joakim
+*.suo
+*.cache
+*.info
+*.vslog
+*.tlog
+*.log
+*.idb
+*.pdb
+*.cso
+*.ilk
+
+
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile

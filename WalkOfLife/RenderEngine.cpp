@@ -74,9 +74,9 @@ bool RenderEngine::Init(){
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, true);
 	
-	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
-	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, false);
+	ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
+	ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
+	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, false);
 	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, false);
 	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, false);
 	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, false);
@@ -86,29 +86,18 @@ bool RenderEngine::Init(){
 	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, false);
 
 	//LIGHT TEST ZONE BITCHES
-	/*float l1Int = 1.0f;
-	XMFLOAT3 l1Pos = XMFLOAT3(0.0f, 1.0f, -2.0f);
-	XMFLOAT4 l1Amb = XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f);
-	XMFLOAT4 l1Diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	XMFLOAT4 l1Spec = XMFLOAT4(0.5f, 0.2f, 0.2f, 1.0f);
-	XMFLOAT3 l1Dir = XMFLOAT3(0.0f, -50.0f, 30.0f);*/
 
-
-
-	testLight[0] = LightClass(l_Directional, XMFLOAT3(1.0f, 1.0f, -5.0f), true, true);
+	testLight[0] = LightClass(l_Directional, XMFLOAT3(0.0f, 1.0f, 5.0f), true, true);
 	testLight[0].lightObject.Color = XMFLOAT4(Colors::White);
 	testLight[0].ToggleActive();
 
-	LightClass snoppe(l_Point, XMFLOAT3(1.0f, 1.0f, 0.0f), true, true);
+	testLight[1] = LightClass(l_Point, XMFLOAT3(3.3f, 0.5f, -1.0f), true, true);
 
-	testLight[1] = snoppe;
-	snoppe.lightObject.Type = 2;
-	testLight[1].lightObject.Position = XMFLOAT4(-4.0f, 8.0f, 1.0f, 1.0f);
-	testLight[1].lightObject.Color = XMFLOAT4(Colors::LightGoldenrodYellow);
+	testLight[1].lightObject.Color = XMFLOAT4(Colors::LightCyan);
 	testLight[1].lightObject.AttConst = 1.0f;
-	testLight[1].lightObject.AttLinear = 0.08f;
-	testLight[1].lightObject.AttQuadratic = 0.00000f;
-	testLight[1].ToggleActive();
+	testLight[1].lightObject.AttLinear = 0.8f;
+	testLight[1].lightObject.AttQuadratic = 0.001f;
+	//testLight[1].ToggleActive();
  	globalAmb = XMFLOAT4(Colors::Yellow);
 
 	D3D11_BUFFER_DESC lbuffDesc;

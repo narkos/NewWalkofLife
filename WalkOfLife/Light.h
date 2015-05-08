@@ -16,7 +16,7 @@ struct Light
 	XMFLOAT4	Color;
 	int			Type;
 	int			Active;
-	int			pad[2];
+	int			pad;
 
 	// Specific Light Properties
 	XMFLOAT4	Direction;					//Spot and Directional
@@ -24,7 +24,8 @@ struct Light
 	float		AttConst;					//Spot and Point
 	float		AttLinear;					//Spot and Point
 	float		AttQuadratic;				//Spot and Point
-	
+	float		Range;						//Spot and Point
+
 	//Basic Directional Light Default Constructor
 	Light() :
 		Position(0.0f, 0.0f, 0.0f, 1.0f),

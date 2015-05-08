@@ -60,12 +60,16 @@ void OBJ::LoadObject(char* geometryFileName, char* materialFileName){
 
 			else if (line[0] == 'f' && line[1] == ' '){
 				sscanf_s(&line[0], "f %d/%d/%d %d/%d/%d %d/%d/%d", &fx.x, &fx.y, &fx.z, &fy.x, &fy.y, &fy.z, &fz.x, &fz.y, &fz.z);
-				faceIndecies.push_back({ fx, fy, fz });
+				faceIndecies.push_back({ fz, fy, fx });
+				// Note the reversed order of fz and fx.
+				// Experimenting wiht mesh rendering and I do believe this might be the correct way
+				// for this model // Joakim
+
 				nrElements++;
 
-				indecies.push_back(fx.x - 1); //alla indecies i en array som kommer att användas i main
+				indecies.push_back(fz.x - 1); //alla indecies i en array som kommer att användas i main
 				indecies.push_back(fy.x - 1); //de kommer ligga en triangle i streck i arrayen [0], [1] och [2] kommer vara indecies för en triangle alltså
-				indecies.push_back(fz.x - 1);
+				indecies.push_back(fx.x - 1);
 			}
 
 

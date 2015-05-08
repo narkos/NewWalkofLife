@@ -75,7 +75,7 @@ public:
 	bool jumping;
 	int bajs = 0;
 	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){
-		this->speed = 0.55;
+		this->speed = 0.1;
 		this->division = 0;
 
 		origin = XMVectorSet(pos.x, pos.y, pos.z, 1); //0 för att det är en vektor

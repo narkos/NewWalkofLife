@@ -123,9 +123,14 @@ bool RenderEngine::Init(){
 
 
 	// Material Buffers Init
+	D3D11_BUFFER_DESC mbuffDesc;
 	ZeroMemory(&lbuffDesc, sizeof(lbuffDesc));
-	lbuffDesc.ByteWidth = sizeof(MaterialProperties);
-	hr = gDevice->CreateBuffer(&lbuffDesc, NULL, &matConstBuff);
+	mbuffDesc.Usage = D3D11_USAGE_DEFAULT;
+	mbuffDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	mbuffDesc.ByteWidth = sizeof(MaterialProperties);
+	mbuffDesc.CPUAccessFlags = 0;
+	mbuffDesc.MiscFlags = 0;
+	hr = gDevice->CreateBuffer(&mbuffDesc, NULL, &matConstBuff);
 
 
 
@@ -552,7 +557,7 @@ void RenderEngine::Render(){
 	//gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
 	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
-	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
+	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	int bajs = 1;
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);

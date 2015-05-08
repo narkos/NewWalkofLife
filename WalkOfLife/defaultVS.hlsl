@@ -21,7 +21,7 @@ struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
 	float2 Tex		: TEXCOORD;
-	float3 Nor		: NORMAL;
+	float4 Nor		: NORMAL;
 	float4 wPos		: POSITION;
 
 };

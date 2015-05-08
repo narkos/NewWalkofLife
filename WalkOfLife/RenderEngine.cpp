@@ -32,7 +32,8 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	//screen_Height = scrH; //OLD
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
-	this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
+	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
+	this->theBinaryTree = new BinaryTree(100, 1000);
 }
 
 // DESTRUCTOR
@@ -96,7 +97,7 @@ bool RenderEngine::Init(){
 
 	testLight[0] = LightClass(l_Directional, XMFLOAT3(1.0f, 1.0f, -5.0f), true, true);
 	testLight[0].lightObject.Color = XMFLOAT4(Colors::White);
-	/*testLight[0].ToggleActive();*/
+	testLight[0].ToggleActive();
 
 	LightClass snoppe(l_Point, XMFLOAT3(1.0f, 1.0f, 0.0f), true, true);
 
@@ -107,8 +108,8 @@ bool RenderEngine::Init(){
 	testLight[1].lightObject.AttConst = 1.0f;
 	testLight[1].lightObject.AttLinear = 0.08f;
 	testLight[1].lightObject.AttQuadratic = 0.00000f;
-	//testLight[1].ToggleActive();
- 	globalAmb = XMFLOAT4(Colors::Black);
+	testLight[1].ToggleActive();
+ 	globalAmb = XMFLOAT4(Colors::Yellow);
 
 	D3D11_BUFFER_DESC lbuffDesc;
 	ZeroMemory(&lbuffDesc, sizeof(lbuffDesc));
@@ -779,7 +780,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 		Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
 		testPlatform.CreateBBOXVertexBuffer(gDevice);
 		testPlatform.nrElements = objectTest.GetNrElements();
-		theQuadtree->AddObject(&testPlatform);
+		//theQuadtree->AddObject(&testPlatform);
+		//theBinaryTree->AddPlatform(testPlatform);
 		gamePlatforms.push_back(testPlatform);
 	}
 

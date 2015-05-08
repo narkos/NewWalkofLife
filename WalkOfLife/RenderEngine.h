@@ -50,6 +50,7 @@ public:
 
 	int Run();
 	float time3;
+	float time4;
 
 	void SetViewport();
 	virtual bool Init();

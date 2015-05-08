@@ -10,10 +10,10 @@ public:
 	~BinaryTree();
 	std::vector<std::vector<Platform>>* testPlatforms;
 	void AddPlatform(Platform);
-	
+	int pixelsPerdivision;
 
 protected:
-	int pixelsPerdivision;
+	
 	int divisions;
 };
 

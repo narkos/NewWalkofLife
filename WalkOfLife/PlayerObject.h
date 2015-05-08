@@ -12,6 +12,7 @@ class PlayerObject : public CollisionObject{
 protected:
 	float speed;
 	float jumpHeight;
+	int division;
 	XMVECTOR origin;
 	XMVECTOR up, down, right, left;
 
@@ -66,11 +67,16 @@ protected:
 		return (((v.x * u.y * w.z) + (v.y * u.z * w.x) + (v.z * u.x * w.y)) - ((v.x * u.z * w.y) + (v.y * u.x * w.z) + (v.z * u.y * w.x)));
 	}
 public:
+	int getDivision();
+	void setDivision(int);
+	void UpdateDivision(int);
+
 	float momentum;
 	bool jumping;
 	int bajs = 0;
 	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){
-		this->speed = 0.05;
+		this->speed = 0.55;
+		this->division = 0;
 
 		origin = XMVectorSet(pos.x, pos.y, pos.z, 1); //0 för att det är en vektor
 		up = XMVectorSet(0, 1, 0, 0);

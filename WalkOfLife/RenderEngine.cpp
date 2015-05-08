@@ -696,6 +696,11 @@ void RenderEngine::Update(float dt){
 		input = theInput.detectInput(hWindow);
 		jump = theInput.detectJump(hWindow);
 
+		if ((gTimer.TotalTime() - time4) >= 5.00f)
+		{
+			theCharacter->UpdateDivision(theBinaryTree->pixelsPerdivision);
+			time4 = gTimer.TotalTime();
+		}
 		theCollision.TestCollision(gamePlatforms);
 
 		if (input == 1 && theCollision.leftValid() == true)

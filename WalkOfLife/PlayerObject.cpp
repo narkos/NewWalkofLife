@@ -42,3 +42,32 @@ float PlayerObject::getJumpHeight()
 {
 	return this->jumpHeight;
 }
+
+int PlayerObject::getDivision()
+{
+	return this->division;
+}
+
+void PlayerObject::setDivision(int division)
+{
+	this->division = division;
+}
+
+void PlayerObject::UpdateDivision(int pixelsPerDivision)
+{
+	if ((this->xPos >= division * pixelsPerDivision) && (this->xPos < (division * pixelsPerDivision) + pixelsPerDivision))
+	{
+		return;
+	}
+
+	else if (this->xPos < division * pixelsPerDivision)
+	{
+		this->division = this->division - 1;
+	}
+
+	else if (this->xPos >= (division * pixelsPerDivision) + pixelsPerDivision)
+	{
+		this->division = this->division + 1;
+	}
+	
+}

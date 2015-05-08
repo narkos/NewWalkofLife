@@ -28,7 +28,7 @@
 *.app
 
 # Added by Joakim
-*.suo
+
 *.cache
 *.info
 *.vslog

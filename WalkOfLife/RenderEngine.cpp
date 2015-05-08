@@ -82,7 +82,7 @@ bool RenderEngine::Init(){
 	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, false);
 	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, false);
 	int test = 1;
-	
+	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, false);
 
 	//LIGHT TEST ZONE BITCHES
 	/*float l1Int = 1.0f;
@@ -405,7 +405,7 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		NULL,
+		D3D11_CREATE_DEVICE_DEBUG,
 		NULL,
 		NULL,
 		D3D11_SDK_VERSION,
@@ -441,9 +441,17 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		depthStencilDesc.MiscFlags = 0;
 
 		HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
-		
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+		ZeroMemory(&descDSV, sizeof(descDSV));
+		descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		descDSV.Texture2D.MipSlice = 0;
+
+		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
 
 		D3D11_DEPTH_STENCIL_DESC dsDesc;
+		ZeroMemory(&dsDesc, sizeof(dsDesc));
 		//Depth test settings
 		dsDesc.DepthEnable = true;
 		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
@@ -464,15 +472,10 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
-		gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 1);
+		gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 
-		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-		descDSV.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		descDSV.Texture2D.MipSlice = 0;
-
-		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
-
+		
+		
 		// set the render target as the back buffer
 		gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 
@@ -539,15 +542,17 @@ int RenderEngine::Run(){
 // RENDER
 
 void RenderEngine::Render(){
+	
 	static float rot = 0.00f;
 	UINT32 vertexSize = sizeof(float) * 8;
 	UINT32 offset = 0;
 	rot += 0.01;
 	float clearColor[] = { 0.15f,0.6f,1.0f, 0.2f };
-	gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
+	//gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
+	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
-	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	
+	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
+	int bajs = 1;
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);
 

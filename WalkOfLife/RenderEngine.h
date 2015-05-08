@@ -77,6 +77,7 @@ public:
 	XMFLOAT4 camPos;
 	float camxPos;
 	float camyPos;
+	
 
 
 	//Material Shit

@@ -11,12 +11,14 @@ struct Light
 	float4	Color;
 	int		Type;
 	int		Active;
-	int2	pad;
+	int		pad;
+	float	Range;
 	float4	Direction;
 	float	SpotConeAngle;
 	float	AttConst;
 	float	AttLinear;
 	float	AttQuadratic;
+	
 };
 
 struct MatInfo
@@ -133,6 +135,9 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		[unroll]
 	for (int i = 0; i < MAX_LIGHTS; ++i)
 	{
+
+		
+
 		LightingResult result = { { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
 		if (lights[i].Active != 1) continue; // Continue if light isn't active
 
@@ -145,7 +150,13 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		break;
 		case L_POINT:
 		{
-			result = createPointLight(lights[i], V, P, N);
+			float3 PtoL = lights[i].Position.xyz - P.xyz;
+			float distance = length(PtoL);
+			if (distance <= lights[i].Range)
+			{
+				result = createPointLight(lights[i], V, P, N);
+			}
+						
 		}
 		break;
 		case L_SPOT:

@@ -19,12 +19,13 @@ struct Light
 	int			pad;
 
 	// Specific Light Properties
+	float		Range;						//Spot and Point
 	XMFLOAT4	Direction;					//Spot and Directional
 	float		SpotConeAngle;				//Spot
 	float		AttConst;					//Spot and Point
 	float		AttLinear;					//Spot and Point
 	float		AttQuadratic;				//Spot and Point
-	float		Range;						//Spot and Point
+	
 
 	//Basic Directional Light Default Constructor
 	Light() :
@@ -32,11 +33,13 @@ struct Light
 		Color(1.0f, 1.0f, 1.0f, 1.0f),
 		Type(l_Directional),
 		Active(0),
+		Range(2.0f),
 		Direction(0.0f, 0.0f, 1.0f, 0.0f),
 		SpotConeAngle(XM_PIDIV2),
 		AttConst(1.0f),
 		AttLinear(0.0f),
 		AttQuadratic(0.0f)
+		
 	{}
 
 };
@@ -59,6 +62,7 @@ protected:
 
 public:
 	LightClass(int type, XMFLOAT3 pos, bool isActive, bool isStatic);
+	LightClass(int type, float range, XMFLOAT3 pos, bool isActive, bool isStatic);
 	LightClass(){}
 	~LightClass();
 

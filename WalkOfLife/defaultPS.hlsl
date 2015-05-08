@@ -19,12 +19,11 @@ struct VS_OUT
 };
 
 float4 PS_main(VS_OUT input) : SV_Target
-
 {
+	
+
 	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
-	//input.Nor = normalize(input.Nor);
-	//float3 objtoEye = normalize()
 	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 		if (Material.UseTexture == 1)
 		{ 

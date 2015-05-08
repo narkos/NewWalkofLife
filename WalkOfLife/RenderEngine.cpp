@@ -74,9 +74,9 @@ bool RenderEngine::Init(){
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, true);
 	
-	ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
-	ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, false);
+	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
+	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
+	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, false);
 	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, false);
 	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, false);
 	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, false);
@@ -554,7 +554,7 @@ void RenderEngine::Render(){
 	UINT32 offset = 0;
 	rot += 0.01;
 	float clearColor[] = { 0.15f,0.6f,1.0f, 0.2f };
-	//gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
+	gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
 	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -595,7 +595,7 @@ void RenderEngine::Render(){
 
 	//RENDER OBJ FILES
 
-	for each (GameObject var in gamePlatforms)
+	for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 	
@@ -791,7 +791,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 		testPlatform.CreateBBOXVertexBuffer(gDevice);
 		testPlatform.nrElements = objectTest.GetNrElements();
 		//theQuadtree->AddObject(&testPlatform);
-		//theBinaryTree->AddPlatform(testPlatform);
+		theBinaryTree->AddPlatform(testPlatform);
 		gamePlatforms.push_back(testPlatform);
 	}
 

@@ -62,11 +62,16 @@ void PlayerObject::UpdateDivision(int pixelsPerDivision)
 
 	else if (this->xPos < division * pixelsPerDivision)
 	{
-		this->division = this->division - 1;
+		if (division != 0)
+		{
+			this->division = this->division - 1;
+		}
+		
 	}
 
 	else if (this->xPos >= (division * pixelsPerDivision) + pixelsPerDivision)
 	{
+
 		this->division = this->division + 1;
 	}
 	

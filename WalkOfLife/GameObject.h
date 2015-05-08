@@ -19,7 +19,7 @@ struct MatInfo
 		Diffuse = D;
 		Specular = S;
 		SpecPow = SP;
-		UseTexture = 0;
+		UseTexture = 1;
 	}
 
 	XMFLOAT4 Emissive;

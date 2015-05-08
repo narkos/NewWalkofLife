@@ -3,7 +3,7 @@
 Camera::Camera()
 {
 	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), 0.0f, -15.0f, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraXPos + 1.0), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), 640.0f / 480.0f, 0.5f, 50.0f);
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), 640.0f / 480.0f, 1.0f, 50.0f);
 }
 
 //////////
@@ -43,7 +43,7 @@ void Camera::updateCamera()
 	//Translate all of the above to screen space functionality
 
 	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), -15.0f, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + 1.0), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), 640.0f / 480.0f, 0.5f, 50.0f);
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 50.0f);
 }
 
 void Camera::setCharacterXPos(float pos)

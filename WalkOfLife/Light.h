@@ -16,10 +16,11 @@ struct Light
 	XMFLOAT4	Color;
 	int			Type;
 	int			Active;
-	int			pad;
+	
 
 	// Specific Light Properties
 	float		Range;						//Spot and Point
+	int			pad;	
 	XMFLOAT4	Direction;					//Spot and Directional
 	float		SpotConeAngle;				//Spot
 	float		AttConst;					//Spot and Point

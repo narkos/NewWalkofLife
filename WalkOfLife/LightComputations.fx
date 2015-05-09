@@ -11,8 +11,8 @@ struct Light
 	float4	Color;
 	int		Type;
 	int		Active;
-	int		pad;
 	float	Range;
+	int		pad;
 	float4	Direction;
 	float	SpotConeAngle;
 	float	AttConst;

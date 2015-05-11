@@ -27,20 +27,23 @@ __declspec(align(16)) struct Light
 
 	
 
-	////Basic Directional Light Default Constructor
-	//Light() :
-	//	Position(0.0f, 0.0f, 0.0f, 1.0f),
-	//	Color(1.0f, 1.0f, 1.0f, 1.0f),
-	//	Type(l_Directional),
-	//	Active(0),
-	//	Range(2.0f),
-	//	Direction(0.0f, 0.0f, 1.0f, 0.0f),
-	//	SpotConeAngle(XM_PIDIV2),
-	//	AttConst(1.0f),
-	//	AttLinear(0.0f),
-	//	AttQuadratic(0.0f)
-	//	
-	//{}
+	//Basic Directional Light Default Constructor
+	Light() :
+		Position(0.0f, 0.0f, 0.0f, 1.0f),
+		Color(1.0f, 1.0f, 1.0f, 1.0f),
+		Direction(0.0f, 0.0f, 1.0f, 0.0f),
+		SpotConeAngle(XM_PIDIV2),
+		AttConst(1.0f),
+		AttLinear(0.0f),
+		AttQuadratic(0.0f),
+		Type(l_Directional),
+		Active(0),
+		Range(2.0f),
+		Padding(0.0f)
+		
+		
+		
+	{}
 
 };
 

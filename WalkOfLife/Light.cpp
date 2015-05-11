@@ -8,7 +8,7 @@ LightClass::LightClass(int type, XMFLOAT3 pos, bool isActive, bool isStatic) : E
 	this->lightObject.Type = type;
 
 	if (type == l_Directional)
-		lightObject.Direction = XMFLOAT4(pos.x, pos.y, pos.z, 1.0f);
+		lightObject.Direction = XMFLOAT4(pos.x, pos.y, pos.z, 0.0f);
 	else
 		lightObject.Position = XMFLOAT4(pos.x, pos.y, pos.z, 1.0f);
 	
@@ -16,6 +16,24 @@ LightClass::LightClass(int type, XMFLOAT3 pos, bool isActive, bool isStatic) : E
 		lightObject.Active = 1;
 	else
 		lightObject.Active = 0;
+}
+
+LightClass::LightClass(int type, float range, XMFLOAT3 pos, bool isActive, bool isStatic) : Entity(pos, isActive, isStatic)
+{
+
+	this->lightObject.Type = type;
+
+	if (type == l_Directional)
+		lightObject.Direction = XMFLOAT4(pos.x, pos.y, pos.z, 0.0f);
+	else
+		lightObject.Position = XMFLOAT4(pos.x, pos.y, pos.z, 1.0f);
+
+	if (isActive)
+		lightObject.Active = 1;
+	else
+		lightObject.Active = 0;
+
+	this->lightObject.Range = range;
 }
 
 void LightClass::ToggleActive()

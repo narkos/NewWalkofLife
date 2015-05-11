@@ -1,15 +1,13 @@
 //PIXEL SHADER
 #include "LightComputations.fx"
 Texture2D txDiffuse : register(t0);
-
-SamplerState sampAni
+//sampler Sampler : register(s0);
+SamplerState sampAni : register(s0)
 {
 	Filter = ANISOTROPIC;
 	MaxAnisotropy = 4;
-	AdressU = WRAP;
-	AdressV = WRAP;
-};
 
+};
 struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
@@ -19,12 +17,11 @@ struct VS_OUT
 };
 
 float4 PS_main(VS_OUT input) : SV_Target
-
 {
+	
+
 	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
-	//input.Nor = normalize(input.Nor);
-	//float3 objtoEye = normalize()
 	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 		if (Material.UseTexture == 1)
 		{ 
@@ -39,7 +36,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 		float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
 
 		return finalColor;
-		//return float4(1.0f,0.0f,0.0f,0.0f);
+		
 
 };
 

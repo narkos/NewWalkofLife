@@ -3,20 +3,19 @@
 #define L_DIRECTIONAL 1
 #define L_POINT 2
 #define L_SPOT 3
-
-
 struct Light
 {
 	float4	Position;
 	float4	Color;
-	int		Type;
-	int		Active;
-	int2	pad;
 	float4	Direction;
 	float	SpotConeAngle;
 	float	AttConst;
 	float	AttLinear;
 	float	AttQuadratic;
+	int		Type;
+	int		Active;
+	float	Range;
+	float	Padding;	
 };
 
 struct MatInfo
@@ -30,7 +29,7 @@ struct MatInfo
 	float2	Padding;
 };
 
-cbuffer MaterialProperties : register(b0)
+cbuffer MaterialProperties : register(b1)
 {
 	MatInfo Material;
 };
@@ -41,13 +40,13 @@ struct LightingResult
 	float4 Specular;
 };
 
-cbuffer LightProperties : register(b1)
+cbuffer LightProperties : register(b2)
 {
 	float4 CamPosition;
 	float4 GlobalAmbient;
 
 	Light lights[MAX_LIGHTS];
-}
+};
 
 // Variable and Parameter Abbreviations Glossary
 //		L = Light Vector
@@ -133,6 +132,9 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		[unroll]
 	for (int i = 0; i < MAX_LIGHTS; ++i)
 	{
+
+		
+
 		LightingResult result = { { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
 		if (lights[i].Active != 1) continue; // Continue if light isn't active
 
@@ -146,6 +148,13 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		case L_POINT:
 		{
 			result = createPointLight(lights[i], V, P, N);
+		/*	float3 PtoL = lights[i].Position.xyz - P.xyz;
+			float distance = length(PtoL);
+			if (distance <= lights[i].Range)
+			{
+			result = createPointLight(lights[i], V, P, N);
+			}
+					*/	
 		}
 		break;
 		case L_SPOT:

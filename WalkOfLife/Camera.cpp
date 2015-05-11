@@ -2,48 +2,51 @@
 
 Camera::Camera()
 {
-	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), 0.0f, -15.0f, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraXPos + 1.0), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), 640.0f / 480.0f, 1.0f, 50.0f);
+
+	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), 0.0f, cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 50.0f);
+
 }
 
 //////////
 
 void Camera::updateCamera()
 {
-	//http://www.gamedev.net/topic/574628-world-space-to-screen-space-co-ordinates/g
+	//Gets the players position in "Camera space" and bases the calculations on that.
+	float playerToCameraX = playerXPos - cameraXPos;
+	float playerToCameraY = playerYPos - cameraYPos;
+	//-------------------------------------------------------------------------------
 
-	//NED TO GET CHARACTER POS IN SCREEN SPACE TO FIX SMOOTHNESS
-
-	//if (theCharacter->xPos > (cameraXPos + 4.0) && theCharacter->xPos <= (cameraXPos + 6.0))
-	//{
-	//	cameraXPos = theCharacter->xPos - cameraXPos;
-	//	//cameraXPos = theCharacter->xPos - (4.0);
-	//}
-
-	if (playerXPos > (cameraXPos + cameraXPosOffset))
+	//Calculations for when the camera should follow the player. 
+	//Smooth follow kicks in when the player hits a "wall" (on the invisible cube in wich the player can move freely).
+	if (playerToCameraX > rightWall)
 	{
-		cameraXPos = playerXPos - cameraXPosOffset;
-		//cameraPosOffset = 0.0f;
+		cameraXPos = (playerXPos - playerToCameraX);
+		cameraXPos = cameraXPos - ((rightWall - playerToCameraX) * damping);
 	}
-	if (playerXPos < (cameraXPos - cameraXPosOffset))
+	
+	if (playerToCameraX < leftWall)
 	{
-		cameraXPos = playerXPos + cameraXPosOffset;
-		//cameraPosOffset = 6.0f;
+		cameraXPos = (playerXPos - playerToCameraX);
+		cameraXPos = cameraXPos - ((leftWall - playerToCameraX) * damping);
 	}
 
-	if (playerYPos > (cameraYPos + cameraYPosOffset))
+	if (playerToCameraY > upperWall)
 	{
-		cameraYPos = playerYPos - cameraYPosOffset;
-	}
-	if (playerYPos < (cameraYPos - cameraYPosOffset))
-	{
-		cameraYPos = playerYPos + cameraYPosOffset;
+		cameraYPos = (playerYPos - playerToCameraY);
+		cameraYPos = cameraYPos - ((upperWall - playerToCameraY) * damping);
 	}
 
-	//Translate all of the above to screen space functionality
+	if (playerToCameraY < lowerWall)
+	{
+		cameraYPos = (playerYPos - playerToCameraY);
+		cameraYPos = cameraYPos - ((lowerWall - playerToCameraY) * damping);
+	}
 
-	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), -15.0f, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + 1.0), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 50.0f);
+	//Sets and updates the camera's view- and projection matrices based of the calculations.
+	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 50.0f);
+
 }
 
 void Camera::setCharacterXPos(float pos)
@@ -82,6 +85,17 @@ float Camera::getCameraYPos()
 
 //////////
 
+void Camera::setCameraZPos(float pos)
+{
+	cameraZPos = pos;
+}
+
+float Camera::getCameraZPos()
+{
+	return cameraZPos;
+}
+
+
 float Camera::getWindowWidth()
 {
 	return WINDOW_WIDTH;
@@ -117,3 +131,106 @@ XMMATRIX Camera::getCamView()
 }
 
 //////////
+//
+//
+//
+//
+//
+//
+//
+//
+//######################################################################################################################################################
+//###																																				 ###
+//###					  //	OLD CAMERA STUFF BELOW (SCREEN SPACE CONVERTING, WORLD SPACE FOLLOWING etc.)	//									 ###	
+//###																																				 ###	
+//######################################################################################################################################################
+
+
+//NED TO GET CHARACTER POS IN SCREEN SPACE TO FIX SMOOTHNESS
+
+//http://www.gamedev.net/topic/574628-world-space-to-screen-space-co-ordinates/g
+
+//if (playerToCamera > 6.0f)
+//{
+//	cameraXPos = playerXPos - 6.0f;
+//}
+
+//if (playerYPos < (cameraYPos - cameraYPosOffset))
+//{
+//	cameraYPos = playerYPos + cameraYPosOffset;
+//}
+
+//////		SCREEN SPACE FUNCTIONALITY		////
+//XMVECTOR LocalSpace = XMVector3Transform(XMVectorSet(playerXPos, playerYPos, 0.0f, 1.0f), (CamView * CamProjection));
+
+//float screenX = (XMVectorGetX(LocalSpace) / (XMVectorGetZ(LocalSpace)) * (WINDOW_WIDTH / 2)) + (WINDOW_WIDTH / 2);
+//float screenY = - (XMVectorGetY(LocalSpace) / (XMVectorGetZ(LocalSpace)) * (WINDOW_HEIGHT / 2)) + (WINDOW_HEIGHT / 2);
+
+//if (screenX > (WINDOW_WIDTH * 0.5f))
+//{
+//	cameraXPos = playerXPos - cameraXPosOffset;
+//}
+//if (screenX > (WINDOW_WIDTH * 0.4f) && screenX < (WINDOW_WIDTH * 0.5f))
+//{
+//	//float dist = (WINDOW_WIDTH * 0.5f) - screenX;
+//	float dist = (playerXPos - cameraXPosOffset);
+
+
+//	cameraXPos = cameraXPos + (dist * 0.05f);
+//	//cameraXPos = screenX - (WINDOW_WIDTH * 0.5f) - cameraXPosOffset;
+//	//cameraXPos = cameraXPos - (((WINDOW_WIDTH * 0.5f) - screenX) * 0.01f);
+//	//cameraXPos = cameraXPos + (((WINDOW_WIDTH * 0.5f) - (WINDOW_WIDTH * 0.4f)) * 0.5f) + 10.0f;
+//}
+
+////////
+//if (playerXPos < (cameraXPos - cameraXPosOffset))
+//{
+//	cameraXPos = playerXPos + cameraXPosOffset;
+//}
+////////
+
+//if (screenX < (WINDOW_WIDTH * 0.15))
+//{
+//	cameraXPos = playerXPos + cameraXPosOffset;
+//}
+
+//if (playerYPos > (cameraYPos + cameraYPosOffset))
+//{
+//	cameraYPos = playerYPos - cameraYPosOffset;
+//}
+//
+//if (playerYPos < (cameraYPos - cameraYPosOffset))
+//{
+//	cameraYPos = playerYPos + cameraYPosOffset;
+//}
+////		SCREEN SPACE FUNCTIONALITY		////
+
+
+////if (theCharacter->xPos > (cameraXPos + 4.0) && theCharacter->xPos <= (cameraXPos + 6.0))
+////{
+////	cameraXPos = theCharacter->xPos - cameraXPos;
+////	//cameraXPos = theCharacter->xPos - (4.0);
+////}
+
+
+//	WORLD SPACE FUNCTIONALITY	//
+//if (playerXPos > (cameraXPos + cameraXPosOffset))
+//{
+//	cameraXPos = playerXPos - cameraXPosOffset;
+//	//cameraPosOffset = 0.0f;
+//}
+//if (playerXPos < (cameraXPos - cameraXPosOffset))
+//{
+//	cameraXPos = playerXPos + cameraXPosOffset;
+//	//cameraPosOffset = 6.0f;
+//}
+
+//if (playerYPos > (cameraYPos + cameraYPosOffset))
+//{
+//	cameraYPos = playerYPos - cameraYPosOffset;
+//}
+//if (playerYPos < (cameraYPos - cameraYPosOffset))
+//{
+//	cameraYPos = playerYPos + cameraYPosOffset;
+//}
+//	WORLD SPACE FUNCTIONALITY	//

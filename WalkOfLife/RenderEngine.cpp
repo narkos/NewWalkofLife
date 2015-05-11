@@ -72,18 +72,18 @@ bool RenderEngine::Init(){
 
 	//Import
 	
-	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0);
+	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1);
-	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1);
-	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1);
-	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1);
-	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1);
+	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
+	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
+	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
+	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
+	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
 	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
 	int test = 1;
-	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2);
+	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2, true);
 
 	////LIGHT TEST ZONE BITCHES
 
@@ -330,6 +330,21 @@ void RenderEngine::Shaders(){
 	ID3DBlob* pPS = nullptr;
 	ShaderTest = CompileShader(L"defaultPS.hlsl", "PS_main", "ps_5_0", &pPS);
 	ShaderTest = gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gPixelShader);
+
+	//wireframe
+	D3D11_INPUT_ELEMENT_DESC inputDescPosOnly[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	gDevice->CreateInputLayout(inputDescPosOnly, ARRAYSIZE(inputDescPosOnly), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gWireFrameLayout);
+
+
+	HRESULT hrWireFrameVS = CompileShader(L"WireFrameVS.hlsl", "main", "vs_5_0", &pVS);
+	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gWireFrameVertexShader);
+
+	HRESULT hrWireFramePS = CompileShader(L"WireFramePS.hlsl", "main", "ps_5_0", &pPS);
+	gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gWireFramePixelShader);
+
 
 	// Realese shaders
 	pVS->Release();
@@ -657,32 +672,32 @@ void RenderEngine::Render(){
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
 
-	for each (GameObject var in theBinaryTree->renderObjects->at(theCharacter->getDivision()))
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
 	{
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
 		gDeviceContext->IASetInputLayout(gVertexLayout);
-		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
 		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
 		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 
-		var.CalculateWorld();
-		var.material = MatPresets::Emerald;
-		var.material.SpecPow = 38.0f;
+		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
+		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
+		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
 
-		matProperties.Material = var.material;
+		matProperties.Material = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material;
 
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
 
 
-		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
 		WVP = XMMatrixIdentity();
-		WVP = var.world * CamView *CamProjection;
+		WVP = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world * CamView *CamProjection;
 
 		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
 
@@ -690,7 +705,103 @@ void RenderEngine::Render(){
 		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-		gDeviceContext->Draw(var.nrElements * 3, 0);
+		gDeviceContext->Draw(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].nrElements * 3, 0);
+	}
+
+	//for each (GameObject var in theBinaryTree->renderObjects->at(theCharacter->getDivision()))
+	//{
+	//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+	//	gDeviceContext->IASetInputLayout(gVertexLayout);
+	//	gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+	//	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+	//	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+	//	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+	//	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+	//	var.CalculateWorld();
+	//	var.material = MatPresets::Emerald;
+	//	var.material.SpecPow = 38.0f;
+
+	//	matProperties.Material = var.material;
+
+	//	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+
+
+	//	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+	//	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+	//	WVP = XMMatrixIdentity();
+	//	WVP = var.world * CamView *CamProjection;
+
+	//	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+	//	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+	//	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+	//	gDeviceContext->Draw(var.nrElements * 3, 0);
+	//}
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+	{
+		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetInputLayout(gVertexLayout);
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
+
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material;
+
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world));
+		WVP = XMMatrixIdentity();
+		WVP = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
+	}
+
+
+	//wireframe bbox
+	UINT32 bufferElementSize = sizeof(XMFLOAT3);
+	UINT32 offset1 = 0;
+
+	gDeviceContext->IASetInputLayout(gWireFrameLayout);
+	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+
+	gDeviceContext->VSSetShader(gWireFrameVertexShader, nullptr, 0);
+	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->PSSetShader(gWireFramePixelShader, nullptr, 0);
+
+	for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].boundingBoxVertexBuffer, &bufferElementSize, &offset1);
+		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
+		//var.world = XMMatrixIdentity();
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+		gDeviceContext->Draw(16, 0);
 	}
 
 
@@ -780,7 +891,7 @@ void RenderEngine::Update(float dt){
 			this->theCharacter->Move(false); //left
 		}
 
-		else if (input == 2)
+		else if (input == 2 && theCollision.rightValid() == true)
 		{
 			this->theCharacter->Move(true); //right
 
@@ -796,9 +907,15 @@ void RenderEngine::Update(float dt){
 		}
 
 		thePhysics.Gravitation(theCollision, theCharacter);
+		theCharacter->UpdatePosition();
 		theCharacter->CalculateWorld();
 
+		//förflyttar alla nonstatic objekt längs deras intervalbana (sin)
 
+		for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
+			if (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetStatic() == false)
+				theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
+		}
 
 		lightProp01.lights[1].Type = l_Directional;
 		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
@@ -837,7 +954,7 @@ void RenderEngine::Release(){
 	//delete testLight;
 }
 
-void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type){// , bool isStatic, XMMATRIX startPosMatrix){
+void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic){// , bool isStatic, XMMATRIX startPosMatrix){
 	static int gameObjectIndex = 0;
 	OBJ objectTest(gDev);
 	//Load obj
@@ -860,12 +977,20 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 	else if (type == 1)
 	{
-		Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
-		testPlatform.CreateBBOXVertexBuffer(gDevice);
-		testPlatform.nrElements = objectTest.GetNrElements();
-		//theQuadtree->AddObject(&testPlatform);
-		theBinaryTree->AddPlatform(testPlatform);
-		//gamePlatforms.push_back(testPlatform);
+		if (isStatic == false){
+			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox);
+			testPlatform.CreateBBOXVertexBuffer(gDevice);
+			testPlatform.nrElements = objectTest.GetNrElements();
+			gamePlatforms.push_back(testPlatform);
+			theBinaryTree->AddPlatform(testPlatform);
+		}
+		else{
+			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
+			testPlatform.CreateBBOXVertexBuffer(gDevice);
+			testPlatform.nrElements = objectTest.GetNrElements();
+			gamePlatforms.push_back(testPlatform);
+			theBinaryTree->AddPlatform(testPlatform);
+		}
 	}
 
 	else

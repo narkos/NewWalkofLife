@@ -85,9 +85,5 @@ namespace MatPresets
 		XMFLOAT4(0.633, 0.727811, 0.633, 1.0),
 		float(76.8f));
 		
-
 	
-
-
-
 }

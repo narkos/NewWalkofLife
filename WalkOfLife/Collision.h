@@ -24,9 +24,9 @@ public:
 
 	Collision(){}
 
-	void TestCollision(vector<Platform> platforms);
+	void TestCollision(vector<Platform> &platforms);
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);
-	float GetYValueOnGround();
+
 
 	bool rightValid(){ return canGoRight; }
 	bool leftValid(){ return canGoLeft; }

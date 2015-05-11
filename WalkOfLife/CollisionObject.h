@@ -9,10 +9,12 @@ protected:
 	bool isDeadly; //dör man om man colliderar med detta objekt?
 
 	BoundingBox bbox;
+	BoundingBox originalBox;
 
 public:
 	CollisionObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : GameObject(b, pos, isActive, isStatic){ //skicka sedan in BBOX:en i konstruktorn!
 		this->bbox = bbox;
+		originalBox = bbox;
 	}
 
 	CollisionObject(){}
@@ -21,7 +23,12 @@ public:
 	}
 
 	void UpdateBBOX(){ //ifall man flyttar runt detta object så måste oxå BBOXen updateras!
-		//bbox.Transform(bbox, world);
+
+		BoundingBox tempB;
+		tempB = originalBox;
+		tempB.Transform(tempB, 1.0f, XMVectorSet(0, 0, 0, 1), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0, 1));
+		bbox = tempB;
+
 	}
 
 	void CalculateWorld(){ //denna ska kallas innan man skickar in den i GPUn

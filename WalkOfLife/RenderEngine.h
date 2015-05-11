@@ -89,7 +89,7 @@ public:
 
 
 	//Import Functions
-	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type);// , bool isStatic, XMMATRIX startPosMatrix);
+	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic);// , bool isStatic, XMMATRIX startPosMatrix);
 	//Struct for objLoader
 	struct GameObjects{
 		int gameObjectIndex;
@@ -167,5 +167,9 @@ protected:
 	ID3D11PixelShader* gPixelShader = nullptr;
 	ID3D11GeometryShader* gGeometryShader = nullptr;
 
+
+	ID3D11VertexShader* gWireFrameVertexShader = nullptr;
+	ID3D11PixelShader* gWireFramePixelShader = nullptr;
+	ID3D11InputLayout* gWireFrameLayout = nullptr;
 
 };

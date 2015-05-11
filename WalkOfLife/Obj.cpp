@@ -137,39 +137,25 @@ void OBJ::LoadObject(char* geometryFileName, char* materialFileName){
 			vertecies.push_back(tempVertex);
 			tempVerts.push_back(XMFLOAT3(tempVertex.vx, tempVertex.vy, tempVertex.vz));
 		}
-		float minX = 99999;
-		float maxX = 0;
-		float minY = 99999;
-		float maxY = 0;
-		float minZ = 99999;
-		float maxZ = 0;
+		float minX = 999999;
+		float maxX = -999999;
+		float minY = 999999;
+		float maxY = -999999;
+		float minZ = 999999;
+		float maxZ = -999999;
 		for (int i = 0; i < SavedVertsX.size(); i++)
 		{
+			minX = min(SavedVertsX[i], minX);
+			maxX = max(SavedVertsX[i], maxX);
 
+			minY = min(SavedVertsY[i], minY);
+			maxY = max(SavedVertsY[i], maxY);
 
-			if (SavedVertsX[i] < minX)
-			{
-				minX = SavedVertsX[i];
-			}
-			if (SavedVertsX[i] > maxX)
-			{
-				maxX = SavedVertsX[i];
-			}
-
-			if (SavedVertsY[i] < minY)
-			{
-				minY = SavedVertsY[i];
-			}
-			if (SavedVertsY[i] > maxY)
-			{
-				maxY = SavedVertsY[i];
-			}
 		}
 		centerX = (maxX + minX) / 2;
 		centerY = (maxY + minY) / 2;
 		extentX = maxX - centerX;
 		extentY = maxY - centerY;
-
 		theBoundingBox = new BoundingBox(XMFLOAT3(centerX, centerY, 0), XMFLOAT3(extentX, extentY, 10));
 
 		CreateAABB(vertecies);

@@ -13,8 +13,15 @@ protected:
 	float speed;
 	float jumpHeight;
 	int division;
-	XMVECTOR origin;
+
+	float rayLength; //storar hur lång ray hiten blev
+	float rayRangeUp = 0.2f;
+	float rayRangeDown = 1;
+	float rayRangeSides = 0.2f;
+	XMVECTOR originLow, originHigh, originMiddle;
+	float lowValue = 0, middleValue = 0.2f, highValue = 1;
 	XMVECTOR up, down, right, left;
+	BoundingBox footBox, originalFootBox;
 
 	struct Vec
 	{
@@ -74,15 +81,29 @@ public:
 	float momentum;
 	bool jumping;
 	int bajs = 0;
+
+	XMFLOAT3 startPlatformPos;
+	XMFLOAT3 currPlatformPos;
+
 	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){
 		this->speed = 0.1;
 		this->division = 0;
 
-		origin = XMVectorSet(pos.x, pos.y, pos.z, 1); //0 för att det är en vektor
+		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); //0 för att det är en vektor
+		originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
+		originHigh = XMVectorSet(pos.x, pos.y + highValue, pos.z, 1);
 		up = XMVectorSet(0, 1, 0, 0);
 		down = XMVectorSet(0, -1, 0, 0);
 		right = XMVectorSet(1, 0, 0, 0);
 		left = XMVectorSet(-1, 0, 0, 0);
+
+		footBox.Center = XMFLOAT3(XMVectorGetX(originLow), XMVectorGetY(originLow), XMVectorGetZ(originLow));
+		footBox.Extents = bbox.Extents;
+		footBox.Extents.y = 10;
+		originalFootBox = footBox; //används vid transformation av bbox
+
+		currPlatformPos = XMFLOAT3(0, 0, 0);
+		startPlatformPos = XMFLOAT3(100000, 1000000, 100000);
 	}
 
 	PlayerObject(){}
@@ -92,6 +113,7 @@ public:
 	void Jump();
 	float getSpeed();
 	float getJumpHeight();
+	void UpdatePosition();
 
 	//void TestIntersect(CollectableObject cObj, int &currCoins, int &currTime){ //testar ifall man träffar ett specifikt CollectableObject och isåfall få dess värde
 	//	//ha nån if-sats som kollar vilka object som ligger i närheten så man inte behöver skicka in alla CollectableObjectsd
@@ -105,6 +127,11 @@ public:
 	//	}
 	//}
 
+	void SetRayOrigins(float low, float middle, float high){
+		lowValue = low, middleValue = middle, highValue = high;
+	}
+
+
 	bool TestIntersect(Platform pObj){
 		if (pObj.GetActive() == true){
 			if (bbox.Contains(pObj.GetBBOX()) == 1)
@@ -117,43 +144,89 @@ public:
 		else return false;
 	}
 
-	bool TestUp(Platform pObj, float &rayLength){
+	bool TestUp(Platform pObj){
 		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(origin, up, rayLength) == true){
-				return true;
+			if (pObj.GetBBOX().Intersects(originHigh, up, rayLength) == true){
+				if (rayLength < rayRangeUp)
+					return true;
+				else return false;
 			}
 			else return false;
 		}
 		else return false;
 	}
 
-	bool TestDown(Platform pObj, float &rayLength){
+	bool TestDown(Platform& pObj){
 		if (pObj.GetActive() == true){
 
-			if (pObj.GetBBOX().Intersects(origin, down, rayLength) == true){
-				bajs++;
-				return true;
+			if (pObj.GetBBOX().Intersects(originLow, down, rayLength) == true){
+				if (rayLength < rayRangeDown){
+					if (SameXMFLOAT3(startPlatformPos, pObj.playerStartIntervalPosition) == false){ 
+						startPlatformPos = pObj.GetCurrIntervalPos();
+						pObj.playerStartIntervalPosition = startPlatformPos;
+					}
+					currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
+					return true;
+				}
+				else return false;
+			}
+			//if (footBox.Intersects(pObj.GetBBOX()) == true){
+			//	if (SameXMFLOAT3(startPlatformPos, pObj.playerStartIntervalPosition) == false){
+			//		startPlatformPos = pObj.GetCurrIntervalPos();
+			//		pObj.playerStartIntervalPosition = startPlatformPos;
+			//	}
+			//	currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
+			//	return true;
+			//}
+			else return false;
+		}
+		else return false;
+	}
 
+	bool TestRight(Platform pObj){
+		if (pObj.GetActive() == true){
+			if (pObj.GetBBOX().Intersects(originMiddle, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
+						if (rayLength < rayRangeSides){
+							if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
+								if (rayLength < rayRangeSides){
+									return true;
+								}
+								else return false;
+							}
+							else return false;
+						}
+						else return false;
+					}
+					else return false;
+				}
+				else return false;
 			}
 			else return false;
 		}
 		else return false;
 	}
 
-	bool TestRight(Platform pObj, float &rayLength){
+	bool TestLeft(Platform pObj){
 		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(origin, right, rayLength) == true){
-				return true;
-			}
-			else return false;
-		}
-		else return false;
-	}
-
-	bool TestLeft(Platform pObj, float &rayLength){
-		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(origin, left, rayLength) == true){
-				return true;
+			if (pObj.GetBBOX().Intersects(originMiddle, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
+						if (rayLength < rayRangeSides){
+							if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
+								if (rayLength < rayRangeSides){
+									return true;
+								}
+								else return false;
+							}
+							else return false;
+						}
+						else return false;
+					}
+					else return false;
+				}
+				else return false;
 			}
 			else return false;
 		}
@@ -162,49 +235,27 @@ public:
 
 	void Translate(float x, float y, float z){
 		pos = XMMatrixTranslation(this->xPos + x, this->yPos + y, 0);
-		origin = XMVectorSet(xPos + x, yPos + y, 0, 0);
+
+		originLow = XMVectorSet(xPos + x, yPos + y + lowValue, 0, 1);
+		originMiddle = XMVectorSet(xPos + x, yPos + y + middleValue, 0, 1);
+		originHigh = XMVectorSet(xPos + x, yPos + y + highValue, 0, 1);
+
+
+		BoundingBox tempB;
+		tempB = originalBox;
+		tempB.Transform(tempB, 1.0f, XMVectorSet(0, 0, 0, 1), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0, 1));
+		bbox = tempB;
+
+		tempB = originalFootBox;
+		tempB.Transform(tempB, 1.0f, XMVectorSet(0, 0, 0, 1), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0, 1));
+		footBox = tempB;
+
+
 
 		/*left = XMVectorSet((XMVectorGetX(left) + xPos), (XMVectorGetY(left) + yPos), 0, 0);
 		right = XMVectorSet((XMVectorGetX(right) + xPos), (XMVectorGetY(right) + yPos), 0, 0);
 		up = XMVectorSet((XMVectorGetX(up) + xPos), (XMVectorGetY(up) + yPos), 0, 0);
 		down = XMVectorSet((XMVectorGetX(down) + xPos), (XMVectorGetY(down) + yPos), 0, 0);*/
-	}
-
-	float GetYValueOnMesh(Platform pObj, XMVECTOR ray, float rayLength){ //kör först funktionen TestDown tex. Hämtar det Y-värde som spelaren ska stå på
-		if (TestDown(pObj, rayLength)){
-			vector<Triangle> tris = pObj.GetTriangles();
-			for each (Triangle t in tris)
-			{
-				if (DirectX::TriangleTests::Intersects(origin, ray, t.x, t.y, t.z, rayLength) == true){ //står spelaren på denna triangeln?
-					//ta reda på vart på triangeln spelaren står, genom att använda worldpos mojs
-					//hur hittar vi positionen mellan två punkter i worldspace?
-					Vec e1, e2, s;
-					Vec or(XMVectorGetX(origin), XMVectorGetY(origin), XMVectorGetZ(origin));
-					Vec rayDirection(0, -1, 0);
-
-					Vec tx(XMVectorGetX(t.x), XMVectorGetY(t.x), XMVectorGetZ(t.x));
-					Vec ty(XMVectorGetX(t.y), XMVectorGetY(t.y), XMVectorGetZ(t.y));
-					Vec tz(XMVectorGetX(t.z), XMVectorGetY(t.z), XMVectorGetZ(t.z));
-					e1 = ty.Sub(tx);
-					e2 = tz.Sub(tx);
-					s = or.Sub(tx);
-					//Vec tempVec = (r.d, e1, e2);
-					Vec vecTemp = Vec(Det(s, e1, e2), Det(rayDirection.VectorMultFloat(-1.0), s, e2), Det(rayDirection.VectorMultFloat(-1.0), e1, s));
-
-					Vec inversen = vecTemp.VectorMultFloat((1 / Det((rayDirection.VectorMultFloat(-1.0)), e1, e2)));
-					float t1 = inversen.x;
-					return t1;
-					break;
-				}
-			}
-			return 0;
-		}
-		else return 0; //ändra denna eventuellt
-
-		//}//RayTestTriangleInMesh
-
-
-
 	}
 
 	////dessa två är bara här för att virtuell mojset ska stämma överens

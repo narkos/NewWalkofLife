@@ -9,43 +9,42 @@ enum LightType
 	l_Spot = 3
 };
 
-struct Light
+__declspec(align(16)) struct Light
 {
 	//	General Light Properties
 	XMFLOAT4	Position;
 	XMFLOAT4	Color;
-	int			Type;
-	int			Active;
-	
-
-	// Specific Light Properties
-	float		Range;						//Spot and Point
-	int			pad;	
 	XMFLOAT4	Direction;					//Spot and Directional
 	float		SpotConeAngle;				//Spot
 	float		AttConst;					//Spot and Point
 	float		AttLinear;					//Spot and Point
 	float		AttQuadratic;				//Spot and Point
+	int			Type;
+	int			Active;
+	float		Range;						//Spot and Point
+	float		Padding;	
 	
 
-	//Basic Directional Light Default Constructor
-	Light() :
-		Position(0.0f, 0.0f, 0.0f, 1.0f),
-		Color(1.0f, 1.0f, 1.0f, 1.0f),
-		Type(l_Directional),
-		Active(0),
-		Range(2.0f),
-		Direction(0.0f, 0.0f, 1.0f, 0.0f),
-		SpotConeAngle(XM_PIDIV2),
-		AttConst(1.0f),
-		AttLinear(0.0f),
-		AttQuadratic(0.0f)
-		
-	{}
+	
+
+	////Basic Directional Light Default Constructor
+	//Light() :
+	//	Position(0.0f, 0.0f, 0.0f, 1.0f),
+	//	Color(1.0f, 1.0f, 1.0f, 1.0f),
+	//	Type(l_Directional),
+	//	Active(0),
+	//	Range(2.0f),
+	//	Direction(0.0f, 0.0f, 1.0f, 0.0f),
+	//	SpotConeAngle(XM_PIDIV2),
+	//	AttConst(1.0f),
+	//	AttLinear(0.0f),
+	//	AttQuadratic(0.0f)
+	//	
+	//{}
 
 };
 
-struct LightProperties
+__declspec(align(16)) struct LightProperties
 {
 	XMFLOAT4 CamPosition;
 	XMFLOAT4 GlobalAmbient;

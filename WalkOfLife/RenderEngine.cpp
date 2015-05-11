@@ -85,32 +85,41 @@ bool RenderEngine::Init(){
 	int test = 1;
 	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, false);
 
-	//LIGHT TEST ZONE BITCHES
+	////LIGHT TEST ZONE BITCHES
 
-	testLight[0] = LightClass(l_Directional, XMFLOAT3(0.0f, 1.0f, 5.0f), true, true);
-	testLight[0].lightObject.Color = XMFLOAT4(Colors::White);
-	//testLight[0].ToggleActive();
+	//testLight[0] = LightClass(l_Directional, XMFLOAT3(0.0f, -1.0f, 0.0f), true, true);
+	//testLight[0].lightObject.Color = XMFLOAT4(Colors::White);
+	////testLight[0].ToggleActive();
 
-	testLight[1] = LightClass(l_Point, XMFLOAT3(-3.3f, 8.0f, -4.0f), true, true);
+	//testLight[1] = LightClass(l_Point, XMFLOAT3(-3.3f, 8.0f, -4.0f), true, true);
 
-	testLight[1].lightObject.Color = XMFLOAT4(Colors::LightCyan);
-	testLight[1].lightObject.AttConst = 1.0f;
-	testLight[1].lightObject.AttLinear = 0.8f;
-	testLight[1].lightObject.AttQuadratic = 0.0001f;
-	testLight[1].lightObject.Range = 10.0f;
-	//testLight[1].ToggleActive();
- 	globalAmb = XMFLOAT4(Colors::Yellow);
+	//testLight[1].lightObject.Color = XMFLOAT4(Colors::LightCyan);
+	//testLight[1].lightObject.AttConst = 1.0f;
+	//testLight[1].lightObject.AttLinear = 0.8f;
+	//testLight[1].lightObject.AttQuadratic = 0.0001f;
+	//testLight[1].lightObject.Range = 10.0f;
+	////testLight[1].ToggleActive();
+
+	//lightProp01.lights[0] = testLight[0].lightObject;
+	//lightProp01.lights[1] = testLight[1].lightObject;
+
+ //	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Yellow);
+
+
+
+
 
 	D3D11_BUFFER_DESC lbuffDesc;
 	ZeroMemory(&lbuffDesc, sizeof(lbuffDesc));
 	lbuffDesc.Usage = D3D11_USAGE_DEFAULT;
 	lbuffDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lbuffDesc.ByteWidth = sizeof(LightProperties);
 	lbuffDesc.CPUAccessFlags = 0;
 	lbuffDesc.MiscFlags = 0;
-	lbuffDesc.ByteWidth = sizeof(LightProperties);
+	
 
 	HRESULT hr = gDevice->CreateBuffer(&lbuffDesc, NULL, &lightConstBuff);
-
+	
 
 	// Material Buffers Init
 	D3D11_BUFFER_DESC mbuffDesc;
@@ -395,7 +404,7 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 	//scd.SampleDesc.Quality - kan vi mecka senare men är lite saker som ska göras då
 	scd.Windowed = TRUE;
 	//scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	scd.Flags = 0;
+	//scd.Flags = 0;
 
 	// create a device, device context and swap chain using the information in the scd struct
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(NULL,
@@ -413,6 +422,7 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 
 	if (SUCCEEDED(hr))
 	{
+
 		// get the address of the back buffer
 		ID3D11Texture2D* pBackBuffer = nullptr;
 		gSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
@@ -547,7 +557,7 @@ void RenderEngine::Render(){
 	gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
 	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
-	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	int bajs = 1;
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);
@@ -562,6 +572,15 @@ void RenderEngine::Render(){
 	XMMATRIX CamProjection = mainCamera.getCamProjection();
 	XMMATRIX identityM = XMMatrixIdentity();
 	XMMATRIX WorldInv = XMMatrixInverse(nullptr, XMMatrixIdentity());
+
+	// LIGHT BUFFER UPDATE
+	lightProp01.CamPosition = XMFLOAT4(mainCamera.getCameraXPos(), mainCamera.getCameraYPos(), mainCamera.getCameraZPos(), 0.0f);
+	gDeviceContext->UpdateSubresource(lightConstBuff, 0, NULL, &lightProp01, 0, 0);
+	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+	gDeviceContext->PSSetConstantBuffers(2, 1, &lightConstBuff);
+	gDeviceContext->PSSetConstantBuffers(1, 1, &matConstBuff);
+	// END LIGHT BUFFER UPDATE
+
 
 	World perObjCBData;
 
@@ -580,9 +599,7 @@ void RenderEngine::Render(){
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);
 	
-	ID3D11Buffer *pShaderBuffers[2] = { matConstBuff, lightConstBuff };
-	gDeviceContext->PSSetConstantBuffers(0, 2, pShaderBuffers);
-
+	
 	//RENDER OBJ FILES
 
 	for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
@@ -598,15 +615,12 @@ void RenderEngine::Render(){
 		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 		
 		var.CalculateWorld();
-		var.material = MatPresets::Emerald;
-		var.material.SpecPow = 38.0f;
-		
-		matProperties.Material = var.material;
 
+
+		var.material = MatPresets::Emerald;
+		matProperties.Material = var.material;
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 		
-		
-
 		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
 		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
 		WVP = XMMatrixIdentity();
@@ -725,16 +739,27 @@ void RenderEngine::Update(float dt){
 
 		thePhysics.Gravitation(theCollision, theCharacter);
 		theCharacter->CalculateWorld();
+
+
+
+		lightProp01.lights[1].Type = l_Directional;
+		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
+		lightProp01.lights[1].Color = XMFLOAT4(Colors::Yellow);
+
+
+		lightProp01.lights[0].Type = l_Point;
+		lightProp01.lights[0].Position = XMFLOAT4(5.0f, 5.0f, 0.0f, 0.0f);
+		lightProp01.lights[0].Color = XMFLOAT4(1.0f, 0.5f, 0.0f, 1.0f);
+		lightProp01.lights[0].AttConst = 1.0f;
+		lightProp01.lights[0].AttLinear = 0.8f;
+		lightProp01.lights[0].AttQuadratic = 0.0001f;
+		lightProp01.lights[0].Range = 10.0f;
+
+		lightProp01.lights[0].Active = 1;
+		lightProp01.lights[1].Active = 1;
+		lightProp01.GlobalAmbient = XMFLOAT4(Colors::White);
+
 	
-
-	// Update Lights
-	camPos = XMFLOAT4(camxPos, 4.0f, -10.0f, 1.0f);
-	lightProp01.CamPosition = camPos;
-	lightProp01.GlobalAmbient = globalAmb;
-	lightProp01.lights[0] = testLight[0].lightObject;
-	lightProp01.lights[1] = testLight[1].lightObject;
-	gDeviceContext->UpdateSubresource(lightConstBuff, 0, NULL, &lightProp01, 0, 0);
-
 }
 
 // REALESE AND CLEANUP

@@ -14,6 +14,7 @@ private:
 
 	float cameraXPos = 0.0f;
 	float cameraYPos = 0.0f;
+	float cameraZPos = -15.0f;
 
 	float cameraXPosOffset = 6.0f;		//How far back in the screen the character will be.
 	float cameraYPosOffset = 1.0f;		//How high the camera will be relative to the character.
@@ -47,6 +48,9 @@ public:
 
 	void setCameraYPos(float pos);
 	float getCameraYPos();
+
+	void setCameraZPos(float pos);
+	float getCameraZPos();
 
 	float getWindowWidth();
 	float getWindowHeight();

@@ -89,7 +89,7 @@ public:
 
 
 	//Import Functions
-	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, bool player);// , bool isStatic, XMMATRIX startPosMatrix);
+	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type);// , bool isStatic, XMMATRIX startPosMatrix);
 	//Struct for objLoader
 	struct GameObjects{
 		int gameObjectIndex;

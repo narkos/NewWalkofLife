@@ -33,7 +33,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
-	this->theBinaryTree = new BinaryTree(100, 1000);
+	this->theBinaryTree = new BinaryTree(100, 100);
 }
 
 // DESTRUCTOR
@@ -72,18 +72,18 @@ bool RenderEngine::Init(){
 
 	//Import
 	
-	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, true);
+	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0);
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, false);
-	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, false);
-	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, false);
-	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, false);
-	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, false);
-	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, false);
+	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1);
+	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1);
+	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1);
+	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1);
+	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1);
+	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
 	int test = 1;
-	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, false);
+	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2);
 
 	//LIGHT TEST ZONE BITCHES
 	/*float l1Int = 1.0f;
@@ -629,7 +629,43 @@ void RenderEngine::Render(){
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
-		}
+	}
+
+	for each (GameObject var in theBinaryTree->renderObjects->at(theCharacter->getDivision()))
+	{
+		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetInputLayout(gVertexLayout);
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+		var.CalculateWorld();
+		var.material = MatPresets::Emerald;
+		var.material.SpecPow = 38.0f;
+
+		matProperties.Material = var.material;
+
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+		WVP = XMMatrixIdentity();
+		WVP = var.world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(var.nrElements * 3, 0);
+	}
 
 
 
@@ -711,7 +747,7 @@ void RenderEngine::Update(float dt){
 			theCharacter->UpdateDivision(theBinaryTree->pixelsPerdivision);
 			time4 = gTimer.TotalTime();
 		}
-		theCollision.TestCollision(gamePlatforms);
+		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{
@@ -764,7 +800,7 @@ void RenderEngine::Release(){
 	//delete testLight;
 }
 
-void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, bool player){// , bool isStatic, XMMATRIX startPosMatrix){
+void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type){// , bool isStatic, XMMATRIX startPosMatrix){
 	static int gameObjectIndex = 0;
 	OBJ objectTest(gDev);
 	//Load obj
@@ -775,7 +811,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	OutputDebugStringA("\n");
 	OutputDebugStringA(materialFileName);
 	OutputDebugStringA("\n");
-	if (player)
+	if (type == 0)
 	{
 		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
@@ -785,14 +821,21 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 		//gameObjects.push_back(*theCharacter);
 	}
 
-	else
+	else if (type == 1)
 	{
 		Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
 		testPlatform.CreateBBOXVertexBuffer(gDevice);
 		testPlatform.nrElements = objectTest.GetNrElements();
 		//theQuadtree->AddObject(&testPlatform);
 		theBinaryTree->AddPlatform(testPlatform);
-		gamePlatforms.push_back(testPlatform);
+		//gamePlatforms.push_back(testPlatform);
+	}
+
+	else
+	{
+		GameObject object(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true);
+		object.nrElements = objectTest.GetNrElements();
+		theBinaryTree->AddObject(object);
 	}
 
 	//testObject.ObjName = objectTest.GetName();

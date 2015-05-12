@@ -76,9 +76,9 @@ bool RenderEngine::Init(){
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
+	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
 	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
-	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
+	//ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
 	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
 	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
 	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
@@ -888,22 +888,59 @@ void RenderEngine::Update(float dt){
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{
-			this->theCharacter->Move(false); //left
+			if (theCharacter->jumpMomentumState)
+			{
+				if (theCharacter->jumpMomentumX > theCharacter->getSpeed() * -1)
+				{
+					theCharacter->jumpMomentumX -= 0.005;
+				}
+
+				else
+				{
+					theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
+				}
+				
+			}
+			else
+			{
+				this->theCharacter->Move(false); //left
+				rightDirection = false;
+			}
+			
 		}
 
 		else if (input == 2 && theCollision.rightValid() == true)
 		{
-			this->theCharacter->Move(true); //right
+			if (theCharacter->jumpMomentumState)
+			{
+				if (theCharacter->jumpMomentumX < theCharacter->getSpeed())
+				{
+					theCharacter->jumpMomentumX += 0.005;
+				}
+
+				else
+				{
+					theCharacter->jumpMomentumX = theCharacter->getSpeed();
+				}
+				
+			}
+			else
+			{
+				this->theCharacter->Move(true); //right
+				rightDirection = true;
+			}
+			
 
 		}
 
 		else
 			this->theCharacter->momentum = 0;
 
-		if (jump && theCollision.isGrounded() == true) //om grounded och man har klickat in jump
+		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
+			theCharacter->setJumpMomentum(rightDirection);
 		}
 
 		thePhysics.Gravitation(theCollision, theCharacter);
@@ -967,7 +1004,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	OutputDebugStringA("\n");
 	if (type == 0)
 	{
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.8, 0);
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
 		Collision tempC(theCharacter);

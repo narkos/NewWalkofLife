@@ -70,7 +70,7 @@ public:
 	PlayerObject* theCharacter;
 	Camera mainCamera;
 	std::wstring mainwname;
-
+	bool rightDirection;
 
 	//Light Shit
 	LightClass testLight[MAX_LIGHTS];

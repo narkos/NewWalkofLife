@@ -78,6 +78,8 @@ public:
 	void setDivision(int);
 	void UpdateDivision(int);
 
+	float jumpMomentumX;
+	bool jumpMomentumState;
 	float momentum;
 	bool jumping;
 	int bajs = 0;
@@ -85,9 +87,12 @@ public:
 	XMFLOAT3 startPlatformPos;
 	XMFLOAT3 currPlatformPos;
 
-	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){
-		this->speed = 0.1;
-		this->division = 0;
+	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float speed, float jumpHeight, int division) : CollisionObject(b, pos, isActive, isStatic, bbox){
+		this->speed = speed;
+		this->division = division;
+		this->jumpHeight = jumpHeight;
+		this->jumpMomentumState = false;
+		this->jumpMomentumX = 0;
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); //0 för att det är en vektor
 		originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
@@ -109,6 +114,7 @@ public:
 	PlayerObject(){}
 	~PlayerObject(){}
 
+	void setJumpMomentum(bool);
 	void Move(bool right);
 	void Jump();
 	float getSpeed();

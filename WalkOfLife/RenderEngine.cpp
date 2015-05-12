@@ -81,6 +81,7 @@ bool RenderEngine::Init(){
 	//ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
 	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
 	//ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
+
 	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
 	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
 	int test = 1;
@@ -449,26 +450,6 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		pBackBuffer->Release();
 
 
-		//DepthBuffer
-		D3D11_TEXTURE2D_DESC depthStencilDesc;
-		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
-		depthStencilDesc.Width = screen_Width;
-		depthStencilDesc.Height = screen_Height;
-		depthStencilDesc.MipLevels = 1;
-		depthStencilDesc.ArraySize = 1;
-		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthStencilDesc.SampleDesc.Count = 1;
-		depthStencilDesc.SampleDesc.Quality = 0;
-		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		depthStencilDesc.CPUAccessFlags = 0;
-		depthStencilDesc.MiscFlags = 0;
-
-		HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
-		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, NULL, &gDepthStencilView);
-
-
-
 		////DepthBuffer
 		//D3D11_TEXTURE2D_DESC depthStencilDesc;
 		//ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -485,38 +466,58 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		//depthStencilDesc.MiscFlags = 0;
 
 		//HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
+		//HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, NULL, &gDepthStencilView);
 
-		//D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-		//ZeroMemory(&descDSV, sizeof(descDSV));
-		//descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		//descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		//descDSV.Texture2D.MipSlice = 0;
 
-		//HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
 
-		//D3D11_DEPTH_STENCIL_DESC dsDesc;
-		//ZeroMemory(&dsDesc, sizeof(dsDesc));
-		////Depth test settings
-		//dsDesc.DepthEnable = true;
-		//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		//dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		////Stencil tests
-		//dsDesc.StencilEnable = true;
-		//dsDesc.StencilReadMask = 0xFF;
-		//dsDesc.StencilWriteMask = 0xFF;
-		////Stencil operations - Pixel Front Facing
-		//dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		//dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		////Stencil operations - Pixel Back Facing
-		//dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		//dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		//DepthBuffer
+		D3D11_TEXTURE2D_DESC depthStencilDesc;
+		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
+		depthStencilDesc.Width = screen_Width;
+		depthStencilDesc.Height = screen_Height;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.ArraySize = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags = 0;
+		depthStencilDesc.MiscFlags = 0;
 
-		//HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
-		//gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
+		HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+		ZeroMemory(&descDSV, sizeof(descDSV));
+		descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		descDSV.Texture2D.MipSlice = 0;
+
+		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
+
+		D3D11_DEPTH_STENCIL_DESC dsDesc;
+		ZeroMemory(&dsDesc, sizeof(dsDesc));
+		//Depth test settings
+		dsDesc.DepthEnable = true;
+		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		//Stencil tests
+		dsDesc.StencilEnable = true;
+		dsDesc.StencilReadMask = 0xFF;
+		dsDesc.StencilWriteMask = 0xFF;
+		//Stencil operations - Pixel Front Facing
+		dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		//Stencil operations - Pixel Back Facing
+		dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
+		gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 
 		
 		
@@ -597,6 +598,39 @@ void RenderEngine::Render(){
 	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+
+	// Draw Text
+	spriteBatch->Begin();
+
+	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
+	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
+	std::wstring xPos = std::to_wstring(theCharacter->xPos);
+	std::wstring yPos = std::to_wstring(theCharacter->yPos);
+	std::wstring dass = std::to_wstring(fpsDisplay);
+	std::wstring name(L"FPS: ");
+	std::wstring year(L"\nYear: ");
+	std::wstring month(L"\nMonth: ");
+	std::wstring XXX(L"\nxPos: ");
+	std::wstring YYY(L"\nyPos: ");
+	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos;
+
+	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
+
+
+	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
+
+	if (gCounter.theAge.years == 100){
+
+		AMAZING_SUPER_UTE_DASS = Gameover.c_str();
+
+	}
+
+	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+
+	spriteBatch->End();
+	///////////////////////////////////////////
+	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 	int bajs = 1;
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);
@@ -839,35 +873,7 @@ void RenderEngine::Render(){
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
 
 	//////////////////////////////////////////////////////////////
-	// Draw Text
-	spriteBatch->Begin();
-
-	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
-	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
-	std::wstring xPos = std::to_wstring(theCharacter->xPos);
-	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	std::wstring dass =std::to_wstring(fpsDisplay);
-	std::wstring name(L"FPS: ");
-	std::wstring year(L"\nYear: ");
-	std::wstring month(L"\nMonth: ");
-	std::wstring XXX(L"\nxPos: ");
-	std::wstring YYY(L"\nyPos: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos;
-
-	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 	
-
-	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
-
-	if (gCounter.theAge.years == 100){
-
-		 AMAZING_SUPER_UTE_DASS = Gameover.c_str();
-
-	}
-
-	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
-
-	spriteBatch->End();
 	gSwapChain->Present(0, 0); //växla back/front buffer
 }
 
@@ -887,25 +893,64 @@ void RenderEngine::Update(float dt){
 			time4 = gTimer.TotalTime();
 		}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{
-			this->theCharacter->Move(false); //left
+			if (theCharacter->jumpMomentumState)
+			{
+				if (theCharacter->jumpMomentumX > theCharacter->getSpeed() * -1)
+				{
+					theCharacter->jumpMomentumX -= 0.005;
+				}
+
+				else
+				{
+					theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
+				}
+				
+			}
+			else
+			{
+				this->theCharacter->Move(false); //left
+				rightDirection = false;
+			}
+			
 		}
 
 		else if (input == 2 && theCollision.rightValid() == true)
 		{
-			this->theCharacter->Move(true); //right
+			if (theCharacter->jumpMomentumState)
+			{
+				if (theCharacter->jumpMomentumX < theCharacter->getSpeed())
+				{
+					theCharacter->jumpMomentumX += 0.005;
+				}
+
+				else
+				{
+					theCharacter->jumpMomentumX = theCharacter->getSpeed();
+				}
+				
+			}
+			else
+			{
+				this->theCharacter->Move(true); //right
+				rightDirection = true;
+			}
+			
 
 		}
 
 		else
 			this->theCharacter->momentum = 0;
 
-		if (jump && theCollision.isGrounded() == true) //om grounded och man har klickat in jump
+		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
+			theCharacter->setJumpMomentum(rightDirection);
 		}
 
 		if (theCollision.upValid() == false){
@@ -973,7 +1018,9 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	OutputDebugStringA("\n");
 	if (type == 0)
 	{
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(20, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
+
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.6, 0);
+
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
 		Collision tempC(theCharacter);

@@ -92,3 +92,17 @@ void PlayerObject::UpdateDivision(int pixelsPerDivision)
 	}
 
 }
+
+void PlayerObject::setJumpMomentum(bool rightDirection)
+{
+	this->jumpMomentumState = true;
+	if (rightDirection)
+	{
+		this->jumpMomentumX = this->speed * this->momentum;
+	}
+	else
+	{
+		this->jumpMomentumX = this->speed * this->momentum * -1;
+	}
+	
+}

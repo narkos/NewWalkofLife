@@ -14,6 +14,10 @@ public:
 	int getCream();
 	void setYear(int year);
 	void setMonth(int month);
+	void takeCigg();
+	void takeCream();
+	void takeCoin();
+
 	struct age
 	{
 		int years;

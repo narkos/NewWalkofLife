@@ -47,3 +47,20 @@ void Counters::setMonth(int month)
 		setMonth(-12);
 	}
 }
+
+void Counters::takeCigg()
+{
+	this->ciggs++;
+	this->theAge.years += 5;
+}
+
+void Counters::takeCream()
+{
+	this->creams++;
+	this->theAge.years -= 5;
+}
+
+void Counters::takeCoin()
+{
+	this->coins++;
+}

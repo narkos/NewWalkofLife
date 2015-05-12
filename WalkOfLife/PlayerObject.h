@@ -19,7 +19,8 @@ protected:
 	float rayRangeDown = 0.2f;
 	float rayRangeSides = 1.5f;
 	XMVECTOR originLow, originLowRight, originLowLeft, originHigh, originMiddle;
-	float lowValue = 0, middleValue = 0.2f, highValue = 1;
+	float lowValue = 0, middleValue = 0.2f, highValue = 1, extraXValue = 0.6f;
+	
 	XMVECTOR up, down, right, left;
 	BoundingBox footBox, originalFootBox;
 	
@@ -98,8 +99,8 @@ public:
 		this->jumpMomentumX = 0;
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
-		originLowRight = XMVectorSet(pos.x + bbox.Extents.x, pos.y + lowValue, pos.z, 1);
-		originLowLeft = XMVectorSet(pos.x - bbox.Extents.x, pos.y + lowValue, pos.z, 1);
+		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1);
+		originLowLeft = XMVectorSet(pos.x - extraXValue, pos.y + lowValue, pos.z, 1);
 		originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
 		originHigh = XMVectorSet(pos.x, pos.y + highValue, pos.z, 1);
 		up = XMVectorSet(0, 1, 0, 0);
@@ -203,6 +204,46 @@ public:
 				}
 				
 			}
+			else if (pObj.GetBBOX().Intersects(originLowRight, down, rayLength) == true){
+				if (rayLength < rayRangeDown){
+					if (pObj.GetStatic() == false){
+						TestDownMovingPlatform(pObj, isGrounded);
+					}
+					else{
+						currPlatformPos = XMFLOAT3(0, 0, 0);
+						lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+						//startPlatformPos = XMFLOAT3(0, 0, 0);
+					}
+					return true;
+
+				}
+				else{
+					currPlatformPos = XMFLOAT3(0, 0, 0);
+					lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+					return false;
+				}
+
+			}
+			if (pObj.GetBBOX().Intersects(originLowLeft, down, rayLength) == true){
+				if (rayLength < rayRangeDown){
+					if (pObj.GetStatic() == false){
+						TestDownMovingPlatform(pObj, isGrounded);
+					}
+					else{
+						currPlatformPos = XMFLOAT3(0, 0, 0);
+						lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+						//startPlatformPos = XMFLOAT3(0, 0, 0);
+					}
+					return true;
+
+				}
+				else{
+					currPlatformPos = XMFLOAT3(0, 0, 0);
+					lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+					return false;
+				}
+
+			}
 			else return false;
 		}
 		else return false;
@@ -262,6 +303,8 @@ public:
 		pos = XMMatrixTranslation(x, y, 0);
 
 		originLow = XMVectorSet(x, y + lowValue, 0, 1);
+		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0, 1);
+		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0, 1);
 		originMiddle = XMVectorSet(x, y + middleValue, 0, 1);
 		originHigh = XMVectorSet(x, y + highValue, 0, 1);
 

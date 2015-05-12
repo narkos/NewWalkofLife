@@ -890,6 +890,8 @@ void RenderEngine::Update(float dt){
 			time4 = gTimer.TotalTime();
 		}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{
@@ -1009,7 +1011,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	OutputDebugStringA("\n");
 	if (type == 0)
 	{
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.8, 0);
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.6, 0);
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
 		Collision tempC(theCharacter);

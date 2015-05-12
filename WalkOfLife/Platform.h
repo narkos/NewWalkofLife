@@ -11,9 +11,10 @@ class Platform : public CollisionObject{
 protected:
 
 public:
+	bool isHitByPlayer;
 	Platform(bool isDeadly, vector<XMFLOAT3> verts, ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){ //och eventuellt ha med tex isBouncy
 		this->isDeadly = isDeadly;
-		
+		isHitByPlayer = false;
 	}
 	Platform(){}
 	~Platform(){}

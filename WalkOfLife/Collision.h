@@ -20,9 +20,12 @@ public:
 
 	Collision(PlayerObject *player){
 		this->player = player;
+		onGround = false;
 	}
 
-	Collision(){}
+	Collision(){
+		onGround = false;
+	}
 
 	void TestCollision(vector<Platform> &platforms);
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);

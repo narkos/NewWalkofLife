@@ -28,8 +28,20 @@ void PlayerObject::Move(bool right)
 	}
 }
 
-void PlayerObject::UpdatePosition(){
-	this->Translate(this->xPos + currPlatformPos.x, yPos + currPlatformPos.y, 0.0);
+void PlayerObject::UpdatePosition(bool canGoRight, bool canGoLeft){
+	if (canGoRight == true && currPlatformPos.x - lastFrameCurrPlatformPos.x > 0){
+		this->xPos += currPlatformPos.x - lastFrameCurrPlatformPos.x;
+	}
+
+	if (canGoLeft == true && currPlatformPos.x - lastFrameCurrPlatformPos.x <= 0){
+		this->xPos += currPlatformPos.x - lastFrameCurrPlatformPos.x;
+	}
+
+	this->yPos += currPlatformPos.y - lastFrameCurrPlatformPos.y;
+	//this->Translate(this->xPos + currPlatformPos.x, yPos + currPlatformPos.y, 0.0);
+	this->Translate(this->xPos, this->yPos, 0.0f);
+
+	lastFrameCurrPlatformPos = currPlatformPos;
 }
 
 void PlayerObject::Jump()

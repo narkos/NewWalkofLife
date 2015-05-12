@@ -16,12 +16,14 @@ protected:
 
 	float rayLength; //storar hur lång ray hiten blev
 	float rayRangeUp = 0.2f;
-	float rayRangeDown = 1;
-	float rayRangeSides = 0.2f;
-	XMVECTOR originLow, originHigh, originMiddle;
+	float rayRangeDown = 0.2f;
+	float rayRangeSides = 1.5f;
+	XMVECTOR originLow, originLowRight, originLowLeft, originHigh, originMiddle;
 	float lowValue = 0, middleValue = 0.2f, highValue = 1;
 	XMVECTOR up, down, right, left;
 	BoundingBox footBox, originalFootBox;
+	
+	
 
 	struct Vec
 	{
@@ -84,12 +86,15 @@ public:
 
 	XMFLOAT3 startPlatformPos;
 	XMFLOAT3 currPlatformPos;
+	XMFLOAT3 lastFrameCurrPlatformPos;
 
 	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){
 		this->speed = 0.1;
 		this->division = 0;
 
-		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); //0 för att det är en vektor
+		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
+		originLowRight = XMVectorSet(pos.x + bbox.Extents.x, pos.y + lowValue, pos.z, 1);
+		originLowLeft = XMVectorSet(pos.x - bbox.Extents.x, pos.y + lowValue, pos.z, 1);
 		originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
 		originHigh = XMVectorSet(pos.x, pos.y + highValue, pos.z, 1);
 		up = XMVectorSet(0, 1, 0, 0);
@@ -103,6 +108,7 @@ public:
 		originalFootBox = footBox; //används vid transformation av bbox
 
 		currPlatformPos = XMFLOAT3(0, 0, 0);
+		lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
 		startPlatformPos = XMFLOAT3(100000, 1000000, 100000);
 	}
 
@@ -113,7 +119,7 @@ public:
 	void Jump();
 	float getSpeed();
 	float getJumpHeight();
-	void UpdatePosition();
+	void UpdatePosition(bool canGoRight, bool canGoLeft);
 
 	//void TestIntersect(CollectableObject cObj, int &currCoins, int &currTime){ //testar ifall man träffar ett specifikt CollectableObject och isåfall få dess värde
 	//	//ha nån if-sats som kollar vilka object som ligger i närheten så man inte behöver skicka in alla CollectableObjectsd
@@ -156,28 +162,41 @@ public:
 		else return false;
 	}
 
-	bool TestDown(Platform& pObj){
+	bool TestDownMovingPlatform(Platform& pObj, bool isGrounded){
+		//if (SameXMFLOAT3(startPlatformPos, pObj.playerStartIntervalPosition) == false){ //kalla detta en gång vid impact istället, spelar ingen roll om det är samma object
+		if (isGrounded == false){ //denna blir kallad flera gånger även om den inte ska det!
+			startPlatformPos = pObj.GetCurrIntervalPos();
+			pObj.playerStartIntervalPosition = startPlatformPos;
+		}
+		currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
+		return true;
+				
+	}
+
+	
+	bool TestDown(Platform& pObj, bool isGrounded){
 		if (pObj.GetActive() == true){
 
 			if (pObj.GetBBOX().Intersects(originLow, down, rayLength) == true){
 				if (rayLength < rayRangeDown){
-					if (SameXMFLOAT3(startPlatformPos, pObj.playerStartIntervalPosition) == false){ 
-						startPlatformPos = pObj.GetCurrIntervalPos();
-						pObj.playerStartIntervalPosition = startPlatformPos;
+					if (pObj.GetStatic() == false){
+						TestDownMovingPlatform(pObj, isGrounded);
 					}
-					currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
+					else{
+						currPlatformPos = XMFLOAT3(0, 0, 0);
+						lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+						//startPlatformPos = XMFLOAT3(0, 0, 0);
+					}
 					return true;
+					
 				}
-				else return false;
+				else{
+					currPlatformPos = XMFLOAT3(0, 0, 0);
+					lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+					return false;
+				}
+				
 			}
-			//if (footBox.Intersects(pObj.GetBBOX()) == true){
-			//	if (SameXMFLOAT3(startPlatformPos, pObj.playerStartIntervalPosition) == false){
-			//		startPlatformPos = pObj.GetCurrIntervalPos();
-			//		pObj.playerStartIntervalPosition = startPlatformPos;
-			//	}
-			//	currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
-			//	return true;
-			//}
 			else return false;
 		}
 		else return false;
@@ -234,11 +253,11 @@ public:
 	}
 
 	void Translate(float x, float y, float z){
-		pos = XMMatrixTranslation(this->xPos + x, this->yPos + y, 0);
+		pos = XMMatrixTranslation(x, y, 0);
 
-		originLow = XMVectorSet(xPos + x, yPos + y + lowValue, 0, 1);
-		originMiddle = XMVectorSet(xPos + x, yPos + y + middleValue, 0, 1);
-		originHigh = XMVectorSet(xPos + x, yPos + y + highValue, 0, 1);
+		originLow = XMVectorSet(x, y + lowValue, 0, 1);
+		originMiddle = XMVectorSet(x, y + middleValue, 0, 1);
+		originHigh = XMVectorSet(x, y + highValue, 0, 1);
 
 
 		BoundingBox tempB;

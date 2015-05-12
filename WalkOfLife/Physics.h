@@ -11,6 +11,10 @@ public:
 	void Gravitation(Collision, PlayerObject*);
 	void Jump(Collision, PlayerObject*);
 	bool onPlatform;
+
+	void DisableUpForce(){
+		upforce = 0;
+	}
 protected:
 	float downforce;
 	float upforce;

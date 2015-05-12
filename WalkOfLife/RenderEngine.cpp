@@ -77,9 +77,10 @@ bool RenderEngine::Init(){
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
 	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
-	ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
+	//theBinaryTree->testPlatforms->at(0).at(0).Translate(0.0f, -2000.0f, 0.0f);
+	//ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
 	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
-	ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
+	//ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
 	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
 	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
 	int test = 1;
@@ -569,6 +570,7 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
+			fpscounter();
 			if ((gTimer.TotalTime() - time3) >= 0.01f)
 			{
 
@@ -576,7 +578,7 @@ int RenderEngine::Run(){
 				Render();
 				time3 = gTimer.TotalTime();
 			}
-			fpscounter();
+			
 		}
 	}
 	return static_cast<int>(msg.wParam);
@@ -906,8 +908,12 @@ void RenderEngine::Update(float dt){
 			thePhysics.onPlatform = false;
 		}
 
+		if (theCollision.upValid() == false){
+			thePhysics.DisableUpForce();
+		}
+
 		thePhysics.Gravitation(theCollision, theCharacter);
-		theCharacter->UpdatePosition();
+		theCharacter->UpdatePosition(theCollision.rightValid(), theCollision.leftValid());
 		theCharacter->CalculateWorld();
 
 		//förflyttar alla nonstatic objekt längs deras intervalbana (sin)
@@ -967,7 +973,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	OutputDebugStringA("\n");
 	if (type == 0)
 	{
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(20, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
 		Collision tempC(theCharacter);
@@ -981,14 +987,13 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
-			gamePlatforms.push_back(testPlatform);
+			
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 		else{
 			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
-			gamePlatforms.push_back(testPlatform);
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 	}

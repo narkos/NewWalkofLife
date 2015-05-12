@@ -7,7 +7,7 @@ void Collision::TestCollision(vector<Platform> &platforms){
 	this->canGoLeft = true;
 	this->canGoUp = true;
 
-	this->onGround = false;
+	//this->onGround = false;
 
 	//for each (Platform p in platforms)
 	//{
@@ -45,10 +45,19 @@ void Collision::TestCollision(vector<Platform> &platforms){
 			canGoUp = false;
 		}
 
-		if (player->TestDown(platforms[i]) == true){
-			groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
-			this->onGround = true;
+	}
+	bool tempOnGround = false;
+	for (int i = 0; i < platforms.size(); i++){
+		if (player->TestDown(platforms[i], this->onGround) == true){
+			//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
+			tempOnGround = true;
+			break;
 			//testa först mot triangeln
 		}
+		else
+			tempOnGround = false;
+		
 	}
-}
+	this->onGround = tempOnGround;
+	}
+

@@ -40,7 +40,7 @@ public:
 
 		this->currIntervalPosition = XMFLOAT3(0, 0, 0);
 		this->playerStartIntervalPosition = XMFLOAT3(0, 0, 0);
-		xInterval = 5;
+		xInterval = 12;
 		yInterval = 0;
 
 		if (pos.x < 0.000001f && pos.x > -0.0000001f && pos.y < 0.000001f && pos.y > -0.0000001f){

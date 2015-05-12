@@ -1019,7 +1019,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.6, 0);
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.7841, 0);
 
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();

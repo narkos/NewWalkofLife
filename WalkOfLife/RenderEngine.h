@@ -81,6 +81,8 @@ public:
 	float camxPos;
 	float camyPos;
 	
+	float lightOffsetTest;
+
 
 
 	//Material Shit

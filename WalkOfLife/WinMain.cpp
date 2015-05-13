@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Applikation* pApplication = new Applikation(hInstance, "App name", 800, 600);
 
 	if (!pApplication->Init()){
-		MessageBox(NULL, L"Kunde inte k?ra Init()", NULL, NULL);
+		MessageBox(NULL, L"Could not initiate Application", NULL, NULL);
 		return 1;
 	}
 

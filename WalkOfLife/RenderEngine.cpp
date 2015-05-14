@@ -1040,7 +1040,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1f, 0.6f);
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
 
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
@@ -1053,14 +1053,14 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	else if (type == 1)
 	{
 		if (isStatic == false){
-			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 1, 1, 1, 1);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 		else{
-			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox, 0, 0, 0, 0);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			theBinaryTree->AddPlatform(testPlatform);
@@ -1069,7 +1069,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 	else
 	{
-		GameObject object(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true);
+		GameObject object(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, 0, 0, 0, 0);
 		object.nrElements = objectTest.GetNrElements();
 		theBinaryTree->AddObject(object);
 	}

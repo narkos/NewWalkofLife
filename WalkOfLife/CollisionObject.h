@@ -12,7 +12,7 @@ protected:
 	BoundingBox originalBox;
 
 public:
-	CollisionObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float xInter, float yInter, float xSpeed, float ySpeed) : GameObject(b, pos, isActive, isStatic){ //skicka sedan in BBOX:en i konstruktorn!
+	CollisionObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float xInter, float yInter, float xSpeed, float ySpeed) : GameObject(b, pos, isActive, isStatic, xInter, yInter, xSpeed, ySpeed){ //skicka sedan in BBOX:en i konstruktorn!
 		this->bbox = bbox;
 		originalBox = bbox;
 		xInterval = xInter;

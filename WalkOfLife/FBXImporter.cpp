@@ -223,7 +223,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		XMFLOAT4 KD;
 		XMFLOAT4 KA;
 		XMFLOAT4 KS;
-		float specularPowah, float trans;
+		float specularPowah, trans;
 
 		fbxFile.read((char*)&KD.x, sizeof(float));
 		fbxFile.read((char*)&KD.y, sizeof(float));

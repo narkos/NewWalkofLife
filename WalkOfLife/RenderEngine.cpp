@@ -117,7 +117,8 @@ bool RenderEngine::Init(){
 
 
 
-
+	lightProp01.lights[2].Position = XMFLOAT4(5.0f, -3.0f, 0.0f, 1.0f);
+	lightOffsetTest = 0.0f;
 
 	D3D11_BUFFER_DESC lbuffDesc;
 	ZeroMemory(&lbuffDesc, sizeof(lbuffDesc));
@@ -415,6 +416,7 @@ void RenderEngine::CreatePlaneData(){
 
 // INITIALIZE DIRECTX OBJECT
 
+
 bool RenderEngine::InitDirect3D(HWND hWindow){
 
 	DXGI_SWAP_CHAIN_DESC scd;
@@ -638,6 +640,7 @@ void RenderEngine::Render(){
 
 	spriteBatch->End();
 	///////////////////////////////////////////
+	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 	int bajs = 1;
 	mainCamera.setPlayerXPos(theCharacter->xPos);
@@ -735,7 +738,6 @@ void RenderEngine::Render(){
 		matProperties.Material = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material;
 
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
 
 
 		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
@@ -865,12 +867,10 @@ void RenderEngine::Render(){
 	
 	WVP = XMMatrixIdentity();
 	WVP = theCharacter->world * CamView *CamProjection;
-	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theCharacter->world)));
 	theCharacter->world = XMMatrixTranspose(theCharacter->world);
 
 	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-	XMStoreFloat4x4(&perObjCBData.WorldSpace, theCharacter->world);
-
+	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theCharacter->world));
 	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theCharacter->world)));
 
 	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
@@ -994,21 +994,50 @@ void RenderEngine::Update(float dt){
 
 		lightProp01.lights[1].Type = l_Directional;
 		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
-		lightProp01.lights[1].Color = XMFLOAT4(Colors::Yellow);
+		lightProp01.lights[1].Color = XMFLOAT4(0.1f, 0.1f,0.1f, 1.0f);
 
 
 		lightProp01.lights[0].Type = l_Point;
-		lightProp01.lights[0].Position = XMFLOAT4(5.0f, 5.0f, 0.0f, 0.0f);
-		lightProp01.lights[0].Color = XMFLOAT4(1.0f, 0.5f, 0.0f, 1.0f);
-		lightProp01.lights[0].AttConst = 1.0f;
-		lightProp01.lights[0].AttLinear = 0.8f;
-		lightProp01.lights[0].AttQuadratic = 0.0001f;
+		lightProp01.lights[0].Position = XMFLOAT4(0.0f, 0.2f, -5.0f, 1.0f);
+		lightProp01.lights[0].Color = XMFLOAT4(Colors::WhiteSmoke);
+		lightProp01.lights[0].AttConst = 1.2f;
+		lightProp01.lights[0].AttLinear = 0.3f;
+		lightProp01.lights[0].AttQuadratic = 0.0f;
 		lightProp01.lights[0].Range = 10.0f;
 
-		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 1;
-		lightProp01.GlobalAmbient = XMFLOAT4(Colors::White);
+		float moveL = 0.01f;
 
+		if (lightOffsetTest <= 1.0f);
+		{
+			lightOffsetTest += moveL;
+			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
+		}
+		
+
+
+		lightProp01.lights[2].Type = l_Point;
+		
+		lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		lightProp01.lights[2].AttConst = 0.3f;
+		lightProp01.lights[2].AttLinear = 0.2f;
+		lightProp01.lights[2].AttQuadratic = 0.5f;
+		lightProp01.lights[2].Range = 15.0f;
+
+		lightProp01.lights[3].Type = l_Point;
+		lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
+		lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		lightProp01.lights[3].AttConst = 0.7f;
+		lightProp01.lights[3].AttLinear = 0.2f;
+		lightProp01.lights[3].AttQuadratic = 0.1f;
+		lightProp01.lights[3].Range = 15.0f;
+
+
+		lightProp01.lights[0].Active = 1;
+		lightProp01.lights[1].Active = 0;
+		lightProp01.lights[2].Active = 1;
+		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
+
+		
 	
 }
 

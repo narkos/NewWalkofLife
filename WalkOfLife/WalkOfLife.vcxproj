@@ -125,7 +125,9 @@
     <ClCompile Include="BinaryTree.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="FBXImporter.cpp" />
     <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="HighScore.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Obj.cpp" />
@@ -146,8 +148,10 @@
     <ClInclude Include="Counters.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FBXImporter.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="HighScore.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Obj.h" />

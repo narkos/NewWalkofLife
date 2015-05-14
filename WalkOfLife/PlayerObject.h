@@ -91,9 +91,9 @@ public:
 	XMFLOAT3 currPlatformPos;
 	XMFLOAT3 lastFrameCurrPlatformPos;
 
-	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float speed, float jumpHeight, int division) : CollisionObject(b, pos, isActive, isStatic, bbox){
+	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float speed, float jumpHeight) : CollisionObject(b, pos, isActive, isStatic, bbox){
 		this->speed = speed;
-		this->division = division;
+		this->division = 0;
 		this->jumpHeight = jumpHeight;
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
@@ -121,6 +121,9 @@ public:
 	PlayerObject(){}
 	~PlayerObject(){}
 
+	void SetDivision(int div){
+		this->division = div;
+	}
 	void setJumpMomentum(bool);
 	void Move(bool right);
 	void Jump();

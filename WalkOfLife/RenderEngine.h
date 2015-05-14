@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <DirectXCollision.h>
+#include "HighScore.h"
 
 //INLCUDE H FILES HERE
 
@@ -65,6 +66,7 @@ public:
 	Collision theCollision;
 	OBJ theOBJ;
 	Physics thePhysics;
+	HighScore theHighScore;
 	GameTimer gTimer;
 	Counters gCounter;
 	PlayerObject* theCharacter;

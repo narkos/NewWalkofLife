@@ -35,6 +35,12 @@ private:
 
 	struct MeshInfo{
 		int meshType;
+		float xInterval;
+		float yInterval;
+		float xSpeed;
+		float ySpeed;
+		int coinValue;
+		int timeValue;
 		int nrAnimations;
 		int nrBones;
 		int nrPos;
@@ -67,13 +73,6 @@ private:
 	};
 
 
-	//det som sedan används
-	struct Mesh{
-		bool isDeadly;
-		bool isStatic;
-		vector<VertexData> vertices;
-		ID3D11Buffer* gVertexBuffer;
-	};
 
 	struct Material{
 		int byteSizeOfName;

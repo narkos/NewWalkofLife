@@ -4,13 +4,18 @@ bool HighScore::LoadHighScore(){
 	loadFile.open(fileNameLoad);
 	string line;
 
-	if (saveFile.is_open()){
+	if (loadFile.is_open()){
+		Score scoreTemp;
 		while (getline(loadFile, line)){
-			Score scoreTemp;
-			sscanf_s(&line[0], "%d", &scoreTemp.coins);
-			sscanf_s(&line[0], "%d", &scoreTemp.time);
-			sscanf_s(&line[0], "%d", &scoreTemp.points);
-			highScoreList.push_back(scoreTemp);
+			if (line[0] == 'c')
+				sscanf_s(&line[0], "c%d", &scoreTemp.coins);
+			else if (line[0] == 't')
+				sscanf_s(&line[0], "t%d", &scoreTemp.time);
+			else{
+				sscanf_s(&line[0], "p%d", &scoreTemp.points);
+				highScoreList.push_back(scoreTemp);
+			}
+			
 		}
 		loadFile.close();
 		return true;
@@ -25,9 +30,11 @@ bool HighScore::SaveHighScore(){
 	if (saveFile.is_open() == true){
 		saveFile.clear();
 		for each(Score s in highScoreList){
-			saveFile << s.coins;
-			saveFile << s.time;
-			saveFile << s.points;
+			saveFile << "c" << s.coins;
+			saveFile << "\n";
+			saveFile << "t" << s.time;
+			saveFile << "\n";
+			saveFile << "p" << s.points;
 			saveFile << "\n";
 		}
 		saveFile.close();
@@ -40,19 +47,20 @@ bool HighScore::SaveHighScore(){
 void HighScore::ReOrganizeLists(){
 	
 	for (int i = 0; i < highScoreList.size(); i++){
-		coinList.push_back(highScoreList[i].coins);
-		timeList.push_back(highScoreList[i].time);
+		coinList.push_back(highScoreList[i]);
+		timeList.push_back(highScoreList[i]);
 	}
 
 	for (int y = 0; y < coinList.size(); y++){
 		for (int i = 0; i < coinList.size(); i++){
-			if (coinList[y] < coinList[i]){
-				SwapInt(coinList[y], coinList[i]);
+			if (coinList[y].coins < coinList[i].coins){
+				SwapScore(coinList[y], coinList[i]);
 			}
 
-			if (timeList[y] < timeList[i]){
-				SwapInt(timeList[y], timeList[i]);
+			if (timeList[y].time < timeList[i].time){
+				SwapScore(timeList[y], timeList[i]);
 			}
 		}
 	}
+	SaveHighScore();
 }

@@ -25,7 +25,7 @@ protected:
 	XMMATRIX scale;
 
 
-	float xInterval, yInterval;
+	float xInterval, yInterval, xSpeed, ySpeed;
 	XMFLOAT3 currIntervalPosition;
 public:
 	XMFLOAT3 playerStartIntervalPosition; //används som ett sorts index för moving objects, se PlayerObject TestDown()
@@ -40,8 +40,10 @@ public:
 
 		this->currIntervalPosition = XMFLOAT3(0, 0, 0);
 		this->playerStartIntervalPosition = XMFLOAT3(0, 0, 0);
-		xInterval = 12;
+		xInterval = 0;
 		yInterval = 0;
+		xSpeed = 0;
+		ySpeed = 0;
 
 		if (pos.x < 0.000001f && pos.x > -0.0000001f && pos.y < 0.000001f && pos.y > -0.0000001f){
 			this->pos = XMMatrixIdentity();
@@ -92,6 +94,7 @@ public:
 	bool GetStatic(){ return isStatic; }
 
 	void PatrolInterval(float time){
+		//applya xSpeed och ySpeed på nått sätt
 		this->currIntervalPosition.x = sinf(time) * xInterval;
 		this->currIntervalPosition.y = sinf(time) * yInterval;
 		this->currIntervalPosition.z = 0;

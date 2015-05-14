@@ -91,10 +91,10 @@ public:
 	XMFLOAT3 currPlatformPos;
 	XMFLOAT3 lastFrameCurrPlatformPos;
 
-	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float speed, float jumpHeight) : CollisionObject(b, pos, isActive, isStatic, bbox){
-		this->speed = speed;
+	PlayerObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float xInter, float yInter, float xSpeed, float ySpeed) : CollisionObject(b, pos, isActive, isStatic, bbox, xInter, yInter, xSpeed, ySpeed){
+		this->speed = xSpeed;
 		this->division = 0;
-		this->jumpHeight = jumpHeight;
+		this->jumpHeight = ySpeed;
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
 
@@ -150,11 +150,10 @@ public:
 
 	bool TestIntersect(Platform pObj){
 		if (pObj.GetActive() == true){
-			if (bbox.Contains(pObj.GetBBOX()) == 1)
+			if (bbox.Intersects(pObj.GetBBOX()) == true) //denna bör vi nog använda, fast använd rays istället
 				return true;
-			else if (bbox.Intersects(pObj.GetBBOX()) == true) //denna bör vi nog använda, fast använd rays istället
+			else if (bbox.Contains(pObj.GetBBOX()) == true)
 				return true;
-
 			else return false;
 		}
 		else return false;

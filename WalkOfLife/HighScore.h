@@ -18,16 +18,18 @@ private:
 		int points;
 	};
 	vector<Score> highScoreList;
-	vector<int> coinList;
-	vector<int> timeList;
+	vector<Score> coinList;
+	vector<Score> timeList;
 
 public:
-	HighScore(char* fileNameL, char* fileNameS){
-		this->fileNameLoad = fileNameL;
-		this->fileNameSave = fileNameS;
+
+	HighScore(){
+		fileNameLoad = "C:\\Users\\Simon\\Desktop\\HighScoreLoad.txt";
+		fileNameSave = "C:\\Users\\Simon\\Desktop\\HighScoreLoad.txt";
 		bool isFine;
 		isFine = LoadHighScore();
 	}
+	~HighScore(){}
 
 	bool LoadHighScore();
 
@@ -38,6 +40,7 @@ public:
 		scoreTemp.coins = coins;
 		scoreTemp.time = time;
 		scoreTemp.points = points;
+		highScoreList.push_back(scoreTemp);
 	}
 
 	void ReOrganizeLists();
@@ -46,5 +49,21 @@ public:
 		temp = a;
 		a = b;
 		b = temp;
+	}
+	void SwapScore(Score &a, Score &b){
+		Score temp;
+		temp = a;
+		a = b;
+		b = temp;
+	}
+
+	vector<Score> GetHighScoreList(){
+		return highScoreList;
+	}
+	vector<Score> GetCoinList(){
+		return coinList;
+	}
+	vector<Score> GetTimeList(){
+		return timeList;
 	}
 };

@@ -70,7 +70,7 @@ void PlayerObject::setDivision(int division)
 }
 
 void PlayerObject::UpdateDivision(int pixelsPerDivision)
-{//LÄGG PÅ PLATFORMS VÄRDET SEN!!!!!!!!!!!!!!!!! ANNARS KAN DE BLI BUGGIGT OM MAN KÖR SPELET LÄNGE
+{
 	if ((this->xPos >= division * pixelsPerDivision) && (this->xPos < (division * pixelsPerDivision) + pixelsPerDivision))
 	{
 		return;

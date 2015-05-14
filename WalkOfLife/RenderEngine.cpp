@@ -881,6 +881,8 @@ void RenderEngine::Render(){
 // UPDATES
 
 void RenderEngine::Update(float dt){
+	
+	soundBackground.PlayMp3();
 		Input theInput;
 		theInput.initInput(this->hInstance, hWindow);
 		int input = 0;
@@ -937,6 +939,7 @@ void RenderEngine::Update(float dt){
 			}
 			else
 			{
+			
 				this->theCharacter->Move(true); //right
 				rightDirection = true;
 			}
@@ -1110,6 +1113,10 @@ void RenderEngine::reset()
 
 void RenderEngine::LoadSounds()
 {
+	soundBackground.InitMp3();
+	soundBackground.LoadMp3("WalkOfLife.mp3");
 	soundJump.InitMp3();
 	soundJump.LoadMp3("boing.wav");
+	
+	
 }

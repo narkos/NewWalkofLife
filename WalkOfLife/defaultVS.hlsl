@@ -36,7 +36,7 @@ VS_OUT VS_main(VS_IN input)
 	output.Tex = input.Tex;
 	output.Nor = mul(float4(input.Nor, 0.0f), InvWorld);
 	//output.Nor = mul(float4(input.Nor, 0.0f), InvWorld);
-	output.wPos = float4(input.Pos, 1.0f);
+	output.wPos = mul(float4(input.Pos, 1.0f), WorldSpace);
 
 	return output;
 	//float4 outpos = float4(input.Pos, 1.0f);

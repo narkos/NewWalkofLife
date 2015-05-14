@@ -719,77 +719,7 @@ void RenderEngine::Render(){
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
 
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
-	{
-		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-		gDeviceContext->IASetInputLayout(gVertexLayout);
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
-
-		matProperties.Material = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material;
-
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-
-		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
-		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
-		WVP = XMMatrixIdentity();
-		WVP = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world * CamView *CamProjection;
-
-		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-
-
-		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-		gDeviceContext->Draw(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].nrElements * 3, 0);
-	}
-
-	//for each (GameObject var in theBinaryTree->renderObjects->at(theCharacter->getDivision()))
-	//{
-	//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-	//	gDeviceContext->IASetInputLayout(gVertexLayout);
-	//	gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-	//	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-	//	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-	//	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-	//	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-
-	//	var.CalculateWorld();
-	//	var.material = MatPresets::Emerald;
-	//	var.material.SpecPow = 38.0f;
-
-	//	matProperties.Material = var.material;
-
-	//	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-
-
-	//	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-	//	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-	//	WVP = XMMatrixIdentity();
-	//	WVP = var.world * CamView *CamProjection;
-
-	//	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-
-
-	//	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-	//	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-	//	gDeviceContext->Draw(var.nrElements * 3, 0);
-	//}
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
 	{
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -1002,9 +932,9 @@ void RenderEngine::Update(float dt){
 		lightProp01.lights[0].AttQuadratic = 0.0f;
 		lightProp01.lights[0].Range = 10.0f;
 
-		float moveL = 0.01f;
+		float moveL = 0.0f;
 
-		if (lightOffsetTest <= 1.0f);
+		if (lightOffsetTest < 1.0f);
 		{
 			lightOffsetTest += moveL;
 			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
@@ -1013,7 +943,6 @@ void RenderEngine::Update(float dt){
 
 
 		lightProp01.lights[2].Type = l_Point;
-		
 		lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		lightProp01.lights[2].AttConst = 0.3f;
 		lightProp01.lights[2].AttLinear = 0.2f;
@@ -1021,17 +950,18 @@ void RenderEngine::Update(float dt){
 		lightProp01.lights[2].Range = 15.0f;
 
 		lightProp01.lights[3].Type = l_Point;
-		lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
+		lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
 		lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		lightProp01.lights[3].AttConst = 0.7f;
 		lightProp01.lights[3].AttLinear = 0.2f;
-		lightProp01.lights[3].AttQuadratic = 0.1f;
+		lightProp01.lights[3].AttQuadratic = 0.0f;
 		lightProp01.lights[3].Range = 15.0f;
 
 
 		lightProp01.lights[0].Active = 1;
 		lightProp01.lights[1].Active = 0;
 		lightProp01.lights[2].Active = 1;
+		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
 
 		

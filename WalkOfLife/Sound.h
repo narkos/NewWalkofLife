@@ -21,11 +21,14 @@ public:
 	void StopMp3();
 	void setVolume(long);
 	long getVolume();
+	void daCapo();
 
 	IGraphBuilder* g_pGraphBuilder = NULL;
 	IMediaControl* g_pPlaybackControl = NULL;
 	IBasicAudio*   g_pVolumeControl = NULL;
+	IMediaSeeking* g_pMediaSeeking = NULL;
 	int			   g_bReady = 0;
+	float soundTime = 0;
 
 	Sound();
 	~Sound();

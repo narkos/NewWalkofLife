@@ -61,8 +61,15 @@ public:
 	void Fonts();
 	void fpscounter();
 	void reset();
-	
-	Sound theSound;
+	void LoadSounds();
+
+
+	Sound soundJump;
+	Sound soundCoin;
+	Sound soundCigg;
+	Sound soundCream;
+	Sound soundBackground;
+	Sound soundMenu;
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;
 	Collision theCollision;

@@ -36,6 +36,9 @@ void Sound::LoadMp3(char filename[])
 		// create a simple interface for volume and balance
 		g_pGraphBuilder->QueryInterface(IID_IBasicAudio, (void **)&g_pVolumeControl);
 
+		g_pGraphBuilder->QueryInterface(IID_IMediaSeeking,
+			(void**)&g_pMediaSeeking);
+
 		// load and start playback of the specified sound file
 		if (SUCCEEDED(g_pGraphBuilder->RenderFile(wFile, NULL)))
 		{
@@ -117,4 +120,13 @@ long Sound::getVolume()
 		g_pVolumeControl->get_Volume(&vol);
 	}
 	return vol;
+}
+
+void Sound::daCapo()
+{
+	LONGLONG rt = 0;
+	g_pMediaSeeking->SetPositions(&rt,
+		AM_SEEKING_AbsolutePositioning,
+		NULL,
+		AM_SEEKING_NoPositioning);
 }

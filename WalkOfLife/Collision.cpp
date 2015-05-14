@@ -61,3 +61,16 @@ void Collision::TestCollision(vector<Platform> &platforms){
 	this->onGround = tempOnGround;
 	}
 
+XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables)
+{
+	for (int i = 0; i < collectables.size(); i++)
+	{
+		if (player->TestIntersect(collectables[i]) == true)
+		{
+			XMFLOAT2 temp;
+			temp.x = collectables[i].GetCoinValue();
+			temp.y = collectables[i].GetTimeValue();
+			return temp;
+		}
+	}
+}

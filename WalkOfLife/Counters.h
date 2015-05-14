@@ -1,5 +1,7 @@
 #include <windows.h>
+#include <DirectXMath.h>
 
+using namespace DirectX;
 
 class Counters{
 
@@ -17,6 +19,7 @@ public:
 	void takeCigg();
 	void takeCream();
 	void takeCoin();
+	void addCollectable(XMFLOAT2);
 
 	struct age
 	{

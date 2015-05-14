@@ -8,7 +8,7 @@
 #include "CollectableObject.h"
 #include "Platform.h"
 
-
+using namespace DirectX;
 
 class Collision{
 public:
@@ -28,6 +28,7 @@ public:
 	}
 
 	void TestCollision(vector<Platform> &platforms);
+	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables);
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);
 
 

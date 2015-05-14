@@ -1007,7 +1007,7 @@ void RenderEngine::Update(float dt){
 		if (lightOffsetTest <= 1.0f);
 		{
 			lightOffsetTest += moveL;
-			lightProp01.lights[2].Position = XMFLOAT4(5.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
+			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
 		}
 		
 

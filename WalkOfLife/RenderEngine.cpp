@@ -34,6 +34,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
 	this->theBinaryTree = new BinaryTree(100, 100);
+	this->LoadSounds();
 }
 
 // DESTRUCTOR
@@ -70,6 +71,13 @@ bool RenderEngine::Init(){
 	//Font
 	Fonts();
 
+	//highscore stuff
+	//theHighScore.AddScore(5, 2, 13);
+
+	//theHighScore.AddScore(2, 9, 3);
+	//theHighScore.AddScore(1, 2, 44);
+	//theHighScore.AddScore(1, 2, 1);
+	//theHighScore.ReOrganizeLists();
 	//Import
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
@@ -407,6 +415,7 @@ void RenderEngine::CreatePlaneData(){
 }
 
 // INITIALIZE DIRECTX OBJECT
+
 
 bool RenderEngine::InitDirect3D(HWND hWindow){
 
@@ -879,6 +888,8 @@ void RenderEngine::Render(){
 // UPDATES
 
 void RenderEngine::Update(float dt){
+	
+	soundBackground.PlayMp3();
 		Input theInput;
 		theInput.initInput(this->hInstance, hWindow);
 		int input = 0;
@@ -935,6 +946,7 @@ void RenderEngine::Update(float dt){
 			}
 			else
 			{
+			
 				this->theCharacter->Move(true); //right
 				rightDirection = true;
 			}
@@ -945,12 +957,22 @@ void RenderEngine::Update(float dt){
 		else
 			this->theCharacter->momentum = 0;
 
+		if (input == 3)
+		{
+			reset();
+		}
+
+		
+
 		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
 			theCharacter->setJumpMomentum(rightDirection);
+			soundJump.PlayMp3();
+			soundJump.daCapo();
 		}
+
 
 		if (theCollision.upValid() == false){
 			thePhysics.DisableUpForce();
@@ -1047,7 +1069,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(5, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.7841, 0);
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+
 
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
@@ -1059,14 +1082,14 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	else if (type == 1)
 	{
 		if (isStatic == false){
-			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 1, 1, 1, 1);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 		else{
-			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox, 0, 0, 0, 0);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			theBinaryTree->AddPlatform(testPlatform);
@@ -1075,7 +1098,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 	else
 	{
-		GameObject object(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true);
+		GameObject object(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, 0, 0, 0, 0);
 		object.nrElements = objectTest.GetNrElements();
 		theBinaryTree->AddObject(object);
 	}
@@ -1098,3 +1121,39 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 }
 
+void RenderEngine::reset()
+{
+	theCharacter->xPos = 4;
+	theCharacter->yPos = 9;
+	theCharacter->Translate(0, 0, 0);
+	theCharacter->setDivision(0);
+	theCharacter->momentum = 0;
+	theCharacter->jumpMomentumX = 0;
+	mainCamera.setCameraXPos(theCharacter->xPos);
+	mainCamera.setCameraYPos(theCharacter->yPos);
+	gCounter.theAge.years = 0;
+	gCounter.theAge.months = 0;
+	for (int i = 0; i < 100; i++)
+	{
+		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
+		{
+			theBinaryTree->renderObjects->at(i).at(j).SetActive(true);
+		}
+
+		for (int j = 0; j < theBinaryTree->testPlatforms->at(i).size(); j++)
+		{
+			theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
+		}
+
+	}
+}
+
+void RenderEngine::LoadSounds()
+{
+	soundBackground.InitMp3();
+	soundBackground.LoadMp3("WalkOfLife.mp3");
+	soundJump.InitMp3();
+	soundJump.LoadMp3("boing.wav");
+	
+	
+}

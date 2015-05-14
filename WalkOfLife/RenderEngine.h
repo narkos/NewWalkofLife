@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <DirectXCollision.h>
+#include "HighScore.h"
 
 //INLCUDE H FILES HERE
 
@@ -27,6 +28,7 @@
 #include "Counters.h"
 #include "Obj.h"
 #include "Light.h"
+#include "Sound.h"
 #include "Extra DirectXLibs\Inc\DDSTextureLoader.h"
 #include "Extra DirectXLibs\Inc\SpriteFont.h"
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
@@ -59,12 +61,22 @@ public:
 	virtual void Release();
 	void Fonts();
 	void fpscounter();
-	
+	void reset();
+	void LoadSounds();
+
+
+	Sound soundJump;
+	Sound soundCoin;
+	Sound soundCigg;
+	Sound soundCream;
+	Sound soundBackground;
+	Sound soundMenu;
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;
 	Collision theCollision;
 	OBJ theOBJ;
 	Physics thePhysics;
+	HighScore theHighScore;
 	GameTimer gTimer;
 	Counters gCounter;
 	PlayerObject* theCharacter;

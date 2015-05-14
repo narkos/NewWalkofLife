@@ -8,7 +8,7 @@ protected:
 	int timeValue;
 
 public:
-	CollectableObject(int coinValue, int timeValue, ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox) : CollisionObject(b, pos, isActive, isStatic, bbox){
+	CollectableObject(int coinValue, int timeValue, ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, BoundingBox bbox, float xInter, float yInter, float xSpeed, float ySpeed) : CollisionObject(b, pos, isActive, isStatic, bbox, xInter, yInter, xSpeed, ySpeed){
 		this->coinValue = coinValue;
 		this->timeValue = timeValue;
 

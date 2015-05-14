@@ -71,6 +71,13 @@ bool RenderEngine::Init(){
 	//Font
 	Fonts();
 
+	//highscore stuff
+	//theHighScore.AddScore(5, 2, 13);
+
+	//theHighScore.AddScore(2, 9, 3);
+	//theHighScore.AddScore(1, 2, 44);
+	//theHighScore.AddScore(1, 2, 1);
+	//theHighScore.ReOrganizeLists();
 	//Import
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
@@ -1033,7 +1040,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.784, 0);
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1f, 0.6f);
+
 
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
@@ -1045,14 +1053,14 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	else if (type == 1)
 	{
 		if (isStatic == false){
-			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 		else{
-			Platform testPlatform(false, objectTest.tempVerts, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			theBinaryTree->AddPlatform(testPlatform);

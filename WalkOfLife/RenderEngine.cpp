@@ -34,6 +34,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
 	this->theBinaryTree = new BinaryTree(100, 100);
+	this->theSound.InitMp3();
 }
 
 // DESTRUCTOR
@@ -949,8 +950,14 @@ void RenderEngine::Update(float dt){
 		if (input == 3)
 		{
 			reset();
-
 		}
+
+		if (input == 4)
+		{
+			theSound.LoadMp3("Sneeze.mp3");
+			theSound.PlayMp3();
+		}
+
 		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);

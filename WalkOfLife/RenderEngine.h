@@ -59,6 +59,7 @@ public:
 	virtual void Release();
 	void Fonts();
 	void fpscounter();
+	void reset();
 	
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;

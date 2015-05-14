@@ -946,6 +946,11 @@ void RenderEngine::Update(float dt){
 		else
 			this->theCharacter->momentum = 0;
 
+		if (input == 3)
+		{
+			reset();
+
+		}
 		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
@@ -1019,7 +1024,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 9, 9), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.7841, 0);
+		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0.1, 0.784, 0);
 
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
@@ -1068,5 +1073,32 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 
 
+}
+
+void RenderEngine::reset()
+{
+	theCharacter->xPos = 4;
+	theCharacter->yPos = 9;
+	theCharacter->Translate(0, 0, 0);
+	theCharacter->setDivision(0);
+	theCharacter->momentum = 0;
+	theCharacter->jumpMomentumX = 0;
+	mainCamera.setCameraXPos(theCharacter->xPos);
+	mainCamera.setCameraYPos(theCharacter->yPos);
+	gCounter.theAge.years = 0;
+	gCounter.theAge.months = 0;
+	for (int i = 0; i < 100; i++)
+	{
+		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
+		{
+			theBinaryTree->renderObjects->at(i).at(j).SetActive(true);
+		}
+
+		for (int j = 0; j < theBinaryTree->testPlatforms->at(i).size(); j++)
+		{
+			theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
+		}
+
+	}
 }
 

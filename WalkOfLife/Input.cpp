@@ -59,6 +59,11 @@ int Input::detectInput(HWND hWindow)
 	{
 		return 2;
 	}
+
+	if (keyboardState[DIK_R])		
+	{
+		return 3;
+	}
 	
 
 	return 0;

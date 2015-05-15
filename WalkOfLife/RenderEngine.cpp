@@ -609,7 +609,6 @@ void RenderEngine::Render(){
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-
 	// Draw Text
 	spriteBatch->Begin();
 
@@ -640,6 +639,7 @@ void RenderEngine::Render(){
 
 	spriteBatch->End();
 	///////////////////////////////////////////
+
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 	int bajs = 1;
@@ -679,27 +679,25 @@ void RenderEngine::Render(){
 	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(WorldInv));
 
 	
-	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+	/*gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);
+	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);*/
 	
 	
 	//RENDER OBJ FILES
-
+	gDeviceContext->IASetInputLayout(gVertexLayout);
+	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 	for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 	
-		gDeviceContext->IASetInputLayout(gVertexLayout);
-		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 		
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 		var.CalculateWorld();
-
 
 		var.material = MatPresets::Emerald;
 		matProperties.Material = var.material;
@@ -723,13 +721,8 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 	{
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-		gDeviceContext->IASetInputLayout(gVertexLayout);
 		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
 
 		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
 		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
@@ -774,7 +767,6 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
 		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
 		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
-		//var.world = XMMatrixIdentity();
 		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 		gDeviceContext->Draw(16, 0);

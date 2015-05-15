@@ -18,15 +18,15 @@ class Entity{
 protected:
 	bool isActive; //ska vi rendera detta eller inte? jag lägger denna här ifall vi tex vill kunna stänga av ljus oxå
 	bool isStatic;
-
-
-
 	XMMATRIX rot;
 	XMMATRIX scale;
-
-
 	float xInterval, yInterval, xSpeed, ySpeed;
 	XMFLOAT3 currIntervalPosition;
+
+
+
+	
+
 public:
 	XMFLOAT3 playerStartIntervalPosition; //används som ett sorts index för moving objects, se PlayerObject TestDown()
 	XMMATRIX pos;
@@ -54,6 +54,19 @@ public:
 
 		rot = XMMatrixIdentity(); //den rotationen och skalningen som den importeras in som kommer vara standard värdet
 		scale = XMMatrixIdentity();
+
+
+		//Slam Test Variable initializations
+		slamWaitTime = 0.0f;
+		//float slamDeltaTime;
+		slamStartTime = 0.0f;
+		slamMomentum = 0.0f;
+		//bool slamHasBegun;
+		slamReturning = false;
+		slamDirection = -1.0f;
+		slamSpeedMultiplier = 1.0f;
+
+
 	}
 
 	Entity(){
@@ -93,12 +106,72 @@ public:
 	bool GetActive(){ return isActive; }
 	bool GetStatic(){ return isStatic; }
 
+	float GetXInterval(void)
+	{
+		return xInterval;
+	}
+	
+	float GetYInterval(void)
+	{
+		return yInterval;
+	}
+
 	void PatrolInterval(float time){
 		//applya xSpeed och ySpeed på nått sätt
-		this->currIntervalPosition.x = sinf(time) * xInterval;
-		this->currIntervalPosition.y = sinf(time) * yInterval;
+		this->currIntervalPosition.x = sinf(xSpeed*time) * xInterval;
+		this->currIntervalPosition.y = sinf(ySpeed*time) * yInterval;
 		this->currIntervalPosition.z = 0;
 		this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
+	}
+
+	//Slam Variables
+	float slamWaitTime;
+	//float slamDeltaTime;
+	float slamStartTime;
+	
+	float slamMomentum;
+	//bool slamHasBegun;
+	bool slamReturning;
+	int slamDirection;
+	float slamSpeedMultiplier;
+
+	void SlamaJamma(float time)
+	{
+	
+		
+		slamMomentum = (time - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
+		this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
+		if (!slamReturning)
+		{
+			if (currIntervalPosition.y > -yInterval)
+			{
+				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
+			}
+			else
+			{
+				slamDirection = slamDirection * -1.0f;
+				slamSpeedMultiplier = 0.1f; //Decrease the speed on Slammer return cycle
+				slamMomentum = 0.0f;
+				slamStartTime = time;
+				slamReturning = true;
+			}
+		}
+		else
+		{
+			if (currIntervalPosition.y < yInterval)
+			{
+				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
+			}
+			else
+			{
+				slamDirection = slamDirection * -1.0f;
+				slamSpeedMultiplier = 1.0f; //Set full speed for slam
+				slamMomentum = 0.0f;
+				slamStartTime = time;
+				slamReturning = false;
+			}
+		}
+				
 	}
 
 	XMFLOAT3 GetCurrIntervalPos(){

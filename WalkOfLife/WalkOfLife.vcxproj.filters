@@ -58,6 +58,9 @@
     <Filter Include="Resource Files\Light Computation">
       <UniqueIdentifier>{6ea09ecd-0ca2-47c3-9568-784080c333bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Meny">
+      <UniqueIdentifier>{7422f9b5-0d11-468d-a842-3dd6aef2e49c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -101,6 +104,15 @@
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Menuclass.cpp">
+      <Filter>Header Files\Meny</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +181,15 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menuclass.h">
+      <Filter>Header Files\Meny</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

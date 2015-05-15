@@ -60,12 +60,12 @@ int Input::detectInput(HWND hWindow)
 		return 2;
 	}
 
-	if (keyboardState[DIK_R])		
+	if (keyboardState[DIK_G])		
 	{
 		return 3;
 	}
 
-	if (keyboardState[DIK_S])
+	if (keyboardState[DIK_R])
 	{
 		return 4;
 	}

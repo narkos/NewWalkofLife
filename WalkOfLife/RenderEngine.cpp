@@ -67,6 +67,7 @@ bool RenderEngine::Init(){
 	Shaders();
 	CreatePlaneData();
 	TextureFunc();
+	mainMenu.CreateTextures(gDevice);
 
 	//Font
 	Fonts();
@@ -76,9 +77,9 @@ bool RenderEngine::Init(){
 
 	//theHighScore.AddScore(2, 9, 3);
 	//theHighScore.AddScore(1, 2, 44);
-	//theHighScore.AddScore(1, 2, 1);
+	////theHighScore.AddScore(1, 2, 1);
 	//theHighScore.ReOrganizeLists();
-	//Import
+	////Import
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
 	
@@ -581,13 +582,26 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
-			fpscounter();
-			if ((gTimer.TotalTime() - time3) >= 0.01f)
+			if (mainMenu.getPause() == FALSE)
+			{
+				if ((gTimer.TotalTime() - time3) >= 0.01f)
+				{
+					fpscounter();
+					Update(0.0f);
+					Render();
+					time3 = gTimer.TotalTime();
+				}
+			}
+			if (mainMenu.getPause() == TRUE)
 			{
 
-				Update(0.0f);
-				Render();
-				time3 = gTimer.TotalTime();
+				/*	scrolltime = gTimer.TotalTime();
+				if (gTimer.TotalTime() >= scrolltime+1.0f)*/
+
+				MenuUpdate(0.0f);
+				mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+
+
 			}
 			
 		}
@@ -609,6 +623,10 @@ void RenderEngine::Render(){
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+	if (mainMenu.getPause() == TRUE)
+	{
+		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+	}
 	// Draw Text
 	spriteBatch->Begin();
 
@@ -884,6 +902,19 @@ void RenderEngine::Update(float dt){
 
 		if (input == 3)
 		{
+			//reset();
+			pausYearCount = gCounter.theAge.years;
+			pausMonthCount = gCounter.theAge.months;
+			pauseTime = gTimer.TotalTime();
+			menuTime = gTimer.TotalTime();
+			gTimer.Stop();
+
+			//pauseTime = 100;
+
+			mainMenu.setPause(TRUE);
+		}
+		if (input == 4)
+		{
 			reset();
 		}
 
@@ -961,6 +992,83 @@ void RenderEngine::Update(float dt){
 
 		
 	
+}
+void RenderEngine::MenuUpdate(float tt){
+	Menu Menuinput;
+	Menuinput.menuInit(this->hInstance, hWindow);
+	int input2 = 0;
+
+	int currentTabTemp = mainMenu.getCurrentTab();
+	int scrolltime = gTimer.TotalTime();
+	//if (gTimer.TotalTime() >= scrolltime + 1.0f)
+
+	if (gTimer.TotalTime() >= menuTime + 0.14f) // Om det gått 0.14 sec sen ditt senaste knapptryck
+	{
+		input2 = Menuinput.menuInput(hWindow);
+
+		if (input2 == 2)
+		{
+			if (iz < 3)
+				iz++;
+			else
+				iz = 1;
+			menuTime = gTimer.TotalTime();
+
+		}
+		if (input2 == 1)
+		{
+			if (iz > 1)
+				iz--;
+			else
+				iz = 3;
+
+			menuTime = gTimer.TotalTime();
+		}
+
+		if (input2 == 3)
+		{
+			//run wichever tab i currently selected --------------------------------------- button functions
+			if (mainMenu.getCurrentTab() == 1)
+			{
+				//gTimer.setPausedTime(pauseTime);
+				//gTimer.setCurrTime(pauseTime);
+				gTimer.Start(pauseTime);
+				mainMenu.setPause(FALSE);
+				menuTime = 0;
+			}
+			else if (mainMenu.getCurrentTab() == 2)
+			{
+				// open highscores
+
+			}
+			else if (mainMenu.getCurrentTab() == 3)
+			{
+				PostMessage(hWindow, WM_QUIT, 0, 0);
+			}
+
+
+		}
+
+		mainMenu.setCurrentTab(iz);
+
+
+		if (input2 == 4)
+		{
+			gTimer.Start(pauseTime);
+
+			//gTimer.setCurrTime(pauseTime);
+			//__int64 Paous = gTimer.TotalTime() - pauseTime;
+			//gTimer.setPausedTime(Paous);
+			mainMenu.setPause(FALSE);
+			menuTime = 0;
+
+			//float gTimer.TotalTime() = pauseTime;
+
+		}
+	}
+
+
+
 }
 
 // REALESE AND CLEANUP

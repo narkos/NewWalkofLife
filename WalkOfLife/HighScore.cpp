@@ -64,3 +64,27 @@ void HighScore::ReOrganizeLists(){
 	}
 	SaveHighScore();
 }
+
+void HighScore::Highscorespritebatch()
+{
+	spriteBatch_HS->Begin();
+
+	std::wstring C_coin1 = std::to_wstring(coinList[0].coins);
+	std::wstring C_time1 = std::to_wstring(coinList[0].time);
+	std::wstring C_point1 = std::to_wstring(coinList[0].points);
+	std::wstring coinz(L"Coins: ");
+	std::wstring timez(L"\nYear: ");
+	std::wstring pointz(L"\nMonth: ");
+	std::wstring C_list1 = coinz + C_coin1 + timez + C_time1 + pointz + C_point1;
+
+	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
+
+
+	const wchar_t* C_LIST_1 = C_list1.c_str();
+
+	
+
+	spritefont_HS->DrawString(spriteBatch_HS.get(), C_LIST_1, DirectX::SimpleMath::Vector2(20, 100));
+
+	spriteBatch_HS->End();
+}

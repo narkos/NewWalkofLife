@@ -33,6 +33,7 @@
 #include "Extra DirectXLibs\Inc\SpriteFont.h"
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
 #include "Extra DirectXLibs\Inc\SimpleMath.h"
+#include "Menuclass.h"
 
 using namespace DirectX;
 
@@ -57,6 +58,7 @@ public:
 	void SetViewport();
 	virtual bool Init();
 	void Update(float dt);
+	void MenuUpdate(float tt);
 	void Render();
 	virtual void Release();
 	void Fonts();
@@ -81,6 +83,7 @@ public:
 	Counters gCounter;
 	PlayerObject* theCharacter;
 	Camera mainCamera;
+	Menu mainMenu;
 	std::wstring mainwname;
 	bool rightDirection;
 
@@ -185,5 +188,13 @@ protected:
 	ID3D11VertexShader* gWireFrameVertexShader = nullptr;
 	ID3D11PixelShader* gWireFramePixelShader = nullptr;
 	ID3D11InputLayout* gWireFrameLayout = nullptr;
+	//////////////////////Anton
+	float pauseTime = 0;
+	float menuTime = 0;
+	int pausYearCount;
+	int pausMonthCount;
+	int Tabofdoom;
+	float scrolltime;
+	int iz = 1;
 
 };

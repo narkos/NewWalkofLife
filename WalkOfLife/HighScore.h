@@ -3,6 +3,11 @@
 #include <d3d11.h>
 #include <vector>
 #include <string>
+#include "Extra DirectXLibs\Inc\DDSTextureLoader.h"
+#include "Extra DirectXLibs\Inc\SpriteFont.h"
+#include "Extra DirectXLibs\Inc\SpriteBatch.h"
+#include "Extra DirectXLibs\Inc\SimpleMath.h"
+using namespace DirectX;
 
 using namespace std;
 class HighScore{
@@ -24,8 +29,8 @@ private:
 public:
 
 	HighScore(){
-		fileNameLoad = "C:\\Users\\Simon\\Desktop\\HighScoreLoad.txt";
-		fileNameSave = "C:\\Users\\Simon\\Desktop\\HighScoreLoad.txt";
+		fileNameLoad = "HighScoreLoad.txt";
+		fileNameSave = "HighScoreLoad.txt";
 		bool isFine;
 		isFine = LoadHighScore();
 	}
@@ -34,6 +39,9 @@ public:
 	bool LoadHighScore();
 
 	bool SaveHighScore();
+	//anton
+	std::unique_ptr<DirectX::SpriteFont> spritefont_HS;
+	std::unique_ptr<DirectX::SpriteBatch> spriteBatch_HS;
 
 	void AddScore(int coins, int time, int points){
 		Score scoreTemp;
@@ -66,4 +74,5 @@ public:
 	vector<Score> GetTimeList(){
 		return timeList;
 	}
+	void Highscorespritebatch();
 };

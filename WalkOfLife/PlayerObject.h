@@ -159,6 +159,17 @@ public:
 		else return false;
 	}
 
+	bool TestIntersect(CollisionObject pObj){
+		if (pObj.GetActive() == true){
+			if (bbox.Intersects(pObj.GetBBOX()) == true) //denna bör vi nog använda, fast använd rays istället
+				return true;
+			else if (bbox.Contains(pObj.GetBBOX()) == true)
+				return true;
+			else return false;
+		}
+		else return false;
+	}
+
 	bool TestUp(Platform pObj){
 		if (pObj.GetActive() == true){
 			if (pObj.GetBBOX().Intersects(originHigh, up, rayLength) == true){
@@ -276,7 +287,57 @@ public:
 		else return false;
 	}
 
+	bool TestRight(CollectableObject pObj){
+		if (pObj.GetActive() == true){
+			if (pObj.GetBBOX().Intersects(originMiddle, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
+						if (rayLength < rayRangeSides){
+							if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
+								if (rayLength < rayRangeSides){
+									return true;
+								}
+								else return false;
+							}
+							else return false;
+						}
+						else return false;
+					}
+					else return false;
+				}
+				else return false;
+			}
+			else return false;
+		}
+		else return false;
+	}
+
 	bool TestLeft(Platform pObj){
+		if (pObj.GetActive() == true){
+			if (pObj.GetBBOX().Intersects(originMiddle, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
+						if (rayLength < rayRangeSides){
+							if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
+								if (rayLength < rayRangeSides){
+									return true;
+								}
+								else return false;
+							}
+							else return false;
+						}
+						else return false;
+					}
+					else return false;
+				}
+				else return false;
+			}
+			else return false;
+		}
+		else return false;
+	}
+
+	bool TestLeft(CollectableObject pObj){
 		if (pObj.GetActive() == true){
 			if (pObj.GetBBOX().Intersects(originMiddle, left, rayLength) == true){
 				if (rayLength < rayRangeSides){

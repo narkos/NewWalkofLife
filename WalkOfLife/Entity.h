@@ -57,15 +57,17 @@ public:
 
 
 		//Slam Test Variable initializations
-		slamWaitTime = 0.0f;
-		//float slamDeltaTime;
+		slamWaitTime = 1.0f;
+		slamDeltaTime = 0.0f;
+		slamStopTime = 0.0f;
 		slamStartTime = 0.0f;
 		slamMomentum = 0.0f;
 		//bool slamHasBegun;
 		slamReturning = false;
+		slamHasStopped = false;
 		slamDirection = -1.0f;
 		slamSpeedMultiplier = 1.0f;
-
+		slamReset = false;
 
 	}
 
@@ -126,21 +128,30 @@ public:
 
 	//Slam Variables
 	float slamWaitTime;
-	//float slamDeltaTime;
+	float slamDeltaTime;
+	float slamStopTime;
 	float slamStartTime;
-	
+	bool slamHasStopped;
 	float slamMomentum;
 	//bool slamHasBegun;
 	bool slamReturning;
 	int slamDirection;
 	float slamSpeedMultiplier;
-
+	bool slamReset;
 	void SlamaJamma(float time)
 	{
 	
-		
-		slamMomentum = (time - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
-		this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
+		if (!slamHasStopped)
+		{
+			if (slamReset)
+			{
+				slamStartTime = time;
+				slamReset = false;
+			}
+			slamMomentum = (time - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
+			this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
+		}
+
 		if (!slamReturning)
 		{
 			if (currIntervalPosition.y > -yInterval)
@@ -149,11 +160,27 @@ public:
 			}
 			else
 			{
-				slamDirection = slamDirection * -1.0f;
-				slamSpeedMultiplier = 0.1f; //Decrease the speed on Slammer return cycle
-				slamMomentum = 0.0f;
-				slamStartTime = time;
-				slamReturning = true;
+				if (!slamHasStopped)
+				{
+					slamStopTime = time;
+					slamMomentum = 0.0f;
+					slamHasStopped = true;
+				}
+
+				slamDeltaTime = time - slamStopTime;
+
+				if (slamDeltaTime >= slamWaitTime)
+				{
+					slamDirection = slamDirection * -1.0f;
+					slamSpeedMultiplier = 0.1f; //Decrease the speed on Slammer return cycle
+					slamMomentum = 0.0f;
+					slamStartTime = time;
+					slamReturning = true;
+					slamHasStopped = false;
+					slamDeltaTime = 0.0f;
+					slamReset = true;
+				}
+			
 			}
 		}
 		else
@@ -164,11 +191,26 @@ public:
 			}
 			else
 			{
-				slamDirection = slamDirection * -1.0f;
-				slamSpeedMultiplier = 1.0f; //Set full speed for slam
-				slamMomentum = 0.0f;
-				slamStartTime = time;
-				slamReturning = false;
+				if (!slamHasStopped)
+				{
+					slamStopTime = time;
+					slamMomentum = 0.0f;
+					slamHasStopped = true;
+				}
+
+				slamDeltaTime = time - slamStopTime;
+				if (slamDeltaTime >= slamWaitTime)
+				{
+					slamDirection = slamDirection * -1.0f;
+					slamSpeedMultiplier = 1.0f; //Set full speed for slam
+					slamMomentum = 0.0f;
+					slamStartTime = time;
+					slamReturning = false;
+					slamHasStopped = false;
+					slamDeltaTime = 0.0f;
+					slamReset = true;
+				}
+		
 			}
 		}
 				

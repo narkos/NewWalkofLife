@@ -66,35 +66,36 @@ bool RenderEngine::Init(){
 	//Initialize Shaders and triangle data
 	Shaders();
 	CreatePlaneData();
+	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
 	{
 		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
 	}
-	//for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicPlatforms().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicCollectableObject().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicDeadlyObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetStaticCollectableObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetStaticDeadlyObjects().at(i));
-	//}
+	for (int i = 0; i < theCustomImporter.GetBackGroundObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetDynamicPlatforms().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetDynamicCollectableObject().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetDynamicDeadlyObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetStaticCollectableObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetStaticDeadlyObjects().at(i));
+	}
 
 	TextureFunc();
 	mainMenu.CreateTextures(gDevice);
@@ -115,6 +116,7 @@ bool RenderEngine::Init(){
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
+
 	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
 	//theBinaryTree->testPlatforms->at(0).at(0).Translate(0.0f, -2000.0f, 0.0f);
 	//ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
@@ -125,6 +127,7 @@ bool RenderEngine::Init(){
 	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
 	int test = 1;
 //	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2, true);
+
 
 	////LIGHT TEST ZONE BITCHES
 
@@ -290,7 +293,7 @@ void RenderEngine::fpscounter()
 void RenderEngine::TextureFunc(){
 
 	HRESULT texCheck;
-	texCheck = CreateDDSTextureFromFile(gDevice, L"Textures/temp.dds", nullptr, &ddsTex1);
+	texCheck = CreateDDSTextureFromFile(gDevice, L"Textures/Lowpoly_man.dds", nullptr, &ddsTex1);
 
 }
 
@@ -1101,12 +1104,13 @@ void RenderEngine::Update(float dt){
 
 		
 
-		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
+		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false && gTimer.TotalTime() - theCharacter->jumpTimer > 0.5) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
 			soundJump.PlayMp3();
 			soundJump.daCapo();
+			theCharacter->jumpTimer = gTimer.TotalTime();
 		}
 
 

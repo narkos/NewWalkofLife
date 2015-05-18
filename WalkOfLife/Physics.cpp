@@ -17,7 +17,7 @@ void Physics::Gravitation(Collision theCollision, PlayerObject *theCharacter)
 {
 	if (theCharacter->jumping == true)
 	{
-		this->upforce = this->upforce * 1.30;
+		this->upforce = this->upforce * 1.70;
 	}
 
 	if (this->upforce > theCharacter->getJumpHeight())

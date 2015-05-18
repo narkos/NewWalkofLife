@@ -101,7 +101,7 @@ public:
 	vector<Platform> GetDynamicPlatforms(){
 		return dynamicPlatforms;
 	}
-	vector<PlayerObject> GetPlatforms(){
+	vector<PlayerObject> GetPlayers(){
 		return players;
 	}
 	vector<GameObject> GetBackGroundObjects(){

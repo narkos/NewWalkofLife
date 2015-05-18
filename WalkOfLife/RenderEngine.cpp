@@ -620,7 +620,7 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 			if (mainMenu.getPause() == FALSE)
 			{
-				if ((gTimer.TotalTime() - time3) >= 0.01f)
+				if ((gTimer.TotalTime() - time3) >= 0.02f)
 				{
 					fpscounter();
 					Update(0.0f);
@@ -975,6 +975,21 @@ void RenderEngine::Update(float dt){
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
 
+		if (!theCollision.rightValid())
+		{
+			theCharacter->jumpMomentumX = 0;
+		}
+
+		if (!theCollision.leftValid())
+		{
+			theCharacter->jumpMomentumX = 0;
+		}
+
+		if (!theCollision.isGrounded() && !theCharacter->jumpMomentumState)
+		{
+			theCharacter->setJumpMomentum(rightDirection);
+		}
+
 		if (gTimer.TotalTime() - theCharacter->dashTimer > 0.30f && !theCharacter->dashDisabling)
 		{
 			theCharacter->momentum = 1;
@@ -1085,7 +1100,6 @@ void RenderEngine::Update(float dt){
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
-			theCharacter->setJumpMomentum(rightDirection);
 			soundJump.PlayMp3();
 			soundJump.daCapo();
 		}

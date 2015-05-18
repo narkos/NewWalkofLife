@@ -2,12 +2,12 @@
 
 void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 	ifstream fbxFile;
-	fbxFile.open(fileName, ios::in | ios::binary);
+	fbxFile.open(fileName, ifstream::binary);
 
 	FileInfo fileInfo;
 	fbxFile.read((char*)&fileInfo.nrMeshes, sizeof(int));
 	fbxFile.read((char*)&fileInfo.nrLights, sizeof(int));
-	fbxFile.read((char*)&fileInfo.nrMaterials, sizeof(int));
+	//fbxFile.read((char*)&fileInfo.nrMaterials, sizeof(int));
 
 
 	for (int i = 0; i < fileInfo.nrMeshes; i++){ //loopa igenom alla meshes
@@ -30,106 +30,140 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		
 
 		//ladda in indecies kanske?
-		int const meshType = meshInfo.meshType;
-		float const xInterval = meshInfo.xInterval;
-		float const yInterval = meshInfo.yInterval;
-		float const xSpeed = meshInfo.xSpeed;
-		float const ySpeed = meshInfo.ySpeed;
-		int const coinValue = meshInfo.coinValue;
-		int const timeValue = meshInfo.timeValue;
+		int meshType = meshInfo.meshType;
+		float xInterval = meshInfo.xInterval;
+		float yInterval = meshInfo.yInterval;
+		float xSpeed = meshInfo.xSpeed;
+		float ySpeed = meshInfo.ySpeed;
+		int coinValue = meshInfo.coinValue;
+		int timeValue = meshInfo.timeValue;
 
-		int const nrOfAnimations = meshInfo.nrAnimations;
-		int const nrOfBones = meshInfo.nrBones;
-		int const nrOfVertexPositions = meshInfo.nrPos;
-		int const nrOfVertexNormals = meshInfo.nrNor;
-		int const nrOfVertexUVs = meshInfo.nrUV;
-		int const nrOfVertexTangents = meshInfo.nrTangents;
-		int const nrOfFaces = meshInfo.nrFaces;
+		if (xInterval < 0)
+			xInterval = 0;
+		if (yInterval < 0)
+			yInterval = 0;
+		if (xSpeed < 0)
+			xSpeed = 0;
+		if (ySpeed < 0)
+			ySpeed = 0;
+
+		int nrOfAnimations = meshInfo.nrAnimations;
+		int nrOfBones = meshInfo.nrBones;
+		int nrOfVertexPositions = meshInfo.nrPos;
+		int nrOfVertexNormals = meshInfo.nrNor;
+		int nrOfVertexUVs = meshInfo.nrUV;
+		int nrOfVertexTangents = meshInfo.nrTangents;
+		int nrOfFaces = meshInfo.nrFaces;
 
 		ID3D11Buffer* meshVertexBuffer;
 
-
-		//VertexData *vertecies = new VertexData[nrOfFaces * 3];
 		vector<VertexData> vertecies;
-		FaceData *faces = new FaceData[nrOfFaces];
+		/*FaceData *faces = new FaceData[nrOfFaces];
 
 		XMFLOAT3 *verPos = new XMFLOAT3[nrOfVertexPositions];
 		XMFLOAT3 *verNor = new XMFLOAT3[nrOfVertexNormals];
 		XMFLOAT2 *verUV = new XMFLOAT2[nrOfVertexUVs];
 		XMFLOAT3 *verTangent = new XMFLOAT3[nrOfVertexTangents];
-		//Float3 *verIndecies = new Float3[nrOfFaces * 3];
+		*/
+		vector<FaceData> faces;
+		vector<XMFLOAT3> verPos;
+		vector<XMFLOAT3> verNor;
+		vector<XMFLOAT2> verUV;
+		vector<XMFLOAT3> verTangent;
+
+		XMFLOAT3 temp3;
+		XMFLOAT2 temp2;
 
 		//ladda in vertexvärden för meshen
 		for (int p = 0; p < nrOfVertexPositions; p++){
-			fbxFile.read((char*)&verPos[p].x, sizeof(float));
-			fbxFile.read((char*)&verPos[p].y, sizeof(float));
-			fbxFile.read((char*)&verPos[p].z, sizeof(float));
+			XMFLOAT3 temp3;
+		
+			fbxFile.read((char*)&temp3.x, sizeof(float));
+			fbxFile.read((char*)&temp3.y, sizeof(float));
+			fbxFile.read((char*)&temp3.z, sizeof(float));
+			verPos.push_back(temp3);
 		}
-
+		
 		for (int p = 0; p < nrOfVertexNormals; p++){
-			fbxFile.read((char*)&verNor[p].x, sizeof(float));
-			fbxFile.read((char*)&verNor[p].y, sizeof(float));
-			fbxFile.read((char*)&verNor[p].z, sizeof(float));
+			XMFLOAT3 temp3;
+		
+			fbxFile.read((char*)&temp3.x, sizeof(float));
+			fbxFile.read((char*)&temp3.y, sizeof(float));
+			fbxFile.read((char*)&temp3.z, sizeof(float));
+			verNor.push_back(temp3);
 		}
 
 		for (int p = 0; p < nrOfVertexUVs; p++){
-			fbxFile.read((char*)&verUV[p].x, sizeof(float));
-			fbxFile.read((char*)&verUV[p].y, sizeof(float));
+			XMFLOAT2 temp2;
+
+			fbxFile.read((char*)&temp2.x, sizeof(float));
+			fbxFile.read((char*)&temp2.y, sizeof(float));
+			verUV.push_back(temp2);
 		}
 
 		for (int p = 0; p < nrOfVertexTangents; p++){
-			fbxFile.read((char*)&verTangent[p].x, sizeof(float));
-			fbxFile.read((char*)&verTangent[p].y, sizeof(float));
-			fbxFile.read((char*)&verTangent[p].z, sizeof(float));
+			XMFLOAT3 temp3;
+		
+			fbxFile.read((char*)&temp3.x, sizeof(float));
+			fbxFile.read((char*)&temp3.y, sizeof(float));
+			fbxFile.read((char*)&temp3.z, sizeof(float));
+			verTangent.push_back(temp3);
 		}
 
 		//tangent här
 
 		//ladda in indeciesen och skapa vertiserna
-		XMFLOAT3 tempVerIndex;
+		Int4 tempVerIndex;
 		VertexData tempVertex;
+		FaceData tempFaceData;
 		for (int y = 0; y < nrOfFaces; y++){
-			fbxFile.read((char*)&tempVerIndex.x, sizeof(float));
-			fbxFile.read((char*)&tempVerIndex.y, sizeof(float));
-			fbxFile.read((char*)&tempVerIndex.z, sizeof(float));
+			fbxFile.read((char*)&tempVerIndex.x, sizeof(int));
+			fbxFile.read((char*)&tempVerIndex.y, sizeof(int));
+			fbxFile.read((char*)&tempVerIndex.z, sizeof(int));
+			
+			tempFaceData.indexPos[0] = tempVerIndex.x;
+			tempFaceData.indexUV[0] = tempVerIndex.y;
+			tempFaceData.indexNor[0] = tempVerIndex.z;
+			
+			//tempFaceData.indexTangent[0] = tempVerIndex.w;
+			
+			fbxFile.read((char*)&tempVerIndex.x, sizeof(int));
+			fbxFile.read((char*)&tempVerIndex.y, sizeof(int));
+			fbxFile.read((char*)&tempVerIndex.z, sizeof(int));
+			
 
-			faces[y].indexPos[0] = tempVerIndex.x;
-			faces[y].indexNor[0] = tempVerIndex.y;
-			faces[y].indexUV[0] = tempVerIndex.z;
+			tempFaceData.indexPos[1] = tempVerIndex.x;
+			tempFaceData.indexUV[1] = tempVerIndex.y;
+			tempFaceData.indexNor[1] = tempVerIndex.z;
+			
+			fbxFile.read((char*)&tempVerIndex.x, sizeof(int));
+			fbxFile.read((char*)&tempVerIndex.y, sizeof(int));
+			fbxFile.read((char*)&tempVerIndex.z, sizeof(int));
+			
 
-			fbxFile.read((char*)&tempVerIndex.x, sizeof(float));
-			fbxFile.read((char*)&tempVerIndex.y, sizeof(float));
-			fbxFile.read((char*)&tempVerIndex.z, sizeof(float));
-
-			faces[y].indexPos[1] = tempVerIndex.x;
-			faces[y].indexNor[1] = tempVerIndex.y;
-			faces[y].indexUV[1] = tempVerIndex.z;
-
-			fbxFile.read((char*)&tempVerIndex.x, sizeof(float));
-			fbxFile.read((char*)&tempVerIndex.y, sizeof(float));
-			fbxFile.read((char*)&tempVerIndex.z, sizeof(float));
-
-			faces[y].indexPos[2] = tempVerIndex.x;
-			faces[y].indexNor[2] = tempVerIndex.y;
-			faces[y].indexUV[2] = tempVerIndex.z;
+			tempFaceData.indexPos[2] = tempVerIndex.x;
+			tempFaceData.indexUV[2] = tempVerIndex.y;
+			tempFaceData.indexNor[2] = tempVerIndex.z;
+			
+			faces.push_back(tempFaceData);
 
 			//skapa facet (vertiserna)!
-			tempVertex.vertPos = verPos[faces[y].indexPos[0]];
-			tempVertex.vertNor = verNor[faces[y].indexNor[0]];
-			tempVertex.vertUV = verUV[faces[y].indexUV[0]];
-			tempVertex.vertTangent = verTangent[faces[y].indexTangent[0]];
+			tempVertex.vertPos = verPos[faces[y].indexPos[0]-1];
+			tempVertex.vertUV = verUV[faces[y].indexUV[0]-1];
+			tempVertex.vertNor = verNor[faces[y].indexNor[0] - 1];
+			//tempVertex.vertTangent = verTangent[0];
 			vertecies.push_back(tempVertex); //vertex 1 i triangeln
 
-			tempVertex.vertPos = verPos[faces[y].indexPos[1]];
-			tempVertex.vertNor = verNor[faces[y].indexNor[1]];
-			tempVertex.vertUV = verUV[faces[y].indexUV[1]];
-			tempVertex.vertTangent = verTangent[faces[y].indexTangent[1]];
+			tempVertex.vertPos = verPos[faces[y].indexPos[1]-1];			
+			tempVertex.vertUV = verUV[faces[y].indexUV[1]-1];
+			tempVertex.vertNor = verNor[faces[y].indexNor[1] - 1];
+			//tempVertex.vertTangent = verTangent[0];
 			vertecies.push_back(tempVertex); //vertex 2 i triangeln
 
-			tempVertex.vertPos = verPos[faces[y].indexPos[2]];
-			tempVertex.vertNor = verNor[faces[y].indexNor[2]];
-			tempVertex.vertUV = verUV[faces[y].indexUV[2]];
-			tempVertex.vertTangent = verTangent[faces[y].indexTangent[2]];
+			tempVertex.vertPos = verPos[faces[y].indexPos[2]-1];
+			tempVertex.vertUV = verUV[faces[y].indexUV[2]-1];
+			tempVertex.vertNor = verNor[faces[y].indexNor[2] - 1];
+			//tempVertex.vertTangent = verTangent[0];
 			vertecies.push_back(tempVertex); //vertex 3 i triangeln
 		}
 
@@ -143,11 +177,17 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		data.pSysMem = vertecies.data();//<--------
 		HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &meshVertexBuffer);
 		
-		delete verPos;
-		delete verNor;
-		delete verUV;
-		delete verTangent;
-		delete faces;
+		//delete verPos;
+		//delete verNor;
+		//delete verUV;
+		//delete verTangent;
+		//delete faces;
+
+		verPos.clear();
+		verNor.clear();
+		verUV.clear();
+		verTangent.clear();
+		faces.clear();
 		
 		float centerX, centerY, extentX, extentY;
 
@@ -155,71 +195,8 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		fbxFile.read((char*)&centerY, sizeof(float));
 		fbxFile.read((char*)&extentX, sizeof(float));
 		fbxFile.read((char*)&extentY, sizeof(float));
-		 //adda dem på listorna
-		if (meshType == 0){ //static
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			staticPlatforms.push_back(tempP);
-		}
-		else if (meshType == 1){ //nonstatic
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			dynamicPlatforms.push_back(tempP);
-		}
-		else if (meshType == 2){ //player
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
-			players.push_back(tempPlayer);
-		}
-		else if (meshType == 3){ //backgroundobj
-			GameObject tempO(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, xInterval, yInterval, xSpeed, ySpeed);
-			backGroundObjects.push_back(tempO);
-		}
-		else if (meshType == 4){ //collectable
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			staticCollectableObjects.push_back(tempC);
-		}
-		else if (meshType == 5){ //deadly
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			staticDeadlyObjects.push_back(tempP);
-		}
-		else if (meshType == 6){ //deadlymoving
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			dynamicDeadlyObjects.push_back(tempP);
-		}
-		else if (meshType == 7){ //collectablemoving
-			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
-			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			dynamicCollectableObjects.push_back(tempC);
-		}
-		//delete meshVertexBuffer
 
-		for (int i = 0; i < nrOfAnimations; i++){
-
-		}
-
-		for (int i = 0; i < nrOfBones; i++){
-
-		}
-		
-		//MATERIAL
+		//MATERIAL!!!!!!
 		XMFLOAT4 KD;
 		XMFLOAT4 KA;
 		XMFLOAT4 KS;
@@ -243,19 +220,87 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		fbxFile.read((char*)&specularPowah, sizeof(float));
 		fbxFile.read((char*)&trans, sizeof(float));
 
-		MatInfo material(KA, KD, KS, specularPowah);
+		//MatInfo material(KA, KD, KS, specularPowah);
+
+
+		 //adda dem på listorna
+		if (meshType == 0 || meshType < 0){ //static
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 1000);
+			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.nrElements = nrOfFaces;
+			staticPlatforms.push_back(tempP);
+		}
+		else if (meshType == 1){ //nonstatic
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.nrElements = nrOfFaces;
+			dynamicPlatforms.push_back(tempP);
+		}
+		else if (meshType == 2){ //player
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
+			tempPlayer.nrElements = nrOfFaces;
+			players.push_back(tempPlayer);
+		}
+		else if (meshType == 3){ //backgroundobj
+			GameObject tempO(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, xInterval, yInterval, xSpeed, ySpeed);
+			tempO.nrElements = nrOfFaces;
+			backGroundObjects.push_back(tempO);
+		}
+		else if (meshType == 4){ //collectable
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempC.nrElements = nrOfFaces;
+			staticCollectableObjects.push_back(tempC);
+		}
+		else if (meshType == 5){ //deadly
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.nrElements = nrOfFaces;
+			staticDeadlyObjects.push_back(tempP);
+		}
+		else if (meshType == 6){ //deadlymoving
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.nrElements = nrOfFaces;
+			dynamicDeadlyObjects.push_back(tempP);
+		}
+		else if (meshType == 7){ //collectablemoving
+			BoundingBox bTemp;
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempC.nrElements = nrOfFaces;
+			dynamicCollectableObjects.push_back(tempC);
+		}
+		//delete meshVertexBuffer
+
+		//for (int i = 0; i < nrOfAnimations; i++){
+
+		//}
+
+		//for (int i = 0; i < nrOfBones; i++){
+
+		//}
 		
 
-	}
-
-	for (int i = 0; i < fileInfo.nrMeshes; i++){
 
 	}
 
 	//lights
 
-	//BBOXs
-
-
+	
 	fbxFile.close();
 }

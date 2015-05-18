@@ -19,7 +19,7 @@ protected:
 	float rayRangeDown = 0.2f;
 	float rayRangeSides = 1.5f;
 	XMVECTOR originLow, originLowRight, originLowLeft, originHigh, originMiddle;
-	float lowValue = 0, middleValue = 0.2f, highValue = 1, extraXValue = 0.6f;
+	float lowValue = -2.5f, middleValue = -1.0f, highValue = 1.0f, extraXValue = 0.6f;
 	
 	XMVECTOR up, down, right, left;
 	BoundingBox footBox, originalFootBox;
@@ -270,23 +270,26 @@ public:
 		if (pObj.GetActive() == true){
 			if (pObj.GetBBOX().Intersects(originMiddle, right, rayLength) == true){
 				if (rayLength < rayRangeSides){
-					if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
-						if (rayLength < rayRangeSides){
-							if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
-								if (rayLength < rayRangeSides){
-									return true;
-								}
-								else return false;
-							}
-							else return false;
-						}
-						else return false;
-					}
-					else return false;
+					return true;
 				}
 				else return false;
 			}
 			else return false;
+			if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+				else return false;
+			}
+			else return false;
+			if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+				else return false;
+			}
+			else return false;
+
 		}
 		else return false;
 	}
@@ -320,23 +323,26 @@ public:
 		if (pObj.GetActive() == true){
 			if (pObj.GetBBOX().Intersects(originMiddle, left, rayLength) == true){
 				if (rayLength < rayRangeSides){
-					if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
-						if (rayLength < rayRangeSides){
-							if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
-								if (rayLength < rayRangeSides){
-									return true;
-								}
-								else return false;
-							}
-							else return false;
-						}
-						else return false;
-					}
-					else return false;
+					return true;
 				}
 				else return false;
 			}
 			else return false;
+			if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+				else return false;
+			}
+			else return false;
+			if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+				else return false;
+			}
+			else return false;
+
 		}
 		else return false;
 	}
@@ -370,7 +376,7 @@ public:
 		pos = XMMatrixTranslation(x, y, 0);
 
 		originLow = XMVectorSet(x, y + lowValue, 0, 1);
-		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0, 1);
+		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0, 1); //markkontroll
 		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0, 1);
 		originMiddle = XMVectorSet(x, y + middleValue, 0, 1);
 		originHigh = XMVectorSet(x, y + highValue, 0, 1);

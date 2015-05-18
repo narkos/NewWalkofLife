@@ -30,7 +30,6 @@ struct MatInfo
 	int UseTexture;
 	float Padding[2];
 
-
 };
 
 struct MaterialProperties

@@ -55,7 +55,7 @@ private:
 		XMFLOAT3 vertPos;
 		XMFLOAT3 vertNor;
 		XMFLOAT2 vertUV;
-		XMFLOAT3 vertTangent;
+		//XMFLOAT3 vertTangent;
 	};
 
 	struct FaceData{
@@ -81,7 +81,18 @@ private:
 		XMFLOAT3 ka, kd, ks;
 	};
 
+	struct Int4{
+		int x, y, z, w;
+	};
+
+	struct Float4{
+		float x, y, z, w;
+	};
+
 public:
+	FBXImporter(){}
+	~FBXImporter(){}
+
 	void ImportFBX(ID3D11Device* gDevice, char* fileName);
 
 	vector<Platform> GetStaticPlatforms(){

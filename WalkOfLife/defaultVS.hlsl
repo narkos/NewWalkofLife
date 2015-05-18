@@ -14,7 +14,7 @@ struct VS_IN
 	float3 Pos : POSITION;
 	float2 Tex : TEXCOORD;
 	float3 Nor : NORMAL;
-
+	//float3 Tan : TANGENT;
 };
 
 struct VS_OUT

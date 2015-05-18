@@ -12,6 +12,7 @@
 #include <memory>
 #include <DirectXCollision.h>
 #include "HighScore.h"
+#include "FBXImporter.h"
 
 //INLCUDE H FILES HERE
 
@@ -76,6 +77,7 @@ public:
 	Collision theCollision;
 	OBJ theOBJ;
 	Physics thePhysics;
+	FBXImporter theCustomImporter;
 	HighScore theHighScore;
 	GameTimer gTimer;
 	Counters gCounter;

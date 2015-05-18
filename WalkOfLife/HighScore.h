@@ -24,8 +24,8 @@ private:
 public:
 
 	HighScore(){
-		fileNameLoad = "C:\\Users\\Simon\\Desktop\\HighScoreLoad.txt";
-		fileNameSave = "C:\\Users\\Simon\\Desktop\\HighScoreLoad.txt";
+		fileNameLoad = "HighScoreLoad.txt";
+		fileNameSave = "HighScoreLoad.txt";
 		bool isFine;
 		isFine = LoadHighScore();
 	}

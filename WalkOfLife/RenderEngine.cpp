@@ -66,6 +66,7 @@ bool RenderEngine::Init(){
 	//Initialize Shaders and triangle data
 	Shaders();
 	CreatePlaneData();
+	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	TextureFunc();
 
 	//Font
@@ -334,6 +335,12 @@ void RenderEngine::Shaders(){
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
+	//D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
+	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//	{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	//};
 	ShaderTest = gDevice->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gVertexLayout);
 	
 	//create pixel shader
@@ -680,9 +687,41 @@ void RenderEngine::Render(){
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);
 	
+	//TEST CUSTOM FORMAT
+	for each (Platform var in theCustomImporter.GetStaticPlatforms())
+	{
+		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetInputLayout(gVertexLayout);
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+		var.CalculateWorld();
+
+
+		var.material = MatPresets::Emerald;
+		matProperties.Material = var.material;
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+		WVP = XMMatrixIdentity();
+		WVP = var.world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(var.nrElements * 3, 0);
+	}
 	
 	//RENDER OBJ FILES
-
 	for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
@@ -903,6 +942,7 @@ void RenderEngine::Update(float dt){
 			time4 = gTimer.TotalTime();
 		}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
 		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 

@@ -34,7 +34,7 @@ void Physics::Gravitation(Collision theCollision, PlayerObject *theCharacter)
 	}
 	if (!theCollision.isGrounded() || this->upforce > 0)
 	{
-		if (!theCollision.isGrounded() && this->downforce < 1 && this->upforce - this->downforce < 0.1)
+		if (!theCollision.isGrounded() && this->downforce < 0.7 && this->upforce - this->downforce < 0.1)
 		{
 			this->downforce = this->downforce + 0.01;
 		}

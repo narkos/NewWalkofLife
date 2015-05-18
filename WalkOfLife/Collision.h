@@ -28,6 +28,7 @@ public:
 	}
 
 	void TestCollision(vector<Platform> &platforms);
+	bool TestCollisionDeadly(vector<Platform> &platforms);
 	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables);
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);
 

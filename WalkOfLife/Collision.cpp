@@ -70,6 +70,7 @@ XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables)
 			XMFLOAT2 temp;
 			temp.x = collectables[i].GetCoinValue();
 			temp.y = collectables[i].GetTimeValue();
+			collectables[i].SetActive(false);
 			return temp;
 		}
 	}

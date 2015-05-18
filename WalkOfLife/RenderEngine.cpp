@@ -71,30 +71,30 @@ bool RenderEngine::Init(){
 	{
 		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
 	}
-	//for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicPlatforms().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicCollectableObject().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicDeadlyObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetStaticCollectableObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetStaticDeadlyObjects().at(i));
-	//}
+	for (int i = 0; i < theCustomImporter.GetBackGroundObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetDynamicPlatforms().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetDynamicCollectableObject().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetDynamicDeadlyObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetStaticCollectableObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetStaticDeadlyObjects().at(i));
+	}
 
 	TextureFunc();
 	mainMenu.CreateTextures(gDevice);
@@ -1101,12 +1101,13 @@ void RenderEngine::Update(float dt){
 
 		
 
-		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
+		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false && gTimer.TotalTime() - theCharacter->jumpTimer > 0.5) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
 			soundJump.PlayMp3();
 			soundJump.daCapo();
+			theCharacter->jumpTimer = gTimer.TotalTime();
 		}
 
 

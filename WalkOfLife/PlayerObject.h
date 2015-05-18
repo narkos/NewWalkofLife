@@ -90,6 +90,7 @@ public:
 	bool dashDisabling;
 	float jumpMomentumX;
 	bool jumpMomentumState;
+	float jumpTimer = 0;
 	float momentum;
 	bool jumping;
 	int bajs = 0;

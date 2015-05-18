@@ -17,13 +17,13 @@ protected:
 	float rayLength; //storar hur lång ray hiten blev
 	float rayRangeUp = 0.2f;
 	float rayRangeDown = 0.4f;
-	float rayRangeSides = 0.5f;
-	XMVECTOR originLow, originLowRight, originLowLeft;
-	XMVECTOR originHigh, originMiddle, originMiddle2, originMiddle3, originMiddle4;
+	float rayRangeSides = 0.8f;
+	XMVECTOR originLow, originLowRight, originLowLeft, originHighRight, originHighLeft;
+	XMVECTOR originHigh;
 	vector<XMVECTOR> originSides;
 	vector<float> originsYValues;
 
-	float lowValue = -2.1f, middleValue = -1.8f, highValue = 0.8f, extraXValue = 0.6f;
+	float lowValue = -2.1f, middleValue = -1.8f, highValue = 0.8f, extraXValue = 0.3f;
 	
 	XMVECTOR up, down, right, left;
 	BoundingBox footBox, originalFootBox;
@@ -111,15 +111,14 @@ public:
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
 		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1); //groundchecks
 		originLowLeft = XMVectorSet(pos.x - extraXValue, pos.y + lowValue, pos.z, 1);
-		/*originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
-		originMiddle2 = XMVectorSet(pos.x, pos.y + middleValue2, pos.z, 1);
-		originMiddle3 = XMVectorSet(pos.x, pos.y + middleValue3, pos.z, 1);
-		originMiddle4 = XMVectorSet(pos.x, pos.y + middleValue4, pos.z, 1);*/
-		for (int i = 0; i < 10; i++){
-			AddOriginSides(-2 + i/2);
+		
+		for (int i = 0; i < 6; i++){
+			AddOriginSides(lowValue + i/2);
 		}
 
 		originHigh = XMVectorSet(pos.x, pos.y + highValue, pos.z, 1);
+		originHighRight = XMVectorSet(pos.x + extraXValue, pos.y + highValue, pos.z, 1);
+		originHighLeft = XMVectorSet(pos.x - extraXValue, pos.y + highValue, pos.z, 1);
 		up = XMVectorSet(0, 1, 0, 0);
 		down = XMVectorSet(0, -1, 0, 0);
 		right = XMVectorSet(1, 0, 0, 0);
@@ -180,9 +179,16 @@ public:
 			if (pObj.GetBBOX().Intersects(originHigh, up, rayLength) == true){
 				if (rayLength < rayRangeUp)
 					return true;
-				else return false;
 			}
-			else return false;
+			if (pObj.GetBBOX().Intersects(originHighRight, up, rayLength) == true){
+				if (rayLength < rayRangeUp)
+					return true;
+			}
+			if (pObj.GetBBOX().Intersects(originHighLeft, up, rayLength) == true){
+				if (rayLength < rayRangeUp)
+					return true;
+			}
+			
 		}
 		else return false;
 	}
@@ -324,6 +330,8 @@ public:
 		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0, 1);
 
 		originHigh = XMVectorSet(x, y + highValue, 0, 1);
+		originHighRight = XMVectorSet(x + extraXValue, y + highValue, 0, 1);
+		originHighLeft = XMVectorSet(x - extraXValue, y + highValue, 0, 1);
 
 		for (int i = 0; i < originSides.size() - 1; i++){
 			originSides[i] = XMVectorSet(x, y + originsYValues[i], 0, 1);

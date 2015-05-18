@@ -16,10 +16,11 @@ protected:
 
 	float rayLength; //storar hur lång ray hiten blev
 	float rayRangeUp = 0.2f;
-	float rayRangeDown = 0.2f;
-	float rayRangeSides = 1.5f;
-	XMVECTOR originLow, originLowRight, originLowLeft, originHigh, originMiddle;
-	float lowValue = -2.5f, middleValue = -1.0f, highValue = 1.0f, extraXValue = 0.6f;
+	float rayRangeDown = 1.0f;
+	float rayRangeSides = 0.5f;
+	XMVECTOR originLow, originLowRight, originLowLeft;
+	XMVECTOR originHigh, originMiddle, originMiddle2, originMiddle3, originMiddle4;
+	float lowValue = -1.5f, middleValue = -1.0f, middleValue2 = 0.25f, middleValue3 = 0.5f, middleValue4 = 0.65f, highValue = 0.8f, extraXValue = 0.6f;
 	
 	XMVECTOR up, down, right, left;
 	BoundingBox footBox, originalFootBox;
@@ -103,9 +104,13 @@ public:
 		this->dashDisabling = true;
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
-		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1);
+		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1); //groundchecks
 		originLowLeft = XMVectorSet(pos.x - extraXValue, pos.y + lowValue, pos.z, 1);
 		originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
+		originMiddle2 = XMVectorSet(pos.x, pos.y + middleValue2, pos.z, 1);
+		originMiddle3 = XMVectorSet(pos.x, pos.y + middleValue3, pos.z, 1);
+		originMiddle4 = XMVectorSet(pos.x, pos.y + middleValue4, pos.z, 1);
+
 		originHigh = XMVectorSet(pos.x, pos.y + highValue, pos.z, 1);
 		up = XMVectorSet(0, 1, 0, 0);
 		down = XMVectorSet(0, -1, 0, 0);
@@ -213,15 +218,9 @@ public:
 					}
 					return true;
 					
-				}
-				else{
-					currPlatformPos = XMFLOAT3(0, 0, 0);
-					lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
-					return false;
-				}
-				
+				}			
 			}
-			else if (pObj.GetBBOX().Intersects(originLowRight, down, rayLength) == true){
+			if (pObj.GetBBOX().Intersects(originLowRight, down, rayLength) == true){
 				if (rayLength < rayRangeDown){
 					if (pObj.GetStatic() == false){
 						TestDownMovingPlatform(pObj, isGrounded);
@@ -233,12 +232,7 @@ public:
 					}
 					return true;
 
-				}
-				else{
-					currPlatformPos = XMFLOAT3(0, 0, 0);
-					lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
-					return false;
-				}
+				}				
 
 			}
 			if (pObj.GetBBOX().Intersects(originLowLeft, down, rayLength) == true){
@@ -254,14 +248,12 @@ public:
 					return true;
 
 				}
-				else{
-					currPlatformPos = XMFLOAT3(0, 0, 0);
-					lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
-					return false;
-				}
-
 			}
-			else return false;
+			else{
+				currPlatformPos = XMFLOAT3(0, 0, 0);
+				lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+				return false;
+			}
 		}
 		else return false;
 	}
@@ -271,50 +263,38 @@ public:
 			if (pObj.GetBBOX().Intersects(originMiddle, right, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
-				}
-				else return false;
+				}				
 			}
-			else return false;
+			if (pObj.GetBBOX().Intersects(originMiddle2, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+			}
+			if (pObj.GetBBOX().Intersects(originMiddle3, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+			}
+			if (pObj.GetBBOX().Intersects(originMiddle4, right, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+			}
+			
 			if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
-				}
-				else return false;
+				}				
 			}
-			else return false;
+			
 			if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
-				}
-				else return false;
+				}			
 			}
+
 			else return false;
 
-		}
-		else return false;
-	}
-
-	bool TestRight(CollectableObject pObj){
-		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(originMiddle, right, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
-						if (rayLength < rayRangeSides){
-							if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
-								if (rayLength < rayRangeSides){
-									return true;
-								}
-								else return false;
-							}
-							else return false;
-						}
-						else return false;
-					}
-					else return false;
-				}
-				else return false;
-			}
-			else return false;
 		}
 		else return false;
 	}
@@ -325,49 +305,39 @@ public:
 				if (rayLength < rayRangeSides){
 					return true;
 				}
-				else return false;
 			}
-			else return false;
+
+			if (pObj.GetBBOX().Intersects(originMiddle2, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+			}
+
+			if (pObj.GetBBOX().Intersects(originMiddle3, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+			}
+
+			if (pObj.GetBBOX().Intersects(originMiddle4, left, rayLength) == true){
+				if (rayLength < rayRangeSides){
+					return true;
+				}
+			}
+			
 			if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
 				}
-				else return false;
 			}
-			else return false;
+			
 			if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
 				}
-				else return false;
 			}
 			else return false;
 
-		}
-		else return false;
-	}
-
-	bool TestLeft(CollectableObject pObj){
-		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(originMiddle, left, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
-						if (rayLength < rayRangeSides){
-							if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
-								if (rayLength < rayRangeSides){
-									return true;
-								}
-								else return false;
-							}
-							else return false;
-						}
-						else return false;
-					}
-					else return false;
-				}
-				else return false;
-			}
-			else return false;
 		}
 		else return false;
 	}
@@ -379,6 +349,9 @@ public:
 		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0, 1); //markkontroll
 		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0, 1);
 		originMiddle = XMVectorSet(x, y + middleValue, 0, 1);
+		originMiddle2 = XMVectorSet(x, y + middleValue2, 0, 1);
+		originMiddle3 = XMVectorSet(x, y + middleValue3, 0, 1);
+		originMiddle4 = XMVectorSet(x, y + middleValue4, 0, 1);
 		originHigh = XMVectorSet(x, y + highValue, 0, 1);
 
 

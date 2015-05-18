@@ -109,7 +109,8 @@ void PlayerObject::setJumpMomentum(bool rightDirection)
 
 void PlayerObject::Dash()
 {
-	this->momentum = 3.0;
-	this->jumpMomentumX = this->jumpMomentumX * 3;
+	this->momentum = 2.5;
+	this->jumpMomentumX = this->jumpMomentumX * 2.5;
 	this->dashDisabling = false;
+	this->dashAvailable = false;
 }

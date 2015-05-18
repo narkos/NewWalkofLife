@@ -33,7 +33,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
-	this->theBinaryTree = new BinaryTree(100, 100);
+	this->theBinaryTree = new BinaryTree(30, 30);
 	this->LoadSounds();
 }
 
@@ -68,6 +68,35 @@ bool RenderEngine::Init(){
 	CreatePlaneData();
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
+	for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
+	{
+		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
+	}
+	//for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
+	//{
+	//	theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
+	//}
+	//for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
+	//{
+	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicPlatforms().at(i));
+	//}
+	//for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
+	//{
+	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicCollectableObject().at(i));
+	//}
+	//for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
+	//{
+	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicDeadlyObjects().at(i));
+	//}
+	//for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
+	//{
+	//	theBinaryTree->AddObject(theCustomImporter.GetStaticCollectableObjects().at(i));
+	//}
+	//for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
+	//{
+	//	theBinaryTree->AddObject(theCustomImporter.GetStaticDeadlyObjects().at(i));
+	//}
+
 	TextureFunc();
 	mainMenu.CreateTextures(gDevice);
 
@@ -87,16 +116,18 @@ bool RenderEngine::Init(){
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-//	ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
+
+	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
 	//theBinaryTree->testPlatforms->at(0).at(0).Translate(0.0f, -2000.0f, 0.0f);
 	//ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
-//	ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
+	//ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
 	//ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
 
-	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
+//	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
 	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
 	int test = 1;
-	//ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2, true);
+//	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2, true);
+
 
 	////LIGHT TEST ZONE BITCHES
 
@@ -592,7 +623,7 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 			if (mainMenu.getPause() == FALSE)
 			{
-				if ((gTimer.TotalTime() - time3) >= 0.01f)
+				if ((gTimer.TotalTime() - time3) >= 0.012f)
 				{
 					fpscounter();
 					Update(0.0f);
@@ -704,13 +735,10 @@ void RenderEngine::Render(){
 	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(XMMatrixIdentity()));
 	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(WorldInv));
 
-	
-	/*gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);*/
-	
+
+		
 	//TEST CUSTOM FORMAT
-	for each (Platform var in theCustomImporter.GetStaticPlatforms())
+	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -742,6 +770,74 @@ void RenderEngine::Render(){
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
+
+	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1))
+	{
+		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetInputLayout(gVertexLayout);
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+		var.CalculateWorld();
+
+
+		var.material = MatPresets::Emerald;
+		matProperties.Material = var.material;
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+		WVP = XMMatrixIdentity();
+		WVP = var.world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(var.nrElements * 3, 0);
+	}
+	if (theCharacter->getDivision() != 0)
+	{
+		for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision() - 1))
+		{
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+	}
 	
 	//RENDER OBJ FILES
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -751,7 +847,7 @@ void RenderEngine::Render(){
 	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 
-	for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
+	/*for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 	
@@ -775,7 +871,7 @@ void RenderEngine::Render(){
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
-	}
+	}*/
 
 for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
 	{
@@ -822,7 +918,7 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->PSSetShader(gWireFramePixelShader, nullptr, 0);
 
-	for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
+	/*for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
 		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].boundingBoxVertexBuffer, &bufferElementSize, &offset1);
 		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
 		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
@@ -830,7 +926,7 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 		gDeviceContext->Draw(16, 0);
-	}
+	}*/
 
 
 
@@ -882,6 +978,21 @@ void RenderEngine::Update(float dt){
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
 
+		if (!theCollision.rightValid() && theCharacter->jumpMomentumX > 0)
+		{
+			theCharacter->jumpMomentumX = 0;
+		}
+
+		if (!theCollision.leftValid() && theCharacter->jumpMomentumX < 0)
+		{
+			theCharacter->jumpMomentumX = 0;
+		}
+
+		if (!theCollision.isGrounded() && !theCharacter->jumpMomentumState)
+		{
+			theCharacter->setJumpMomentum(rightDirection);
+		}
+
 		if (gTimer.TotalTime() - theCharacter->dashTimer > 0.30f && !theCharacter->dashDisabling)
 		{
 			theCharacter->momentum = 1;
@@ -898,20 +1009,20 @@ void RenderEngine::Update(float dt){
 			theCharacter->dashDisabling = true;
 		}
 
-		if (theCharacter->momentum > 1)
+		if (gTimer.TotalTime() - theCharacter->dashTimer > 4.00f && !theCharacter->dashAvailable)
 		{
-			theCharacter->momentum -= 0.05;
+			theCharacter->dashAvailable = true;
 		}
 
-		if ((gTimer.TotalTime() - time4) >= 5.00f)
-		{
+	//	if ((gTimer.TotalTime() - time4) >= 1.00f)
+		//{
 			theCharacter->UpdateDivision(theBinaryTree->pixelsPerdivision);
-			time4 = gTimer.TotalTime();
-		}
+			//time4 = gTimer.TotalTime();
+		//}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
-		theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
-		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
-		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
+		//theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
+	
+		
 		XMFLOAT2 tempPickUpValue;
 		//tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
 
@@ -985,7 +1096,7 @@ void RenderEngine::Update(float dt){
 			reset();
 		}
 
-		if (dash && gTimer.TotalTime() - theCharacter->dashTimer > 0.30f)
+		if (dash && theCharacter->dashAvailable)
 		{
 			theCharacter->Dash();
 			theCharacter->dashTimer = gTimer.TotalTime();
@@ -997,7 +1108,6 @@ void RenderEngine::Update(float dt){
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
-			theCharacter->setJumpMomentum(rightDirection);
 			soundJump.PlayMp3();
 			soundJump.daCapo();
 		}
@@ -1015,12 +1125,18 @@ void RenderEngine::Update(float dt){
 
 		for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
 			if (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetStatic() == false)
-				theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
+				if (theCharacter->xPos >= theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetXInterval() - 3.0f)
+					&& theCharacter->xPos <= theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetXInterval() + 3.0f))
+
+					theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].SlamaJamma(gTimer.TotalTime());
+
+					// MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
+					//theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
 		}
 
 		lightProp01.lights[1].Type = l_Directional;
 		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
-		lightProp01.lights[1].Color = XMFLOAT4(0.1f, 0.1f,0.1f, 1.0f);
+		lightProp01.lights[1].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
 		lightProp01.lights[0].Type = l_Point;
@@ -1058,7 +1174,7 @@ void RenderEngine::Update(float dt){
 
 
 		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 0;
+		lightProp01.lights[1].Active = 1;
 		lightProp01.lights[2].Active = 1;
 		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
@@ -1188,7 +1304,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	else if (type == 1)
 	{
 		if (isStatic == false){
-			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 1, 1, 1, 1);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 3, 4.0f, 1.0f, 1.0f);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			

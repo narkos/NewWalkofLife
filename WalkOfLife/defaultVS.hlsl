@@ -35,24 +35,7 @@ VS_OUT VS_main(VS_IN input)
 	output.Pos = mul(float4(input.Pos, 1.0f), WVP);
 	output.Tex = input.Tex;
 	output.Nor = mul(float4(input.Nor, 0.0f), InvWorld);
-	//output.Nor = mul(float4(input.Nor, 0.0f), InvWorld);
 	output.wPos = mul(float4(input.Pos, 1.0f), WorldSpace);
 
 	return output;
-	//float4 outpos = float4(input.Pos, 1.0f);
-
-	//	outpos = mul(outpos, world);
-	//	//outpos = mul(outpos, WorldSpace);
-
-	//outpos = mul(outpos, View);
-	//outpos = mul(outpos, Projection);
-
-	//float3 temppos = mul(input.Pos, WorldSpace);
-	//	output.pos = float4(temppos, 1.0f);
-	////output.pos = input.Pos;
-	//output.Tex = input.Tex;
-	//output.normals = float4(input.normals, 1.0f);
-	////output.wPos = outpos;
-	//output.wPos = outpos;
-	//return output;
 };

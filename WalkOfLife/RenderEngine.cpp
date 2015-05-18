@@ -703,11 +703,8 @@ void RenderEngine::Render(){
 	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(XMMatrixIdentity()));
 	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(WorldInv));
 
-	
-	/*gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);*/
-	
+
+		
 	//TEST CUSTOM FORMAT
 	for each (Platform var in theCustomImporter.GetStaticPlatforms())
 	{
@@ -1014,7 +1011,13 @@ void RenderEngine::Update(float dt){
 
 		for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
 			if (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetStatic() == false)
-				theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
+				if (theCharacter->xPos >= theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetXInterval() - 3.0f)
+					&& theCharacter->xPos <= theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetXInterval() + 3.0f))
+
+					theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].SlamaJamma(gTimer.TotalTime());
+
+					// MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
+					//theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
 		}
 
 		lightProp01.lights[1].Type = l_Directional;
@@ -1187,7 +1190,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	else if (type == 1)
 	{
 		if (isStatic == false){
-			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 1, 1, 1, 1);
+			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 3, 4.0f, 1.0f, 1.0f);
 			testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			

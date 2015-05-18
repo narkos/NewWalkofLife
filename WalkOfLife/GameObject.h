@@ -59,6 +59,10 @@ public:
 		return vertexBuffer;
 	}
 
+	void setVertexBuffer(ID3D11Buffer* VertexBufferz){
+		vertexBuffer = VertexBufferz;
+	}
+
 	ID3D11Buffer* GetIndexBuffer(){
 		return indexBuffer;
 	}

@@ -34,6 +34,7 @@
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
 #include "Extra DirectXLibs\Inc\SimpleMath.h"
 #include "Menuclass.h"
+#include "HighScore.h"
 
 using namespace DirectX;
 
@@ -59,7 +60,7 @@ public:
 	virtual bool Init();
 	void Update(float dt);
 	void MenuUpdate(float tt);
-	void Render();
+	void Render(PlayerObject* theCharacter);
 	virtual void Release();
 	void Fonts();
 	void fpscounter();
@@ -82,13 +83,16 @@ public:
 	GameTimer gTimer;
 	Counters gCounter;
 	PlayerObject* theCharacter;
+	PlayerObject* theCharacter2;
+	PlayerObject* theCharacter3;
 	Camera mainCamera;
 	Menu mainMenu;
+	
 	std::wstring mainwname;
 	bool rightDirection;
 
 	//Light Shit
-	LightClass testLight[MAX_LIGHTS];
+	LightClass testLight[20];
 	ID3D11Buffer* lightConstBuff;
 	XMFLOAT4 globalAmb;
 	LightProperties lightProp01;

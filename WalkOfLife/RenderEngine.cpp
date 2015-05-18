@@ -843,11 +843,11 @@ void RenderEngine::Update(float dt){
 			time4 = gTimer.TotalTime();
 		}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 		XMFLOAT2 tempPickUpValue;
 		//tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
 
-		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
-		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{

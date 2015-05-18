@@ -18,6 +18,11 @@ public:
 	std::vector<std::vector<CollectableObject>>* collectableMoving;
 	void AddPlatform(Platform);
 	void AddObject(GameObject);
+	void addCollectables(CollectableObject);
+	void addMovingPlatforms(Platform);
+	void addDeadlyPlatforms(Platform);
+	void addMovingCollectable(CollectableObject);
+	void addDeadlyMovingPlatform(Platform);
 	int pixelsPerdivision;
 
 protected:

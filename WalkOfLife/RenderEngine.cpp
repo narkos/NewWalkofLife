@@ -112,6 +112,7 @@ bool RenderEngine::Init(){
 	////Import
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
+	//ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
@@ -624,7 +625,7 @@ int RenderEngine::Run(){
 				{
 					fpscounter();
 					Update(0.0f);
-					Render();
+					Render(theCharacter);
 					time3 = gTimer.TotalTime();
 				}
 			}
@@ -633,9 +634,16 @@ int RenderEngine::Run(){
 
 				/*	scrolltime = gTimer.TotalTime();
 				if (gTimer.TotalTime() >= scrolltime+1.0f)*/
+				//if (theHighScore.getHSbool() == FALSE)
+				{
+					MenuUpdate(0.0f);
+					mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+				}
 
-				MenuUpdate(0.0f);
-				mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+				if(theHighScore.getHSbool()==TRUE)
+				{
+					theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+				}
 
 
 			}
@@ -647,7 +655,7 @@ int RenderEngine::Run(){
 
 // RENDER
 
-void RenderEngine::Render(){
+void RenderEngine::Render(PlayerObject* theCharacter){
 	
 	static float rot = 0.00f;
 	UINT32 vertexSize = sizeof(float) * 8;
@@ -1220,12 +1228,21 @@ void RenderEngine::MenuUpdate(float tt){
 				//gTimer.setCurrTime(pauseTime);
 				gTimer.Start(pauseTime);
 				mainMenu.setPause(FALSE);
+				theHighScore.setHSbool(FALSE);
 				menuTime = 0;
 			}
 			else if (mainMenu.getCurrentTab() == 2)
 			{
 				// open highscores
+				if (theHighScore.getHSbool() == FALSE)
+				{
+					theHighScore.setHSbool(TRUE);
+				}
+				else if(theHighScore.getHSbool() == TRUE)
+				{
+					theHighScore.setHSbool(FALSE);
 
+				}
 			}
 			else if (mainMenu.getCurrentTab() == 3)
 			{
@@ -1246,6 +1263,7 @@ void RenderEngine::MenuUpdate(float tt){
 			//__int64 Paous = gTimer.TotalTime() - pauseTime;
 			//gTimer.setPausedTime(Paous);
 			mainMenu.setPause(FALSE);
+			theHighScore.setHSbool(FALSE);
 			menuTime = 0;
 
 			//float gTimer.TotalTime() = pauseTime;
@@ -1290,7 +1308,6 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
-
 		theCharacter->CreateBBOXVertexBuffer(gDevice);
 		theCharacter->nrElements = objectTest.GetNrElements();
 		Collision tempC(theCharacter);
@@ -1313,6 +1330,26 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 			testPlatform.nrElements = objectTest.GetNrElements();
 			theBinaryTree->AddPlatform(testPlatform);
 		}
+	}
+	if (type == 4)
+	{
+		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+
+		theCharacter2->CreateBBOXVertexBuffer(gDevice);
+		theCharacter2->nrElements = objectTest.GetNrElements();
+		Collision tempD(theCharacter2);
+		theCollision = tempD;
+		//gameObjects.push_back(*theCharacter);
+	}
+	if (type == 5)
+	{
+		theCharacter3 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+
+		theCharacter3->CreateBBOXVertexBuffer(gDevice);
+		theCharacter3->nrElements = objectTest.GetNrElements();
+		Collision tempDC(theCharacter3);
+		theCollision = tempDC;
+		//gameObjects.push_back(*theCharacter);
 	}
 
 	else

@@ -8,12 +8,12 @@ Menu::Menu()
 
 void Menu::CreateTextures(ID3D11Device* gDevice)
 { 
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Menu_resume.dds", nullptr, &RutTex1);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Menu_resume_lit.dds", nullptr, &RutTex12);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Menu_Highscore.dds", nullptr, &RutTex2);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Menu_Highscore_lit.dds", nullptr, &RutTex22);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Menu_Exit.dds", nullptr, &RutTex3);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Menu_Exit_lit.dds", nullptr, &RutTex32);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Ress_1.dds", nullptr, &RutTex1);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Ress_2.dds", nullptr, &RutTex12);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/High_1.dds", nullptr, &RutTex2);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/High_2.dds", nullptr, &RutTex22);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_1.dds", nullptr, &RutTex3);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_2.dds", nullptr, &RutTex32);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Resume.dds", nullptr, &RutTex4);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Resume2.dds", nullptr, &RutTex42);
 	

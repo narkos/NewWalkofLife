@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="BinaryTree.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CharSwitch.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="FBXImporter.cpp" />
     <ClCompile Include="GameTimer.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="FBXImporter.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="CharSwitch.h" />
     <ClInclude Include="HighScore.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />

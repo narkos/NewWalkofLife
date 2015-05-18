@@ -1,5 +1,7 @@
 #include "HighScore.h"
 
+
+
 bool HighScore::LoadHighScore(){
 	loadFile.open(fileNameLoad);
 	string line;
@@ -18,6 +20,7 @@ bool HighScore::LoadHighScore(){
 			
 		}
 		loadFile.close();
+		ReOrganizeLists();
 		return true;
 	}
 	else return false;
@@ -62,29 +65,70 @@ void HighScore::ReOrganizeLists(){
 			}
 		}
 	}
+	for (int i = 0; i < highScoreList.size(); i++){
+		for (int y = 0; y < highScoreList.size(); y++){
+			if (highScoreList[y].points > highScoreList[i].points){
+				SwapScore(highScoreList[i], highScoreList[y]);
+			}
+		}
+	}
 	SaveHighScore();
 }
 
-void HighScore::Highscorespritebatch()
+void HighScore::Highscorespritebatch(ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain)
 {
-	spriteBatch_HS->Begin();
+	spritefont_HS.reset(new DirectX::SpriteFont(gDevice, L"Fonts/Arial.spritefont"));
+	spriteBatch_HS.reset(new DirectX::SpriteBatch(gDeviceContext));
+	
 
-	std::wstring C_coin1 = std::to_wstring(coinList[0].coins);
-	std::wstring C_time1 = std::to_wstring(coinList[0].time);
-	std::wstring C_point1 = std::to_wstring(coinList[0].points);
-	std::wstring coinz(L"Coins: ");
-	std::wstring timez(L"\nYear: ");
-	std::wstring pointz(L"\nMonth: ");
-	std::wstring C_list1 = coinz + C_coin1 + timez + C_time1 + pointz + C_point1;
+	spriteBatch_HS->Begin();
+	///-------Coinlist
+	std::wstring BestC(L"Best coin run ");
+	std::wstring C_coin1 = std::to_wstring(coinList[coinList.size()-1].coins);
+	std::wstring C_time1 = std::to_wstring(coinList[coinList.size()-1].time);
+	std::wstring C_point1 = std::to_wstring(coinList[coinList.size()-1].points);
+	///-------Timelist
+	std::wstring BestT(L"Fastest run ");
+	std::wstring T_coin1 = std::to_wstring(timeList[0].coins);
+	std::wstring T_time1 = std::to_wstring(timeList[0].time);
+	std::wstring T_point1 = std::to_wstring(timeList[0].points);
+	///-------Pointlist
+	std::wstring BestH(L"Best total point run ");
+	std::wstring H_coin1 = std::to_wstring(highScoreList[highScoreList.size()-1].coins);
+	std::wstring H_time1 = std::to_wstring(highScoreList[highScoreList.size() - 1].time);
+	std::wstring H_point1 = std::to_wstring(highScoreList[highScoreList.size() - 1].points);
+	/*std::wstring C_coin1 = std::to_wstring(1);
+	std::wstring C_time1 = std::to_wstring(2);
+	std::wstring C_point1 = std::to_wstring(3);*/
+	std::wstring coinz(L"\nCoins: ");
+	std::wstring timez(L"\nTime: ");
+	std::wstring pointz(L"\nPoints: ");
+	std::wstring C_list1 = BestC + coinz + C_coin1 + timez + C_time1 + pointz + C_point1;
+	std::wstring T_list1 = BestT + coinz + T_coin1 + timez + T_time1 + pointz + T_point1;
+	std::wstring H_list1 = BestH + coinz + H_coin1 + timez + H_time1 + pointz + H_point1;
 
 	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 
 
 	const wchar_t* C_LIST_1 = C_list1.c_str();
-
+	const wchar_t* T_LIST_1 = T_list1.c_str();
+	const wchar_t* H_LIST_1 = H_list1.c_str();
 	
 
-	spritefont_HS->DrawString(spriteBatch_HS.get(), C_LIST_1, DirectX::SimpleMath::Vector2(20, 100));
+	spritefont_HS->DrawString(spriteBatch_HS.get(), C_LIST_1, DirectX::SimpleMath::Vector2(100, 500));
+	spritefont_HS->DrawString(spriteBatch_HS.get(), T_LIST_1, DirectX::SimpleMath::Vector2(100, 350));
+	spritefont_HS->DrawString(spriteBatch_HS.get(), H_LIST_1, DirectX::SimpleMath::Vector2(100, 200));
+
 
 	spriteBatch_HS->End();
+}
+
+bool HighScore::getHSbool()
+{
+	return HSbool;
+}
+void HighScore::setHSbool(bool set)
+{
+	HSbool = set;
+	
 }

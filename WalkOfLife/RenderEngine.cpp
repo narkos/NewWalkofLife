@@ -620,7 +620,7 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 			if (mainMenu.getPause() == FALSE)
 			{
-				if ((gTimer.TotalTime() - time3) >= 0.02f)
+				if ((gTimer.TotalTime() - time3) >= 0.012f)
 				{
 					fpscounter();
 					Update(0.0f);
@@ -975,12 +975,12 @@ void RenderEngine::Update(float dt){
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
 
-		if (!theCollision.rightValid())
+		if (!theCollision.rightValid() && theCharacter->jumpMomentumX > 0)
 		{
 			theCharacter->jumpMomentumX = 0;
 		}
 
-		if (!theCollision.leftValid())
+		if (!theCollision.leftValid() && theCharacter->jumpMomentumX < 0)
 		{
 			theCharacter->jumpMomentumX = 0;
 		}
@@ -1004,6 +1004,11 @@ void RenderEngine::Update(float dt){
 			}
 	
 			theCharacter->dashDisabling = true;
+		}
+
+		if (gTimer.TotalTime() - theCharacter->dashTimer > 4.00f && !theCharacter->dashAvailable)
+		{
+			theCharacter->dashAvailable = true;
 		}
 
 	//	if ((gTimer.TotalTime() - time4) >= 1.00f)
@@ -1088,7 +1093,7 @@ void RenderEngine::Update(float dt){
 			reset();
 		}
 
-		if (dash && gTimer.TotalTime() - theCharacter->dashTimer > 0.30f)
+		if (dash && theCharacter->dashAvailable)
 		{
 			theCharacter->Dash();
 			theCharacter->dashTimer = gTimer.TotalTime();

@@ -89,6 +89,7 @@ public:
 	float momentum;
 	bool jumping;
 	int bajs = 0;
+	float dashAvailable = true;
 
 	XMFLOAT3 startPlatformPos;
 	XMFLOAT3 currPlatformPos;
@@ -101,6 +102,7 @@ public:
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
 		this->dashDisabling = true;
+
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
 		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1);

@@ -894,8 +894,32 @@ void RenderEngine::Update(float dt){
 		theInput.initInput(this->hInstance, hWindow);
 		int input = 0;
 		bool jump = false;
+		bool dash = false;
+
 		input = theInput.detectInput(hWindow);
 		jump = theInput.detectJump(hWindow);
+		dash = theInput.detectDash(hWindow);
+
+		if (gTimer.TotalTime() - theCharacter->dashTimer > 0.30f && !theCharacter->dashDisabling)
+		{
+			theCharacter->momentum = 1;
+			if (theCharacter->jumpMomentumX < 0)
+			{
+				theCharacter->jumpMomentumX = -0.1;
+			}
+			
+			if (theCharacter->jumpMomentumX > 0)
+			{
+				theCharacter->jumpMomentumX = 0.1;
+			}
+	
+			theCharacter->dashDisabling = true;
+		}
+
+		if (theCharacter->momentum > 1)
+		{
+			theCharacter->momentum -= 0.05;
+		}
 
 		if ((gTimer.TotalTime() - time4) >= 5.00f)
 		{
@@ -920,7 +944,7 @@ void RenderEngine::Update(float dt){
 
 				else
 				{
-					theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
+					//theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
 				}
 				
 			}
@@ -943,7 +967,7 @@ void RenderEngine::Update(float dt){
 
 				else
 				{
-					theCharacter->jumpMomentumX = theCharacter->getSpeed();
+					//theCharacter->jumpMomentumX = theCharacter->getSpeed();
 				}
 				
 			}
@@ -963,6 +987,12 @@ void RenderEngine::Update(float dt){
 		if (input == 3)
 		{
 			reset();
+		}
+
+		if (dash && gTimer.TotalTime() - theCharacter->dashTimer > 0.30f)
+		{
+			theCharacter->Dash();
+			theCharacter->dashTimer = gTimer.TotalTime();
 		}
 
 		

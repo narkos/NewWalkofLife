@@ -16,4 +16,5 @@ public:
 	void initInput(HINSTANCE hInstance, HWND);
 	int detectInput(HWND);
 	bool detectJump(HWND);
+	bool detectDash(HWND);
 };

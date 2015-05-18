@@ -80,7 +80,10 @@ public:
 	int getDivision();
 	void setDivision(int);
 	void UpdateDivision(int);
+	void Dash();
 
+	float dashTimer;
+	bool dashDisabling;
 	float jumpMomentumX;
 	bool jumpMomentumState;
 	float momentum;
@@ -97,6 +100,7 @@ public:
 		this->jumpHeight = ySpeed;
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
+		this->dashDisabling = true;
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
 		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1);

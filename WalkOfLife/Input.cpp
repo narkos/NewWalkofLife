@@ -100,3 +100,21 @@ bool Input::detectJump(HWND hWindow)
 	}
 	
 }
+
+bool Input::detectDash(HWND hWindow)
+{
+	BYTE keyboardState[256];
+
+	DIKeyboard->Acquire();
+
+	DIKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
+
+	if (keyboardState[DIK_LSHIFT] || keyboardState[DIK_SPACE])		//Moves right when the D key or the RIGHT arrow is pressed
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

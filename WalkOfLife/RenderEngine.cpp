@@ -67,6 +67,7 @@ bool RenderEngine::Init(){
 	Shaders();
 	CreatePlaneData();
 	TextureFunc();
+	mainMenu.CreateTextures(gDevice);
 
 	//Font
 	Fonts();
@@ -76,9 +77,9 @@ bool RenderEngine::Init(){
 
 	//theHighScore.AddScore(2, 9, 3);
 	//theHighScore.AddScore(1, 2, 44);
-	//theHighScore.AddScore(1, 2, 1);
+	////theHighScore.AddScore(1, 2, 1);
 	//theHighScore.ReOrganizeLists();
-	//Import
+	////Import
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
 	
@@ -581,13 +582,26 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
-			fpscounter();
-			if ((gTimer.TotalTime() - time3) >= 0.01f)
+			if (mainMenu.getPause() == FALSE)
+			{
+				if ((gTimer.TotalTime() - time3) >= 0.01f)
+				{
+					fpscounter();
+					Update(0.0f);
+					Render();
+					time3 = gTimer.TotalTime();
+				}
+			}
+			if (mainMenu.getPause() == TRUE)
 			{
 
-				Update(0.0f);
-				Render();
-				time3 = gTimer.TotalTime();
+				/*	scrolltime = gTimer.TotalTime();
+				if (gTimer.TotalTime() >= scrolltime+1.0f)*/
+
+				MenuUpdate(0.0f);
+				mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+
+
 			}
 			
 		}
@@ -609,7 +623,10 @@ void RenderEngine::Render(){
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-
+	if (mainMenu.getPause() == TRUE)
+	{
+		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+	}
 	// Draw Text
 	spriteBatch->Begin();
 
@@ -640,6 +657,7 @@ void RenderEngine::Render(){
 
 	spriteBatch->End();
 	///////////////////////////////////////////
+
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 	int bajs = 1;
@@ -679,27 +697,25 @@ void RenderEngine::Render(){
 	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(WorldInv));
 
 	
-	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+	/*gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);
+	gDeviceContext->IASetVertexBuffers(0, 1, &gVertexBuffer, &vertexSize, &offset);*/
 	
 	
 	//RENDER OBJ FILES
-
+	gDeviceContext->IASetInputLayout(gVertexLayout);
+	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 	for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 	
-		gDeviceContext->IASetInputLayout(gVertexLayout);
-		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 		
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 		var.CalculateWorld();
-
 
 		var.material = MatPresets::Emerald;
 		matProperties.Material = var.material;
@@ -719,87 +735,12 @@ void RenderEngine::Render(){
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
 
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
 	{
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-		gDeviceContext->IASetInputLayout(gVertexLayout);
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
-
-		matProperties.Material = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].material;
-
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-
-		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
-		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
-		WVP = XMMatrixIdentity();
-		WVP = theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world * CamView *CamProjection;
-
-		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-
-
-		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-		gDeviceContext->Draw(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].nrElements * 3, 0);
-	}
-
-	//for each (GameObject var in theBinaryTree->renderObjects->at(theCharacter->getDivision()))
-	//{
-	//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-	//	gDeviceContext->IASetInputLayout(gVertexLayout);
-	//	gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-	//	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-	//	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-	//	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-	//	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-
-	//	var.CalculateWorld();
-	//	var.material = MatPresets::Emerald;
-	//	var.material.SpecPow = 38.0f;
-
-	//	matProperties.Material = var.material;
-
-	//	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-
-
-	//	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-	//	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-	//	WVP = XMMatrixIdentity();
-	//	WVP = var.world * CamView *CamProjection;
-
-	//	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-
-
-	//	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-	//	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-	//	gDeviceContext->Draw(var.nrElements * 3, 0);
-	//}
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
-	{
-		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-		gDeviceContext->IASetInputLayout(gVertexLayout);
 		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
 
 		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
 		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
@@ -844,7 +785,6 @@ void RenderEngine::Render(){
 		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
 		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
 		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
-		//var.world = XMMatrixIdentity();
 		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 		gDeviceContext->Draw(16, 0);
@@ -927,11 +867,11 @@ void RenderEngine::Update(float dt){
 			time4 = gTimer.TotalTime();
 		}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
+		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 		XMFLOAT2 tempPickUpValue;
 		//tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
 
-		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1));
-		//theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{
@@ -986,6 +926,19 @@ void RenderEngine::Update(float dt){
 
 		if (input == 3)
 		{
+			//reset();
+			pausYearCount = gCounter.theAge.years;
+			pausMonthCount = gCounter.theAge.months;
+			pauseTime = gTimer.TotalTime();
+			menuTime = gTimer.TotalTime();
+			gTimer.Stop();
+
+			//pauseTime = 100;
+
+			mainMenu.setPause(TRUE);
+		}
+		if (input == 4)
+		{
 			reset();
 		}
 
@@ -1035,9 +988,9 @@ void RenderEngine::Update(float dt){
 		lightProp01.lights[0].AttQuadratic = 0.0f;
 		lightProp01.lights[0].Range = 10.0f;
 
-		float moveL = 0.01f;
+		float moveL = 0.0f;
 
-		if (lightOffsetTest <= 1.0f);
+		if (lightOffsetTest < 1.0f);
 		{
 			lightOffsetTest += moveL;
 			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
@@ -1046,7 +999,6 @@ void RenderEngine::Update(float dt){
 
 
 		lightProp01.lights[2].Type = l_Point;
-		
 		lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		lightProp01.lights[2].AttConst = 0.3f;
 		lightProp01.lights[2].AttLinear = 0.2f;
@@ -1054,21 +1006,99 @@ void RenderEngine::Update(float dt){
 		lightProp01.lights[2].Range = 15.0f;
 
 		lightProp01.lights[3].Type = l_Point;
-		lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
+		lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
 		lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		lightProp01.lights[3].AttConst = 0.7f;
 		lightProp01.lights[3].AttLinear = 0.2f;
-		lightProp01.lights[3].AttQuadratic = 0.1f;
+		lightProp01.lights[3].AttQuadratic = 0.0f;
 		lightProp01.lights[3].Range = 15.0f;
 
 
 		lightProp01.lights[0].Active = 1;
 		lightProp01.lights[1].Active = 0;
 		lightProp01.lights[2].Active = 1;
+		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
 
 		
 	
+}
+void RenderEngine::MenuUpdate(float tt){
+	Menu Menuinput;
+	Menuinput.menuInit(this->hInstance, hWindow);
+	int input2 = 0;
+
+	int currentTabTemp = mainMenu.getCurrentTab();
+	int scrolltime = gTimer.TotalTime();
+	//if (gTimer.TotalTime() >= scrolltime + 1.0f)
+
+	if (gTimer.TotalTime() >= menuTime + 0.14f) // Om det gått 0.14 sec sen ditt senaste knapptryck
+	{
+		input2 = Menuinput.menuInput(hWindow);
+
+		if (input2 == 2)
+		{
+			if (iz < 3)
+				iz++;
+			else
+				iz = 1;
+			menuTime = gTimer.TotalTime();
+
+		}
+		if (input2 == 1)
+		{
+			if (iz > 1)
+				iz--;
+			else
+				iz = 3;
+
+			menuTime = gTimer.TotalTime();
+		}
+
+		if (input2 == 3)
+		{
+			//run wichever tab i currently selected --------------------------------------- button functions
+			if (mainMenu.getCurrentTab() == 1)
+			{
+				//gTimer.setPausedTime(pauseTime);
+				//gTimer.setCurrTime(pauseTime);
+				gTimer.Start(pauseTime);
+				mainMenu.setPause(FALSE);
+				menuTime = 0;
+			}
+			else if (mainMenu.getCurrentTab() == 2)
+			{
+				// open highscores
+
+			}
+			else if (mainMenu.getCurrentTab() == 3)
+			{
+				PostMessage(hWindow, WM_QUIT, 0, 0);
+			}
+
+
+		}
+
+		mainMenu.setCurrentTab(iz);
+
+
+		if (input2 == 4)
+		{
+			gTimer.Start(pauseTime);
+
+			//gTimer.setCurrTime(pauseTime);
+			//__int64 Paous = gTimer.TotalTime() - pauseTime;
+			//gTimer.setPausedTime(Paous);
+			mainMenu.setPause(FALSE);
+			menuTime = 0;
+
+			//float gTimer.TotalTime() = pauseTime;
+
+		}
+	}
+
+
+
 }
 
 // REALESE AND CLEANUP

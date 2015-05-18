@@ -14,9 +14,15 @@ public:
 
 	float GameTime()const; // in seconds
 	float TotalTime()const;
+	float DeltaTime()const;
 	void Reset(); // Resets GameTimer
 	void Tick(); // Counts time
-	
+	void setPausedTime(__int64 Time);
+	void setCurrTime(float Time);
+	void Start(float);
+	void Stop();
+	float getPauseTime(float pTime);
+
 private:
 	double mSecondsPerCount;
 	//Time Variables must be int64 because its the format they are aquiered from
@@ -25,5 +31,8 @@ private:
 	__int64 mStopTime;
 	__int64 mPrevTime;
 	__int64 mCurrTime;
-	
+	bool mStopped;
+	double mDeltaTime;
+
+
 };

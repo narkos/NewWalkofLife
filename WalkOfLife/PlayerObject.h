@@ -16,11 +16,14 @@ protected:
 
 	float rayLength; //storar hur lång ray hiten blev
 	float rayRangeUp = 0.2f;
-	float rayRangeDown = 1.0f;
+	float rayRangeDown = 0.4f;
 	float rayRangeSides = 0.5f;
 	XMVECTOR originLow, originLowRight, originLowLeft;
 	XMVECTOR originHigh, originMiddle, originMiddle2, originMiddle3, originMiddle4;
-	float lowValue = -1.5f, middleValue = -1.0f, middleValue2 = 0.25f, middleValue3 = 0.5f, middleValue4 = 0.65f, highValue = 0.8f, extraXValue = 0.6f;
+	vector<XMVECTOR> originSides;
+	vector<float> originsYValues;
+
+	float lowValue = -2.1f, middleValue = -1.8f, highValue = 0.8f, extraXValue = 0.6f;
 	
 	XMVECTOR up, down, right, left;
 	BoundingBox footBox, originalFootBox;
@@ -106,10 +109,13 @@ public:
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
 		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1); //groundchecks
 		originLowLeft = XMVectorSet(pos.x - extraXValue, pos.y + lowValue, pos.z, 1);
-		originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
+		/*originMiddle = XMVectorSet(pos.x, pos.y + middleValue, pos.z, 1);
 		originMiddle2 = XMVectorSet(pos.x, pos.y + middleValue2, pos.z, 1);
 		originMiddle3 = XMVectorSet(pos.x, pos.y + middleValue3, pos.z, 1);
-		originMiddle4 = XMVectorSet(pos.x, pos.y + middleValue4, pos.z, 1);
+		originMiddle4 = XMVectorSet(pos.x, pos.y + middleValue4, pos.z, 1);*/
+		for (int i = 0; i < 10; i++){
+			AddOriginSides(-2 + i/2);
+		}
 
 		originHigh = XMVectorSet(pos.x, pos.y + highValue, pos.z, 1);
 		up = XMVectorSet(0, 1, 0, 0);
@@ -139,18 +145,6 @@ public:
 	float getSpeed();
 	float getJumpHeight();
 	void UpdatePosition(bool canGoRight, bool canGoLeft);
-
-	//void TestIntersect(CollectableObject cObj, int &currCoins, int &currTime){ //testar ifall man träffar ett specifikt CollectableObject och isåfall få dess värde
-	//	//ha nån if-sats som kollar vilka object som ligger i närheten så man inte behöver skicka in alla CollectableObjectsd
-	//	if (cObj.GetActive() == true){ //testa bara collision ifall detta objektet är aktivt
-	//		if (cObj.isCollectable() == true){
-	//			if (bbox.Intersects(cObj.GetBBOX()) == true){ //denna bör vi nog använda, fast använd rays istället
-	//				currCoins += cObj.GetCoinValue();
-	//				currTime += cObj.GetTimeValue();
-	//			}
-	//		}
-	//	}
-	//}
 
 	void SetRayOrigins(float low, float middle, float high){
 		lowValue = low, middleValue = middle, highValue = high;
@@ -260,77 +254,48 @@ public:
 
 	bool TestRight(Platform pObj){
 		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(originMiddle, right, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
-				}				
-			}
-			if (pObj.GetBBOX().Intersects(originMiddle2, right, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
+			for (int i = 0; i < originSides.size() - 1; i++){
+				if (pObj.GetBBOX().Intersects(originSides[i], right, rayLength) == true){
+					if (rayLength < rayRangeSides){
+						return true;
+					}
 				}
 			}
-			if (pObj.GetBBOX().Intersects(originMiddle3, right, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
-				}
-			}
-			if (pObj.GetBBOX().Intersects(originMiddle4, right, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
-				}
-			}
-			
+
 			if (pObj.GetBBOX().Intersects(originHigh, right, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
-				}				
+				}
 			}
-			
+
 			if (pObj.GetBBOX().Intersects(originLow, right, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
-				}			
+				}
 			}
 
 			else return false;
-
 		}
-		else return false;
+		return false;
+	
 	}
 
 	bool TestLeft(Platform pObj){
 		if (pObj.GetActive() == true){
-			if (pObj.GetBBOX().Intersects(originMiddle, left, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
+			for (int i = 0; i < originSides.size() - 1; i++){
+				if (pObj.GetBBOX().Intersects(originSides[i], left, rayLength) == true){
+					if (rayLength < rayRangeSides){
+						return true;
+					}
 				}
 			}
 
-			if (pObj.GetBBOX().Intersects(originMiddle2, left, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
-				}
-			}
-
-			if (pObj.GetBBOX().Intersects(originMiddle3, left, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
-				}
-			}
-
-			if (pObj.GetBBOX().Intersects(originMiddle4, left, rayLength) == true){
-				if (rayLength < rayRangeSides){
-					return true;
-				}
-			}
-			
 			if (pObj.GetBBOX().Intersects(originHigh, left, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
 				}
 			}
-			
+
 			if (pObj.GetBBOX().Intersects(originLow, left, rayLength) == true){
 				if (rayLength < rayRangeSides){
 					return true;
@@ -338,8 +303,15 @@ public:
 			}
 			else return false;
 
+
 		}
-		else return false;
+		return false;
+	}
+
+	void AddOriginSides(float yValue){
+		XMVECTOR temp = XMVectorSet(xPos, yPos + yValue, 0, 1);
+		originsYValues.push_back(yValue);
+		originSides.push_back(temp);
 	}
 
 	void Translate(float x, float y, float z){
@@ -348,11 +320,12 @@ public:
 		originLow = XMVectorSet(x, y + lowValue, 0, 1);
 		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0, 1); //markkontroll
 		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0, 1);
-		originMiddle = XMVectorSet(x, y + middleValue, 0, 1);
-		originMiddle2 = XMVectorSet(x, y + middleValue2, 0, 1);
-		originMiddle3 = XMVectorSet(x, y + middleValue3, 0, 1);
-		originMiddle4 = XMVectorSet(x, y + middleValue4, 0, 1);
+
 		originHigh = XMVectorSet(x, y + highValue, 0, 1);
+
+		for (int i = 0; i < originSides.size() - 1; i++){
+			originSides[i] = XMVectorSet(x, y + originsYValues[i], 0, 1);
+		}
 
 
 		BoundingBox tempB;

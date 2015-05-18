@@ -1019,7 +1019,7 @@ void RenderEngine::Update(float dt){
 
 		lightProp01.lights[1].Type = l_Directional;
 		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
-		lightProp01.lights[1].Color = XMFLOAT4(0.1f, 0.1f,0.1f, 1.0f);
+		lightProp01.lights[1].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
 		lightProp01.lights[0].Type = l_Point;
@@ -1057,7 +1057,7 @@ void RenderEngine::Update(float dt){
 
 
 		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 0;
+		lightProp01.lights[1].Active = 1;
 		lightProp01.lights[2].Active = 1;
 		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);

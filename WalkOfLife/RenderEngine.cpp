@@ -33,7 +33,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
-	this->theBinaryTree = new BinaryTree(30, 30);
+	this->theBinaryTree = new BinaryTree(40, 40);
 	this->LoadSounds();
 }
 
@@ -385,6 +385,11 @@ void RenderEngine::Shaders(){
 	ShaderTest = CompileShader(L"defaultPS.hlsl", "PS_main", "ps_5_0", &pPS);
 	ShaderTest = gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gPixelShader);
 
+	ID3DBlob* pPS2 = nullptr;
+	ShaderTest = CompileShader(L"simplePS.hlsl", "PS_main", "ps_5_0", &pPS2);
+	ShaderTest = gDevice->CreatePixelShader(pPS2->GetBufferPointer(), pPS2->GetBufferSize(), nullptr, &gPixelShader2);
+
+
 	//wireframe
 	D3D11_INPUT_ELEMENT_DESC inputDescPosOnly[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
@@ -708,7 +713,8 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
 	std::wstring xPos = std::to_wstring(theCharacter->xPos);
 	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	std::wstring coins = std::to_wstring(gCounter.getCoin());
+	//std::wstring coins = std::to_wstring(gCounter.getCoin());
+	std::wstring coins = std::to_wstring(theCharacter->getDivision());
 	std::wstring dass = std::to_wstring(fpsDisplay);
 	std::wstring name(L"FPS: ");
 	std::wstring year(L"\nYear: ");
@@ -786,7 +792,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
 		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
 
 		var.CalculateWorld();
 
@@ -1288,6 +1294,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacter.UpdateDivision(theBinaryTree->pixelsPerdivision);
 			//time4 = gTimer.TotalTime();
 		//}
+
+			if (theCharacter.getDivision() != 0)
+			{
+				theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1), theCharacter);
+			}
+
+			else
+				theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theBinaryTree->testPlatforms->at(theCharacter->getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theCharacter);
+
 
 		
 

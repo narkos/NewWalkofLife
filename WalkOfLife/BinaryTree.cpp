@@ -10,6 +10,9 @@ BinaryTree::BinaryTree(int divisions, int pixelsPerDivision)
 	this->renderObjects = new std::vector<std::vector<GameObject>>(100);
 	this->collectables = new std::vector<std::vector<CollectableObject>>(100);
 	this->deadly = new std::vector<std::vector<Platform>>(100);
+	this->collectableMoving = new std::vector<std::vector<CollectableObject>>(100);
+	this->platformsMoving = new std::vector<std::vector<Platform>>(100);
+
 }
 
 
@@ -144,13 +147,13 @@ void BinaryTree::AddObject(GameObject theObject)
 
 void BinaryTree::addCollectables(CollectableObject theObject)
 {
-	if (theObject.xPos > 49 * pixelsPerdivision)
+	if (theObject.GetBBOX().Center.x > 49 * pixelsPerdivision)
 	{
-		if (theObject.xPos > 74 * pixelsPerdivision)
+		if (theObject.GetBBOX().Center.x > 74 * pixelsPerdivision)
 		{
 			for (int i = 0; i < 25; i++)
 			{
-				if ((theObject.xPos >= 75 * pixelsPerdivision + i*pixelsPerdivision) && (theObject.xPos < 75 * pixelsPerdivision + (i*pixelsPerdivision) + pixelsPerdivision))
+				if ((theObject.GetBBOX().Center.x >= 75 * pixelsPerdivision + i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < 75 * pixelsPerdivision + (i*pixelsPerdivision) + pixelsPerdivision))
 				{
 					collectables->at(i).push_back(theObject);
 					break;
@@ -162,7 +165,7 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 		{
 			for (int i = 0; i < 25; i++)
 			{
-				if ((theObject.xPos >= 50 * pixelsPerdivision + i*pixelsPerdivision) && (theObject.xPos < 50 * pixelsPerdivision + (i*pixelsPerdivision) + pixelsPerdivision))
+				if ((theObject.GetBBOX().Center.x >= 50 * pixelsPerdivision + i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < 50 * pixelsPerdivision + (i*pixelsPerdivision) + pixelsPerdivision))
 				{
 					collectables->at(i).push_back(theObject);
 					break;
@@ -177,7 +180,7 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 		{
 			for (int i = 0; i < 25; i++)
 			{
-				if ((theObject.xPos >= 25 * pixelsPerdivision + i*pixelsPerdivision) && (theObject.xPos < 25 * pixelsPerdivision + (i*pixelsPerdivision) + pixelsPerdivision))
+				if ((theObject.GetBBOX().Center.x >= 25 * pixelsPerdivision + i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < 25 * pixelsPerdivision + (i*pixelsPerdivision) + pixelsPerdivision))
 				{
 					collectables->at(i).push_back(theObject);
 					break;
@@ -189,7 +192,7 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 		{
 			for (int i = 0; i < 25; i++)
 			{
-				if ((theObject.xPos >= i*pixelsPerdivision) && (theObject.xPos < (i*pixelsPerdivision) + pixelsPerdivision))
+				if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 				{
 					collectables->at(i).push_back(theObject);
 					break;

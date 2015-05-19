@@ -1689,19 +1689,19 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
-	//	{
-	//		theBinaryTree->renderObjects->at(i).at(j).SetActive(true);
-	//	}
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
+		{
+			theBinaryTree->collectables->at(i).at(j).SetActive(true);
+		}
 
 	//	/*for (int j = 0; j < theBinaryTree->collectableMoving->at(i).size(); j++)
 	//	{
 	//		theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
 	//	}*/
 
-	//}
+	}
 }
 
 void RenderEngine::LoadSounds()

@@ -8,6 +8,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 	this->canGoUp = true;
 
 	for (int i = 0; i < platforms.size(); i++){
+		
 		if (player->TestRight(platforms[i]) == true){ //den träffa nått till höger
 			canGoRight = false;
 
@@ -46,7 +47,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 			{
 				if (player->TestLeft(platforms2[i]) == true){ //borde nog vara mindre än 10, men testa!
 					canGoLeft = false;
-			}
+				}
 
 			}
 
@@ -77,17 +78,17 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 		
 	}
 	
-		for (int i = 0; i < platforms2.size(); i++){
+		for (int i = 0; i < platforms3.size(); i++){
 			if (canGoRight)
 			{
-				if (player->TestRight(platforms2[i]) == true){ //den träffa nått till höger
+				if (player->TestRight(platforms3[i]) == true){ //den träffa nått till höger
 					canGoRight = false;
 				}
 			}
 
 			if (canGoLeft)
 			{
-				if (player->TestLeft(platforms2[i]) == true){ //borde nog vara mindre än 10, men testa!
+				if (player->TestLeft(platforms3[i]) == true){ //borde nog vara mindre än 10, men testa!
 					canGoLeft = false;
 				}
 
@@ -95,7 +96,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 
 			if (canGoUp)
 			{
-				if (player->TestUp(platforms2[i]) == true){
+				if (player->TestUp(platforms3[i]) == true){
 					canGoUp = false;
 				}
 
@@ -105,8 +106,8 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 
 		if (!tempOnGround)
 		{
-			for (int i = 0; i < platforms2.size(); i++){
-				if (player->TestDown(platforms2[i], this->onGround) == true){
+			for (int i = 0; i < platforms3.size(); i++){
+				if (player->TestDown(platforms3[i], this->onGround) == true){
 					//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
 					tempOnGround = true;
 					break;

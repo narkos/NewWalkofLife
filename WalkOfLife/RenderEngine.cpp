@@ -33,7 +33,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
-	this->theBinaryTree = new BinaryTree(40, 40);
+	this->theBinaryTree = new BinaryTree(30, 30);
 	this->LoadSounds();
 }
 

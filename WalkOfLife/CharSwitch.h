@@ -25,7 +25,7 @@ class CharSwitch
 {
 
 public:
-	void switchCharState(int charstate);
+	void switchCharState(float pastchar);
 	void setCharState(int state);
 	int getCharSate();
 

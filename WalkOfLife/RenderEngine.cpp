@@ -621,6 +621,16 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
+			if (gCounter.theAge.years == 5)
+			{
+					//CurrChar.switchCharState(theCharacter1->xPos);
+				CurrChar.setCharState(1);
+				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
+				theCharacter2->xPos = theCharacter1->xPos;
+				theCharacter2->yPos = theCharacter1->yPos;
+				
+			}
+				
 			if (mainMenu.getPause() == FALSE)
 			{
 				if ((gTimer.TotalTime() - time3) >= 0.012f)

@@ -1,6 +1,6 @@
 #include "CharSwitch.h"
 
-void CharSwitch::switchCharState(int charstate)
+void CharSwitch::switchCharState(float pastchar)
 {
 	if (charstate == 0)
 	{
@@ -10,6 +10,7 @@ void CharSwitch::switchCharState(int charstate)
 	{
 		//delete current charater model.
 		//move new character to current position.
+
 		//theCharacter->setVertexbuffer(vBuffer2);
 		//theCustomImporter.GetPlayers()[0]->setVertexbuffer(vBuffer2);
 

@@ -1289,12 +1289,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			//time4 = gTimer.TotalTime();
 		//}
 
-		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		
 
 		
-		if (theCollision.TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter->getDivision())))
+		if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision())))
 		{
-			reset();
+			reset(&theCharacter);
 		}
 		////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
@@ -1303,9 +1303,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 	
 		
-		XMFLOAT2 tempPickUpValue;
-		tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
-		gCounter.addCollectable(tempPickUpValue);
+	/*	XMFLOAT2 tempPickUpValue;
+		tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()));*/
+	/*	gCounter.addCollectable(tempPickUpValue);*/
 
 		if (input == 1 && theCollision->leftValid() == true)
 		{
@@ -1395,7 +1395,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			thePhysics.onPlatform = false;
 			soundJump.PlayMp3();
 			soundJump.daCapo();
-			theCharacter->jumpTimer = gTimer.TotalTime();
+			theCharacter.jumpTimer = gTimer.TotalTime();
 		}
 
 

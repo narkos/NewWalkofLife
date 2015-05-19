@@ -1,0 +1,9 @@
+newmtl Lowpoly_man:defaultMat
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd Lowpoly_man.bmp
+bump lowpoly_man_normalmap2.jpg -bm 0.925926
+Ni 1.00
+Ks 0.50 0.50 0.50

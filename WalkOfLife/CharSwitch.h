@@ -25,12 +25,12 @@ class CharSwitch
 {
 
 public:
-	void switchCharState();
+	void switchCharState(int charstate);
 	void setCharState(int state);
 	int getCharSate();
 
 
 private:
-	int charstate;
+	int charstate = 0;
 
 };

@@ -10,8 +10,8 @@ class Physics
 public:
 	Physics();
 	~Physics();
-	void Gravitation(Collision, PlayerObject*);
-	void Jump(Collision, PlayerObject*);
+	void Gravitation(Collision*, PlayerObject*);
+	void Jump(Collision*, PlayerObject*);
 	bool onPlatform;
 
 	void DisableUpForce(){

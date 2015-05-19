@@ -67,6 +67,7 @@ bool RenderEngine::Init(){
 	Shaders();
 	CreatePlaneData();
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
+	//theCustomImporter.GetPlayers()[0]
 	for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
 	{
 		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
@@ -112,7 +113,8 @@ bool RenderEngine::Init(){
 	////Import
 	
 	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
-	//ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
+	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 4, false);
+	ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
@@ -624,8 +626,23 @@ int RenderEngine::Run(){
 				if ((gTimer.TotalTime() - time3) >= 0.012f)
 				{
 					fpscounter();
-					Update(0.0f);
-					Render(theCharacter);
+					
+					if (CurrChar.getCharSate() == 0)
+					{
+						Update(0.0f, *theCharacter1);
+						Render(theCharacter1);
+					}
+					else if (CurrChar.getCharSate() == 1)
+					{
+						//theCollision
+						Update(0.0f, *theCharacter2);
+						Render(theCharacter2);
+					}
+					else if (CurrChar.getCharSate() == 2)
+					{
+						Update(0.0f, *theCharacter3);
+						Render(theCharacter3);
+					}
 					time3 = gTimer.TotalTime();
 				}
 			}
@@ -970,7 +987,7 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 
 // UPDATES
 
-void RenderEngine::Update(float dt){
+void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 	
 	soundBackground.PlayMp3();
 		Input theInput;
@@ -982,49 +999,50 @@ void RenderEngine::Update(float dt){
 		input = theInput.detectInput(hWindow);
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
+		theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
-		if (!theCollision.rightValid() && theCharacter->jumpMomentumX > 0)
+		if (!theCollision->rightValid() && theCharacter.jumpMomentumX > 0)
 		{
-			theCharacter->jumpMomentumX = 0;
+			theCharacter.jumpMomentumX = 0;
 		}
 
-		if (!theCollision.leftValid() && theCharacter->jumpMomentumX < 0)
+		if (!theCollision->leftValid() && theCharacter.jumpMomentumX < 0)
 		{
-			theCharacter->jumpMomentumX = 0;
+			theCharacter.jumpMomentumX = 0;
 		}
 
-		if (!theCollision.isGrounded() && !theCharacter->jumpMomentumState)
+		if (!theCollision->isGrounded() && !theCharacter.jumpMomentumState)
 		{
-			theCharacter->setJumpMomentum(rightDirection);
+			theCharacter.setJumpMomentum(rightDirection);
 		}
 
-		if (gTimer.TotalTime() - theCharacter->dashTimer > 0.30f && !theCharacter->dashDisabling)
+		if (gTimer.TotalTime() - theCharacter.dashTimer > 0.30f && !theCharacter.dashDisabling)
 		{
-			theCharacter->momentum = 1;
-			if (theCharacter->jumpMomentumX < 0)
+			theCharacter.momentum = 1;
+			if (theCharacter.jumpMomentumX < 0)
 			{
-				theCharacter->jumpMomentumX = -0.1;
+				theCharacter.jumpMomentumX = -0.1;
 			}
 			
-			if (theCharacter->jumpMomentumX > 0)
+			if (theCharacter.jumpMomentumX > 0)
 			{
-				theCharacter->jumpMomentumX = 0.1;
+				theCharacter.jumpMomentumX = 0.1;
 			}
 	
-			theCharacter->dashDisabling = true;
+			theCharacter.dashDisabling = true;
 		}
 
-		if (gTimer.TotalTime() - theCharacter->dashTimer > 4.00f && !theCharacter->dashAvailable)
+		if (gTimer.TotalTime() - theCharacter.dashTimer > 4.00f && !theCharacter.dashAvailable)
 		{
-			theCharacter->dashAvailable = true;
+			theCharacter.dashAvailable = true;
 		}
 
 	//	if ((gTimer.TotalTime() - time4) >= 1.00f)
 		//{
-			theCharacter->UpdateDivision(theBinaryTree->pixelsPerdivision);
+		theCharacter.UpdateDivision(theBinaryTree->pixelsPerdivision);
 			//time4 = gTimer.TotalTime();
 		//}
-		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+		
 		//theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 	
 		
@@ -1032,13 +1050,13 @@ void RenderEngine::Update(float dt){
 		//tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
 
 
-		if (input == 1 && theCollision.leftValid() == true)
+		if (input == 1 && theCollision->leftValid() == true)
 		{
-			if (theCharacter->jumpMomentumState)
+			if (theCharacter.jumpMomentumState)
 			{
-				if (theCharacter->jumpMomentumX > theCharacter->getSpeed() * -1)
+				if (theCharacter.jumpMomentumX > theCharacter.getSpeed() * -1)
 				{
-					theCharacter->jumpMomentumX -= 0.005;
+					theCharacter.jumpMomentumX -= 0.005;
 				}
 
 				else
@@ -1049,19 +1067,19 @@ void RenderEngine::Update(float dt){
 			}
 			else
 			{
-				this->theCharacter->Move(false); //left
+				theCharacter.Move(false); //left
 				rightDirection = false;
 			}
 			
 		}
 
-		else if (input == 2 && theCollision.rightValid() == true)
+		else if (input == 2 && theCollision->rightValid() == true)
 		{
-			if (theCharacter->jumpMomentumState)
+			if (theCharacter.jumpMomentumState)
 			{
-				if (theCharacter->jumpMomentumX < theCharacter->getSpeed())
+				if (theCharacter.jumpMomentumX < theCharacter.getSpeed())
 				{
-					theCharacter->jumpMomentumX += 0.005;
+					theCharacter.jumpMomentumX += 0.005;
 				}
 
 				else
@@ -1073,7 +1091,7 @@ void RenderEngine::Update(float dt){
 			else
 			{
 			
-				this->theCharacter->Move(true); //right
+				theCharacter.Move(true); //right
 				rightDirection = true;
 			}
 			
@@ -1081,7 +1099,7 @@ void RenderEngine::Update(float dt){
 		}
 
 		else
-			this->theCharacter->momentum = 0;
+			theCharacter.momentum = 0;
 
 		if (input == 3)
 		{
@@ -1098,42 +1116,47 @@ void RenderEngine::Update(float dt){
 		}
 		if (input == 4)
 		{
-			reset();
+			reset(&theCharacter);
+		}
+		if (input == 5)
+		{
+
+			CurrChar.setCharState(1);
 		}
 
-		if (dash && theCharacter->dashAvailable)
+		if (dash && theCharacter.dashAvailable)
 		{
-			theCharacter->Dash();
-			theCharacter->dashTimer = gTimer.TotalTime();
+			theCharacter.Dash();
+			theCharacter.dashTimer = gTimer.TotalTime();
 		}
 
 		
 
-		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
+		if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false) //om grounded och man har klickat in jump
 		{
-			this->thePhysics.Jump(theCollision, theCharacter);
+			thePhysics.Jump(theCollision, &theCharacter);
 			thePhysics.onPlatform = false;
 			soundJump.PlayMp3();
 			soundJump.daCapo();
 		}
 
 
-		if (theCollision.upValid() == false){
+		if (theCollision->upValid() == false){
 			thePhysics.DisableUpForce();
 		}
 
-		thePhysics.Gravitation(theCollision, theCharacter);
-		theCharacter->UpdatePosition(theCollision.rightValid(), theCollision.leftValid());
-		theCharacter->CalculateWorld();
+		thePhysics.Gravitation(theCollision, &theCharacter);
+		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+		theCharacter.CalculateWorld();
 
 		//förflyttar alla nonstatic objekt längs deras intervalbana (sin)
 
-		for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
-			if (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetStatic() == false)
-				if (theCharacter->xPos >= theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetXInterval() - 3.0f)
-					&& theCharacter->xPos <= theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].GetXInterval() + 3.0f))
+		for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter.getDivision()).size(); i++){
+			if (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetStatic() == false)
+				if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
+					&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
 
-					theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].SlamaJamma(gTimer.TotalTime());
+					theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
 
 					// MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
 					//theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
@@ -1306,12 +1329,12 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+		theCharacter1 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
-		theCharacter->CreateBBOXVertexBuffer(gDevice);
-		theCharacter->nrElements = objectTest.GetNrElements();
-		Collision tempC(theCharacter);
-		theCollision = tempC;
+		theCharacter1->CreateBBOXVertexBuffer(gDevice);
+		theCharacter1->nrElements = objectTest.GetNrElements();
+		Collision tempC(theCharacter1);
+		theCollision = &tempC;
 		//gameObjects.push_back(*theCharacter);
 	}
 
@@ -1334,11 +1357,12 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 4)
 	{
 		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-
+		//theCharacter2->Scale(0.5f, 0.5f, 0.5f);
 		theCharacter2->CreateBBOXVertexBuffer(gDevice);
 		theCharacter2->nrElements = objectTest.GetNrElements();
-		Collision tempD(theCharacter2);
-		theCollision = tempD;
+		
+		/*Collision tempD(theCharacter2);
+		theCollision = &tempD;*/
 		//gameObjects.push_back(*theCharacter);
 	}
 	if (type == 5)
@@ -1347,8 +1371,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 		theCharacter3->CreateBBOXVertexBuffer(gDevice);
 		theCharacter3->nrElements = objectTest.GetNrElements();
-		Collision tempDC(theCharacter3);
-		theCollision = tempDC;
+	/*	Collision tempDC(theCharacter3);
+		theCollision = &tempDC;*/
 		//gameObjects.push_back(*theCharacter);
 	}
 
@@ -1377,7 +1401,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 }
 
-void RenderEngine::reset()
+void RenderEngine::reset(PlayerObject* theCharacter)
 {
 	theCharacter->xPos = 4;
 	theCharacter->yPos = 9;

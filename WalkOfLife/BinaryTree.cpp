@@ -8,6 +8,8 @@ BinaryTree::BinaryTree(int divisions, int pixelsPerDivision)
 	
 	this->testPlatforms = new std::vector<std::vector<Platform>>(100);
 	this->renderObjects = new std::vector<std::vector<GameObject>>(100);
+	this->collectables = new std::vector<std::vector<CollectableObject>>(100);
+	this->deadly = new std::vector<std::vector<Platform>>(100);
 }
 
 

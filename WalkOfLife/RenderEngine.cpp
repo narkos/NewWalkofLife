@@ -72,30 +72,30 @@ bool RenderEngine::Init(){
 	{
 		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
 	}
-	//for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicPlatforms().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicCollectableObject().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetDynamicDeadlyObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetStaticCollectableObjects().at(i));
-	//}
-	//for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
-	//{
-	//	theBinaryTree->AddObject(theCustomImporter.GetStaticDeadlyObjects().at(i));
-	//}
+	for (int i = 0; i < theCustomImporter.GetBackGroundObjects().size(); i++)
+	{
+		theBinaryTree->AddObject(theCustomImporter.GetBackGroundObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicPlatforms().size(); i++)
+	{
+		theBinaryTree->addMovingPlatforms(theCustomImporter.GetDynamicPlatforms().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicCollectableObject().size(); i++)
+	{
+		theBinaryTree->addMovingCollectable(theCustomImporter.GetDynamicCollectableObject().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetDynamicDeadlyObjects().size(); i++)
+	{
+		theBinaryTree->addDeadlyMovingPlatform(theCustomImporter.GetDynamicDeadlyObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetStaticCollectableObjects().size(); i++)
+	{
+		theBinaryTree->addCollectables(theCustomImporter.GetStaticCollectableObjects().at(i));
+	}
+	for (int i = 0; i < theCustomImporter.GetStaticDeadlyObjects().size(); i++)
+	{
+		theBinaryTree->addDeadlyPlatforms(theCustomImporter.GetStaticDeadlyObjects().at(i));
+	}
 
 	TextureFunc();
 	mainMenu.CreateTextures(gDevice);
@@ -673,13 +673,16 @@ void RenderEngine::Render(){
 	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
 	std::wstring xPos = std::to_wstring(theCharacter->xPos);
 	std::wstring yPos = std::to_wstring(theCharacter->yPos);
+	std::wstring coins = std::to_wstring(gCounter.getCoin());
 	std::wstring dass = std::to_wstring(fpsDisplay);
 	std::wstring name(L"FPS: ");
 	std::wstring year(L"\nYear: ");
 	std::wstring month(L"\nMonth: ");
 	std::wstring XXX(L"\nxPos: ");
 	std::wstring YYY(L"\nyPos: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos;
+	std::wstring coin(L"\nCoins: ");
+	std::wstring nrOfDeaths(L"\nDeaths: ");
+	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos + coin + coins;
 
 	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 
@@ -770,6 +773,236 @@ void RenderEngine::Render(){
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
+
+	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()))
+	{
+		if (var.GetActive())
+		{
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+		
+	}
+
+	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()+1))
+	{
+		if (var.GetActive())
+		{
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+
+	}
+
+	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()))
+	{
+		
+		
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		
+
+	}
+
+	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()+1))
+	{
+		
+		
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		
+
+	}
+
+	if (theCharacter->getDivision() != 0)
+	{
+		for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision() - 1))
+		{
+			
+			
+				gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+				gDeviceContext->IASetInputLayout(gVertexLayout);
+				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+				gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+				var.CalculateWorld();
+
+
+				var.material = MatPresets::Emerald;
+				matProperties.Material = var.material;
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+				XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+				XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+				WVP = XMMatrixIdentity();
+				WVP = var.world * CamView *CamProjection;
+
+				XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+				gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(var.nrElements * 3, 0);
+			
+
+		}
+	}
+	
+
+	if (theCharacter->getDivision() != 0)
+	{
+		for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision() - 1))
+		{
+			if (var.GetActive())
+			{
+				gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+				gDeviceContext->IASetInputLayout(gVertexLayout);
+				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+				gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+				var.CalculateWorld();
+
+
+				var.material = MatPresets::Emerald;
+				matProperties.Material = var.material;
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+				XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+				XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+				WVP = XMMatrixIdentity();
+				WVP = var.world * CamView *CamProjection;
+
+				XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+				gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(var.nrElements * 3, 0);
+			}
+
+		}
+	}
+	
 
 	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1))
 	{
@@ -1020,12 +1253,18 @@ void RenderEngine::Update(float dt){
 			//time4 = gTimer.TotalTime();
 		//}
 		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
-		//theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
+
+		
+		if (theCollision.TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter->getDivision())))
+		{
+			reset();
+		}
+		////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 	
 		
 		XMFLOAT2 tempPickUpValue;
-		//tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
-
+		tempPickUpValue = theCollision.TestCollision(theBinaryTree->collectables->at(theCharacter->getDivision()));
+		gCounter.addCollectable(tempPickUpValue);
 
 		if (input == 1 && theCollision.leftValid() == true)
 		{
@@ -1104,12 +1343,13 @@ void RenderEngine::Update(float dt){
 
 		
 
-		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false) //om grounded och man har klickat in jump
+		if (jump && theCollision.isGrounded() == true && theCharacter->jumpMomentumState == false && gTimer.TotalTime() - theCharacter->jumpTimer > 0.5) //om grounded och man har klickat in jump
 		{
 			this->thePhysics.Jump(theCollision, theCharacter);
 			thePhysics.onPlatform = false;
 			soundJump.PlayMp3();
 			soundJump.daCapo();
+			theCharacter->jumpTimer = gTimer.TotalTime();
 		}
 
 

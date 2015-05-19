@@ -10,6 +10,9 @@ BinaryTree::BinaryTree(int divisions, int pixelsPerDivision)
 	this->renderObjects = new std::vector<std::vector<GameObject>>(100);
 	this->collectables = new std::vector<std::vector<CollectableObject>>(100);
 	this->deadly = new std::vector<std::vector<Platform>>(100);
+	this->collectableMoving = new std::vector<std::vector<CollectableObject>>(100);
+	this->platformsMoving = new std::vector<std::vector<Platform>>(100);
+
 }
 
 

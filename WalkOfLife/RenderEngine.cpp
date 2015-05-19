@@ -33,7 +33,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
-	this->theBinaryTree = new BinaryTree(30, 30);
+	this->theBinaryTree = new BinaryTree(50, 50);
 	this->LoadSounds();
 }
 
@@ -381,6 +381,11 @@ void RenderEngine::Shaders(){
 	ID3DBlob* pPS = nullptr;
 	ShaderTest = CompileShader(L"defaultPS.hlsl", "PS_main", "ps_5_0", &pPS);
 	ShaderTest = gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gPixelShader);
+
+	ID3DBlob* pPS2 = nullptr;
+	ShaderTest = CompileShader(L"simplePS.hlsl", "PS_main", "ps_5_0", &pPS2);
+	ShaderTest = gDevice->CreatePixelShader(pPS2->GetBufferPointer(), pPS2->GetBufferSize(), nullptr, &gPixelShader2);
+
 
 	//wireframe
 	D3D11_INPUT_ELEMENT_DESC inputDescPosOnly[] = {
@@ -751,7 +756,7 @@ void RenderEngine::Render(){
 		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
 		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
 
 		var.CalculateWorld();
 

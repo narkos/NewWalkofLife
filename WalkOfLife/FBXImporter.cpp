@@ -12,6 +12,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 
 	for (int i = 0; i < fileInfo.nrMeshes; i++){ //loopa igenom alla meshes
 		MeshInfo meshInfo;
+		
 		fbxFile.read((char*)&meshInfo.meshType, sizeof(int));
 		fbxFile.read((char*)&meshInfo.xInterval, sizeof(float));
 		fbxFile.read((char*)&meshInfo.yInterval, sizeof(float));
@@ -81,6 +82,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			fbxFile.read((char*)&temp3.x, sizeof(float));
 			fbxFile.read((char*)&temp3.y, sizeof(float));
 			fbxFile.read((char*)&temp3.z, sizeof(float));
+			temp3.z = temp3.z*-1;
 			verPos.push_back(temp3);
 		}
 		
@@ -90,6 +92,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			fbxFile.read((char*)&temp3.x, sizeof(float));
 			fbxFile.read((char*)&temp3.y, sizeof(float));
 			fbxFile.read((char*)&temp3.z, sizeof(float));
+			temp3.z = temp3.z*-1;
 			verNor.push_back(temp3);
 		}
 
@@ -98,6 +101,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 
 			fbxFile.read((char*)&temp2.x, sizeof(float));
 			fbxFile.read((char*)&temp2.y, sizeof(float));
+	
 			verUV.push_back(temp2);
 		}
 
@@ -148,9 +152,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			faces.push_back(tempFaceData);
 
 			//skapa facet (vertiserna)!
-			tempVertex.vertPos = verPos[faces[y].indexPos[0]-1];
-			tempVertex.vertUV = verUV[faces[y].indexUV[0]-1];
-			tempVertex.vertNor = verNor[faces[y].indexNor[0] - 1];
+			tempVertex.vertPos = verPos[faces[y].indexPos[2]-1];
+			tempVertex.vertUV = verUV[faces[y].indexUV[2]-1];
+			tempVertex.vertNor = verNor[faces[y].indexNor[2] - 1];
 			//tempVertex.vertTangent = verTangent[0];
 			vertecies.push_back(tempVertex); //vertex 1 i triangeln
 
@@ -160,9 +164,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			//tempVertex.vertTangent = verTangent[0];
 			vertecies.push_back(tempVertex); //vertex 2 i triangeln
 
-			tempVertex.vertPos = verPos[faces[y].indexPos[2]-1];
-			tempVertex.vertUV = verUV[faces[y].indexUV[2]-1];
-			tempVertex.vertNor = verNor[faces[y].indexNor[2] - 1];
+			tempVertex.vertPos = verPos[faces[y].indexPos[0]-1];
+			tempVertex.vertUV = verUV[faces[y].indexUV[0]-1];
+			tempVertex.vertNor = verNor[faces[y].indexNor[0] - 1];
 			//tempVertex.vertTangent = verTangent[0];
 			vertecies.push_back(tempVertex); //vertex 3 i triangeln
 		}

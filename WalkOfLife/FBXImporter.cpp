@@ -92,7 +92,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			fbxFile.read((char*)&temp3.x, sizeof(float));
 			fbxFile.read((char*)&temp3.y, sizeof(float));
 			fbxFile.read((char*)&temp3.z, sizeof(float));
-			temp3.z = temp3.z*-1;
+			
 			verNor.push_back(temp3);
 		}
 
@@ -101,7 +101,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 
 			fbxFile.read((char*)&temp2.x, sizeof(float));
 			fbxFile.read((char*)&temp2.y, sizeof(float));
-	
+			temp2.y = temp2.y*-1;
 			verUV.push_back(temp2);
 		}
 

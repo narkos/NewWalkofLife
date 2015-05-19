@@ -178,8 +178,11 @@ protected:
 	ID3D11Buffer* gWorld;
 	ID3D11Buffer* cWorld;
 
+	ID3D11SamplerState* sampState1 = nullptr;
+
 	ID3D11ShaderResourceView* gTextureView = nullptr;
 	ID3D11ShaderResourceView* ddsTex1 = nullptr;
+	ID3D11ShaderResourceView* ddsTex2 = nullptr;
 
 	ID3D11InputLayout* gVertexLayout = nullptr;
 	ID3D11VertexShader* gVertexShader = nullptr;

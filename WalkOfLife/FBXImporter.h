@@ -53,8 +53,9 @@ private:
 
 	struct VertexData{
 		XMFLOAT3 vertPos;
-		XMFLOAT3 vertNor;
 		XMFLOAT2 vertUV;
+		XMFLOAT3 vertNor;
+		
 		//XMFLOAT3 vertTangent;
 	};
 

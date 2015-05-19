@@ -2,12 +2,8 @@
 #include "LightComputations.fx"
 Texture2D txDiffuse : register(t0);
 //sampler Sampler : register(s0);
-SamplerState sampAni : register(s0)
-{
-	Filter = ANISOTROPIC;
-	MaxAnisotropy = 4;
+SamplerState sampAni : register(s0);
 
-};
 struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
@@ -22,11 +18,9 @@ float4 PS_main(VS_OUT input) : SV_Target
 
 	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
-	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-		if (Material.UseTexture == 1)
-		{ 
-			Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
-		}
+
+			float4 Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
+		
 
 		float4 emissive = Material.Emissive;
 		float4 ambient = GlobalAmbient*Material.Ambient;
@@ -35,7 +29,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 
 		float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
 
-		return Texdiffuse;
+		return (finalColor);
 		
 
 };

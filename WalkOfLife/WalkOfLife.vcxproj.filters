@@ -61,6 +61,9 @@
     <Filter Include="Header Files\Meny">
       <UniqueIdentifier>{7422f9b5-0d11-468d-a842-3dd6aef2e49c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SwitchChar">
+      <UniqueIdentifier>{932d25d2-9b30-40e9-bdf3-f199560a862f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="Menuclass.cpp">
       <Filter>Header Files\Meny</Filter>
+    </ClCompile>
+    <ClCompile Include="CharSwitch.cpp">
+      <Filter>Header Files\SwitchChar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Menuclass.h">
       <Filter>Header Files\Meny</Filter>
+    </ClInclude>
+    <ClInclude Include="CharSwitch.h">
+      <Filter>Header Files\SwitchChar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

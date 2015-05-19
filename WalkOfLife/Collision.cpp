@@ -1,6 +1,7 @@
 #include "Collision.h"
 
-void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &platforms2, vector<Platform> &platforms3){
+
+void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &platforms2, vector<Platform> &platforms3, PlayerObject& player){
 
 	this->distDown = 0;
 	this->canGoRight = true;
@@ -8,23 +9,23 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 	this->canGoUp = true;
 
 	for (int i = 0; i < platforms.size(); i++){
-		
-		if (player->TestRight(platforms[i]) == true){ //den träffa nått till höger
+
+		if (player.TestRight(platforms[i]) == true){ //den träffa nått till höger
 			canGoRight = false;
 
 		}
-		if (player->TestLeft(platforms[i]) == true){ //borde nog vara mindre än 10, men testa!
+		if (player.TestLeft(platforms[i]) == true){ //borde nog vara mindre än 10, men testa!
 			canGoLeft = false;
 
 		}
-		if (player->TestUp(platforms[i]) == true){
+		if (player.TestUp(platforms[i]) == true){
 			canGoUp = false;
 		}
 
 	}
 	bool tempOnGround = false;
 	for (int i = 0; i < platforms.size(); i++){
-		if (player->TestDown(platforms[i], this->onGround) == true){
+		if (player.TestDown(platforms[i], this->onGround) == true){
 			//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
 			tempOnGround = true;
 			break;
@@ -38,14 +39,14 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 	for (int i = 0; i < platforms2.size(); i++){
 			if (canGoRight)
 			{
-				if (player->TestRight(platforms2[i]) == true){ //den träffa nått till höger
+				if (player.TestRight(platforms2[i]) == true){ //den träffa nått till höger
 					canGoRight = false;
 			}
 			}
 
 			if (canGoLeft)
 			{
-				if (player->TestLeft(platforms2[i]) == true){ //borde nog vara mindre än 10, men testa!
+				if (player.TestLeft(platforms2[i]) == true){ //borde nog vara mindre än 10, men testa!
 					canGoLeft = false;
 				}
 
@@ -53,7 +54,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 
 			if (canGoUp)
 			{
-				if (player->TestUp(platforms2[i]) == true){
+				if (player.TestUp(platforms2[i]) == true){
 					canGoUp = false;
 			}
 			
@@ -64,7 +65,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 		if (!tempOnGround)
 		{
 			for (int i = 0; i < platforms2.size(); i++){
-				if (player->TestDown(platforms2[i], this->onGround) == true){
+				if (player.TestDown(platforms2[i], this->onGround) == true){
 					//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
 					tempOnGround = true;
 					break;
@@ -81,14 +82,22 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 		for (int i = 0; i < platforms3.size(); i++){
 			if (canGoRight)
 			{
+<<<<<<< HEAD
 				if (player->TestRight(platforms3[i]) == true){ //den träffa nått till höger
+=======
+				if (player.TestRight(platforms2[i]) == true){ //den träffa nått till höger
+>>>>>>> origin/master
 					canGoRight = false;
 				}
 			}
 
 			if (canGoLeft)
 			{
+<<<<<<< HEAD
 				if (player->TestLeft(platforms3[i]) == true){ //borde nog vara mindre än 10, men testa!
+=======
+				if (player.TestLeft(platforms2[i]) == true){ //borde nog vara mindre än 10, men testa!
+>>>>>>> origin/master
 					canGoLeft = false;
 				}
 
@@ -96,7 +105,11 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 
 			if (canGoUp)
 			{
+<<<<<<< HEAD
 				if (player->TestUp(platforms3[i]) == true){
+=======
+				if (player.TestUp(platforms2[i]) == true){
+>>>>>>> origin/master
 					canGoUp = false;
 				}
 
@@ -106,8 +119,13 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 
 		if (!tempOnGround)
 		{
+<<<<<<< HEAD
 			for (int i = 0; i < platforms3.size(); i++){
 				if (player->TestDown(platforms3[i], this->onGround) == true){
+=======
+			for (int i = 0; i < platforms2.size(); i++){
+				if (player.TestDown(platforms2[i], this->onGround) == true){
+>>>>>>> origin/master
 					//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
 					tempOnGround = true;
 					break;
@@ -160,7 +178,7 @@ bool Collision::TestCollisionDeadly(vector<Platform> &platforms)
 }
 
 
-XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables)
+XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables, PlayerObject* player)
 {
 	for (int i = 0; i < collectables.size(); i++)
 	{

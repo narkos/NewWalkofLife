@@ -1251,6 +1251,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		input = theInput.detectInput(hWindow);
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
+
+		if (theCharacter.getDivision() != 0)
+		{
+			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
+		}
+
+		else
+			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+
 		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
 		if (!theCollision->rightValid() && theCharacter.jumpMomentumX > 0)
@@ -1295,14 +1304,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			//time4 = gTimer.TotalTime();
 		//}
 
-			if (theCharacter.getDivision() != 0)
-			{
-				theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()-1), theCharacter);
-			}
-
-			else
-				theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
-
+			
 
 		
 
@@ -1318,9 +1320,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 	
 		
-	/*	XMFLOAT2 tempPickUpValue;
-		tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()));*/
-	/*	gCounter.addCollectable(tempPickUpValue);*/
+		XMFLOAT2 tempPickUpValue;
+		tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
+			gCounter.addCollectable(tempPickUpValue); 
 
 		if (input == 1 && theCollision->leftValid() == true)
 		{
@@ -1630,7 +1632,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 4)
 	{
 		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-		//theCharacter2->Scale(0.5f, 0.5f, 0.5f);
+		theCharacter2->Scale(0.5f, 0.5f, 0.5f);
 		theCharacter2->CreateBBOXVertexBuffer(gDevice);
 		theCharacter2->nrElements = objectTest.GetNrElements();
 		
@@ -1676,6 +1678,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 void RenderEngine::reset(PlayerObject* theCharacter)
 {
+	CurrChar.setCharState(0);
 	theCharacter->xPos = 4;
 	theCharacter->yPos = 9;
 	theCharacter->Translate(0, 0, 0);
@@ -1686,19 +1689,19 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
-	for (int i = 0; i < 100; i++)
-	{
-		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
-		{
-			theBinaryTree->renderObjects->at(i).at(j).SetActive(true);
-		}
+	//for (int i = 0; i < 100; i++)
+	//{
+	//	for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
+	//	{
+	//		theBinaryTree->renderObjects->at(i).at(j).SetActive(true);
+	//	}
 
-		for (int j = 0; j < theBinaryTree->testPlatforms->at(i).size(); j++)
-		{
-			theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
-		}
+	//	/*for (int j = 0; j < theBinaryTree->collectableMoving->at(i).size(); j++)
+	//	{
+	//		theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
+	//	}*/
 
-	}
+	//}
 }
 
 void RenderEngine::LoadSounds()

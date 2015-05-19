@@ -129,6 +129,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 	
 
 	this->onGround = tempOnGround;
+	
 	}
 
 bool Collision::TestCollisionDeadly(vector<Platform> &platforms)

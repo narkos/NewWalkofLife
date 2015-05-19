@@ -1251,7 +1251,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		input = theInput.detectInput(hWindow);
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
-		theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
 		if (!theCollision->rightValid() && theCharacter.jumpMomentumX > 0)
 		{
@@ -1297,11 +1297,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 			if (theCharacter.getDivision() != 0)
 			{
-				theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1), theCharacter);
+				theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()-1), theCharacter);
 			}
 
 			else
-				theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theBinaryTree->testPlatforms->at(theCharacter->getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theCharacter);
+				theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
 
 		

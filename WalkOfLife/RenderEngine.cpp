@@ -382,6 +382,11 @@ void RenderEngine::Shaders(){
 	ShaderTest = CompileShader(L"defaultPS.hlsl", "PS_main", "ps_5_0", &pPS);
 	ShaderTest = gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gPixelShader);
 
+	ID3DBlob* pPS2 = nullptr;
+	ShaderTest = CompileShader(L"simplePS.hlsl", "PS_main", "ps_5_0", &pPS2);
+	ShaderTest = gDevice->CreatePixelShader(pPS2->GetBufferPointer(), pPS2->GetBufferSize(), nullptr, &gPixelShader2);
+
+
 	//wireframe
 	D3D11_INPUT_ELEMENT_DESC inputDescPosOnly[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
@@ -752,7 +757,7 @@ void RenderEngine::Render(){
 		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
 		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
 
 		var.CalculateWorld();
 

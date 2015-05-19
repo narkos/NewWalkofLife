@@ -184,6 +184,7 @@ protected:
 	ID3D11InputLayout* gVertexLayout = nullptr;
 	ID3D11VertexShader* gVertexShader = nullptr;
 	ID3D11PixelShader* gPixelShader = nullptr;
+	ID3D11PixelShader* gPixelShader2 = nullptr;
 	ID3D11GeometryShader* gGeometryShader = nullptr;
 
 

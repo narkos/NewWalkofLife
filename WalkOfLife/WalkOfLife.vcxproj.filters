@@ -208,5 +208,8 @@
     <FxCompile Include="WireFrameVS.hlsl">
       <Filter>Resource Files\Default Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="simplePS.hlsl">
+      <Filter>Resource Files\Default Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

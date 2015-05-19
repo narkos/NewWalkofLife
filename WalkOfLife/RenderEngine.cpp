@@ -33,7 +33,7 @@ RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UIN
 	pRenderEngine = this;
 	windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX;
 	//this->theQuadtree = new Quadtree(0, 0, 100, 100, 1, 6);
-	this->theBinaryTree = new BinaryTree(30, 30);
+	this->theBinaryTree = new BinaryTree(40, 40);
 	this->LoadSounds();
 }
 
@@ -673,7 +673,8 @@ void RenderEngine::Render(){
 	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
 	std::wstring xPos = std::to_wstring(theCharacter->xPos);
 	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	std::wstring coins = std::to_wstring(gCounter.getCoin());
+	//std::wstring coins = std::to_wstring(gCounter.getCoin());
+	std::wstring coins = std::to_wstring(theCharacter->getDivision());
 	std::wstring dass = std::to_wstring(fpsDisplay);
 	std::wstring name(L"FPS: ");
 	std::wstring year(L"\nYear: ");
@@ -1252,7 +1253,14 @@ void RenderEngine::Update(float dt){
 			theCharacter->UpdateDivision(theBinaryTree->pixelsPerdivision);
 			//time4 = gTimer.TotalTime();
 		//}
-		theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+			if (theCharacter->getDivision() != 0)
+			{
+				theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter->getDivision()-1));
+			}
+
+			else
+				theCollision.TestCollision(theBinaryTree->testPlatforms->at(theCharacter->getDivision()), theBinaryTree->testPlatforms->at(theCharacter->getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter->getDivision()));
+
 
 		
 		if (theCollision.TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter->getDivision())))

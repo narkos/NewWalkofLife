@@ -27,7 +27,7 @@ public:
 		onGround = false;
 	}
 
-	void TestCollision(vector<Platform> &platforms);
+	void TestCollision(vector<Platform> &platforms, vector<Platform> &platforms2, vector<Platform> &platforms3);
 	bool TestCollisionDeadly(vector<Platform> &platforms);
 	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables);
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);

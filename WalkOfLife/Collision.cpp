@@ -1,6 +1,6 @@
 #include "Collision.h"
 
-void Collision::TestCollision(vector<Platform> &platforms){
+void Collision::TestCollision(vector<Platform> &platforms, PlayerObject& player){
 
 	this->distDown = 0;
 	this->canGoRight = true;
@@ -33,22 +33,22 @@ void Collision::TestCollision(vector<Platform> &platforms){
 	//}
 
 	for (int i = 0; i < platforms.size(); i++){
-		if (player->TestRight(platforms[i]) == true){ //den träffa nått till höger
+		if (player.TestRight(platforms[i]) == true){ //den träffa nått till höger
 			canGoRight = false;
 
 		}
-		if (player->TestLeft(platforms[i]) == true){ //borde nog vara mindre än 10, men testa!
+		if (player.TestLeft(platforms[i]) == true){ //borde nog vara mindre än 10, men testa!
 			canGoLeft = false;
 
 		}
-		if (player->TestUp(platforms[i]) == true){
+		if (player.TestUp(platforms[i]) == true){
 			canGoUp = false;
 		}
 
 	}
 	bool tempOnGround = false;
 	for (int i = 0; i < platforms.size(); i++){
-		if (player->TestDown(platforms[i], this->onGround) == true){
+		if (player.TestDown(platforms[i], this->onGround) == true){
 			//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
 			tempOnGround = true;
 			break;
@@ -118,7 +118,7 @@ bool Collision::TestCollisionDeadly(vector<Platform> &platforms){
 	return tempOnGround;
 }
 
-XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables)
+XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables, PlayerObject* player)
 {
 	for (int i = 0; i < collectables.size(); i++)
 	{

@@ -19,7 +19,7 @@ public:
 
 
 	Collision(PlayerObject *player){
-		this->player = player;
+	this->player = player;
 		onGround = false;
 	}
 
@@ -27,9 +27,10 @@ public:
 		onGround = false;
 	}
 
-	void TestCollision(vector<Platform> &platforms);
 	bool TestCollisionDeadly(vector<Platform> &platforms);
-	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables);
+	void TestCollision(vector<Platform> &platforms, PlayerObject &theCharacter);
+	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables, PlayerObject *theCharacter);
+
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);
 
 
@@ -41,12 +42,12 @@ public:
 private:
 	//används för att kolla hur spelaren kommer kunna flytta sig
 	PlayerObject *player;
-	Platform groundPlatform;
+	
 
 	bool canGoRight;
 	bool canGoLeft;
 	bool canGoUp;
 	bool onGround;
 	
-	float yValue; //den på marken under spelaren
+	
 };

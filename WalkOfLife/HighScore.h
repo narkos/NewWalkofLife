@@ -1,3 +1,11 @@
+#pragma once
+
+#ifndef HIGHSCORE_H
+#define HIGHSCORE_H
+#endif
+
+
+
 #include <iostream>
 #include <fstream>
 #include <d3d11.h>
@@ -7,7 +15,10 @@
 #include "Extra DirectXLibs\Inc\SpriteFont.h"
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
 #include "Extra DirectXLibs\Inc\SimpleMath.h"
-using namespace DirectX;
+//using namespace DirectX;
+
+#pragma comment (lib, "d3d11.lib")
+#pragma comment (lib, "d3dcompiler.lib")
 
 using namespace std;
 class HighScore{
@@ -25,8 +36,18 @@ private:
 	vector<Score> highScoreList;
 	vector<Score> coinList;
 	vector<Score> timeList;
+	bool HSbool = FALSE;
+	//anton
+	
 
 public:
+
+	bool LoadHighScore();
+	bool getHSbool();
+	void setHSbool(bool set);
+	bool SaveHighScore();
+	std::unique_ptr<DirectX::SpriteFont> spritefont_HS;
+	std::unique_ptr<DirectX::SpriteBatch> spriteBatch_HS;
 
 	HighScore(){
 		fileNameLoad = "HighScoreLoad.txt";
@@ -36,12 +57,8 @@ public:
 	}
 	~HighScore(){}
 
-	bool LoadHighScore();
 
-	bool SaveHighScore();
-	//anton
-	std::unique_ptr<DirectX::SpriteFont> spritefont_HS;
-	std::unique_ptr<DirectX::SpriteBatch> spriteBatch_HS;
+	
 
 	void AddScore(int coins, int time, int points){
 		Score scoreTemp;
@@ -74,5 +91,5 @@ public:
 	vector<Score> GetTimeList(){
 		return timeList;
 	}
-	void Highscorespritebatch();
+	void Highscorespritebatch(ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain);
 };

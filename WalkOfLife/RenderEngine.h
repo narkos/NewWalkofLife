@@ -35,6 +35,8 @@
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
 #include "Extra DirectXLibs\Inc\SimpleMath.h"
 #include "Menuclass.h"
+#include "HighScore.h"
+#include "CharSwitch.h"
 
 using namespace DirectX;
 
@@ -58,13 +60,13 @@ public:
 
 	void SetViewport();
 	virtual bool Init();
-	void Update(float dt);
+	void Update(float dt, PlayerObject& theCharacter);
 	void MenuUpdate(float tt);
-	void Render();
+	void Render(PlayerObject* theCharacter);
 	virtual void Release();
 	void Fonts();
 	void fpscounter();
-	void reset();
+	void reset(PlayerObject* theCharacter);
 	void LoadSounds();
 
 
@@ -76,21 +78,28 @@ public:
 	Sound soundMenu;
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;
-	Collision theCollision;
+	Collision* theCollision;
+	Collision tempD;
+	//Collision* theCollision2;
+	//Collision* theCollision3;
 	OBJ theOBJ;
 	Physics thePhysics;
 	FBXImporter theCustomImporter;
 	HighScore theHighScore;
 	GameTimer gTimer;
 	Counters gCounter;
-	PlayerObject* theCharacter;
+	PlayerObject* theCharacter1;
+	PlayerObject* theCharacter2;
+	PlayerObject* theCharacter3;
 	Camera mainCamera;
 	Menu mainMenu;
+	CharSwitch CurrChar;
+	
 	std::wstring mainwname;
 	bool rightDirection;
 
 	//Light Shit
-	LightClass testLight[MAX_LIGHTS];
+	LightClass testLight[20];
 	ID3D11Buffer* lightConstBuff;
 	XMFLOAT4 globalAmb;
 	LightProperties lightProp01;

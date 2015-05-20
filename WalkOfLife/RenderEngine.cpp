@@ -1406,7 +1406,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		}
 
 		
-		if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false) //om grounded och man har klickat in jump
+		if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
 
 		{
 			thePhysics.Jump(theCollision, &theCharacter);

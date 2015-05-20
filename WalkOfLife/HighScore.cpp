@@ -115,9 +115,9 @@ void HighScore::Highscorespritebatch(ID3D11Device* gDevice, ID3D11DeviceContext*
 	const wchar_t* H_LIST_1 = H_list1.c_str();
 	
 
-	spritefont_HS->DrawString(spriteBatch_HS.get(), C_LIST_1, DirectX::SimpleMath::Vector2(100, 500));
-	spritefont_HS->DrawString(spriteBatch_HS.get(), T_LIST_1, DirectX::SimpleMath::Vector2(100, 350));
-	spritefont_HS->DrawString(spriteBatch_HS.get(), H_LIST_1, DirectX::SimpleMath::Vector2(100, 200));
+	spritefont_HS->DrawString(spriteBatch_HS.get(), C_LIST_1, DirectX::SimpleMath::Vector2((width / 1.4)+10, 500));
+	spritefont_HS->DrawString(spriteBatch_HS.get(), T_LIST_1, DirectX::SimpleMath::Vector2((width / 1.4)+10, 350));
+	spritefont_HS->DrawString(spriteBatch_HS.get(), H_LIST_1, DirectX::SimpleMath::Vector2((width / 1.4)+10, 200));
 
 
 	spriteBatch_HS->End();

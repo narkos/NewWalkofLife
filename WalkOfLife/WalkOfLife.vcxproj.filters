@@ -158,9 +158,6 @@
     <ClInclude Include="Platform.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerObject.h">
-      <Filter>Header Files\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
@@ -199,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="CharSwitch.h">
       <Filter>Header Files\SwitchChar</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>Header Files\Shadows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

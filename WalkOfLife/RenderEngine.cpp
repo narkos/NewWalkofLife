@@ -1190,6 +1190,72 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
 	}
 
+for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()+1).size(); i++)
+{
+	//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+	gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].vertexBuffer, &vertexSize, &offset);
+
+
+	theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].CalculateWorld();
+	theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].material = MatPresets::Emerald;
+	theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].material.SpecPow = 38.0f;
+
+	matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].material;
+
+	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+
+
+	XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].world)));
+	XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].world));
+	WVP = XMMatrixIdentity();
+	WVP = theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].world * CamView *CamProjection;
+
+	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision()+1)[i].nrElements * 3, 0);
+}
+
+if (theCharacter->getDivision() != 0)
+{
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1).size(); i++)
+	{
+		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].vertexBuffer, &vertexSize, &offset);
+
+
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material.SpecPow = 38.0f;
+
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material;
+
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world));
+		WVP = XMMatrixIdentity();
+		WVP = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].nrElements * 3, 0);
+	}
+}
+
+
 
 	//wireframe bbox
 	UINT32 bufferElementSize = sizeof(XMFLOAT3);

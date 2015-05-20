@@ -254,6 +254,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 3){ //backgroundobj
 			GameObject tempO(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, xInterval, yInterval, xSpeed, ySpeed);
+			tempO.xPos = centerX;
 			tempO.nrElements = nrOfFaces;
 			backGroundObjects.push_back(tempO);
 		}

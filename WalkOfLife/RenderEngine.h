@@ -94,7 +94,9 @@ public:
 	Camera mainCamera;
 	Menu mainMenu;
 	CharSwitch CurrChar;
-	
+	bool Character2 = false;
+	bool Character3 = false;
+
 	std::wstring mainwname;
 	bool rightDirection;
 

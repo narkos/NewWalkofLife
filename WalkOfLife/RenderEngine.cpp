@@ -629,8 +629,9 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
-			if (gCounter.theAge.years == 5)
+			if (gCounter.theAge.years == 5 && !Character2)
 			{
+				Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
 				CurrChar.setCharState(1);
 				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);

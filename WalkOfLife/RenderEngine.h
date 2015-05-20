@@ -69,6 +69,9 @@ public:
 	void reset(PlayerObject* theCharacter);
 	void LoadSounds();
 
+	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
+
+
 
 	Sound soundJump;
 	Sound soundCoin;
@@ -141,7 +144,6 @@ public:
 	std::vector<GameObject> gameObjects;
 
 	//Tempor?r geometry
-	void CreatePlaneData();
 	void Shaders();
 	void TextureFunc();
 
@@ -162,6 +164,7 @@ public:
 		XMFLOAT4X4 WVP;
 	};
 
+	World perObjCBData;
 	
 protected:
 	 //handle till f?nstret

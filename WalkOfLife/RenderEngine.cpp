@@ -827,392 +827,392 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
 
-//	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()))
-//	{
-//		if (var.GetActive())
-//		{
-//			
-//			gDeviceContext->IASetInputLayout(gVertexLayout);
-//			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//		//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//			var.CalculateWorld();
-//
-//
-//			var.material = MatPresets::Emerald;
-//			matProperties.Material = var.material;
-//			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//			WVP = XMMatrixIdentity();
-//			WVP = var.world * CamView *CamProjection;
-//
-//			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//			gDeviceContext->Draw(var.nrElements * 3, 0);
-//		}
-//		
-//	}
-//
-//	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()+1))
-//	{
-//		if (var.GetActive())
-//		{
-//			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//			gDeviceContext->IASetInputLayout(gVertexLayout);
-//			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//			var.CalculateWorld();
-//
-//
-//			var.material = MatPresets::Emerald;
-//			matProperties.Material = var.material;
-//			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//			WVP = XMMatrixIdentity();
-//			WVP = var.world * CamView *CamProjection;
-//
-//			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//			gDeviceContext->Draw(var.nrElements * 3, 0);
-//		}
-//
-//	}
-//
-//	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()))
-//	{
-//		
-//		
-//			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//			gDeviceContext->IASetInputLayout(gVertexLayout);
-//			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//			var.CalculateWorld();
-//
-//
-//			var.material = MatPresets::Emerald;
-//			matProperties.Material = var.material;
-//			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//			WVP = XMMatrixIdentity();
-//			WVP = var.world * CamView *CamProjection;
-//
-//			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//			gDeviceContext->Draw(var.nrElements * 3, 0);
-//		
-//
-//	}
-//
-//	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()+1))
-//	{
-//		
-//		
-//		//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//			gDeviceContext->IASetInputLayout(gVertexLayout);
-//			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//			var.CalculateWorld();
-//
-//
-//			var.material = MatPresets::Emerald;
-//			matProperties.Material = var.material;
-//			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//			WVP = XMMatrixIdentity();
-//			WVP = var.world * CamView *CamProjection;
-//
-//			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//			gDeviceContext->Draw(var.nrElements * 3, 0);
-//		
-//
-//	}
-//
-//	if (theCharacter->getDivision() != 0)
-//	{
-//		for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision() - 1))
-//		{
-//			
-//			
-//				//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//				gDeviceContext->IASetInputLayout(gVertexLayout);
-//				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//				gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//				gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//				gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//				gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//				gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//				var.CalculateWorld();
-//
-//
-//				var.material = MatPresets::Emerald;
-//				matProperties.Material = var.material;
-//				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//				XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//				XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//				WVP = XMMatrixIdentity();
-//				WVP = var.world * CamView *CamProjection;
-//
-//				XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//				gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//				gDeviceContext->Draw(var.nrElements * 3, 0);
-//			
-//
-//		}
-//	}
-//	
-//
-//	if (theCharacter->getDivision() != 0)
-//	{
-//		for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision() - 1))
-//		{
-//			if (var.GetActive())
-//			{
-//				//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//				gDeviceContext->IASetInputLayout(gVertexLayout);
-//				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//				gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//				gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//				gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//				gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//				gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//				var.CalculateWorld();
-//
-//
-//				var.material = MatPresets::Emerald;
-//				matProperties.Material = var.material;
-//				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//				XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//				XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//				WVP = XMMatrixIdentity();
-//				WVP = var.world * CamView *CamProjection;
-//
-//				XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//				gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//				gDeviceContext->Draw(var.nrElements * 3, 0);
-//			}
-//
-//		}
-//	}
-//	
-//
-//	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1))
-//	{
-//		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//		gDeviceContext->IASetInputLayout(gVertexLayout);
-//		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//		var.CalculateWorld();
-//
-//
-//		var.material = MatPresets::Emerald;
-//		matProperties.Material = var.material;
-//		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//		WVP = XMMatrixIdentity();
-//		WVP = var.world * CamView *CamProjection;
-//
-//		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//		gDeviceContext->Draw(var.nrElements * 3, 0);
-//	}
-//	if (theCharacter->getDivision() != 0)
-//	{
-//		for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision() - 1))
-//		{
-//			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//			gDeviceContext->IASetInputLayout(gVertexLayout);
-//			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//			var.CalculateWorld();
-//
-//
-//			var.material = MatPresets::Emerald;
-//			matProperties.Material = var.material;
-//			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//			WVP = XMMatrixIdentity();
-//			WVP = var.world * CamView *CamProjection;
-//
-//			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//			gDeviceContext->Draw(var.nrElements * 3, 0);
-//		}
-//	}
-//	
-//	//RENDER OBJ FILES
-//	//gDeviceContext->IASetInputLayout(gVertexLayout);
-//	//gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//	//gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-//	//gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//	//gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//	//gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-//
-//	/*for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
-//	{
-//			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//	
-//		
-//		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-//		var.CalculateWorld();
-//
-//		var.material = MatPresets::Emerald;
-//		matProperties.Material = var.material;
-//		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//		
-//		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
-//		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
-//		WVP = XMMatrixIdentity();
-//		WVP = var.world * CamView *CamProjection;
-//
-//		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//		gDeviceContext->Draw(var.nrElements * 3, 0);
-//	}*/
-//
-//for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
-//	{
-//		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-//
-//		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
-//
-//
-//		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
-//		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
-//		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
-//
-//		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material;
-//
-//		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-//
-//
-//
-//		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world)));
-//		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world));
-//		WVP = XMMatrixIdentity();
-//		WVP = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world * CamView *CamProjection;
-//
-//		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
-//
-//
-//		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//
-//		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
-//	}
-//
-//
-//	//wireframe bbox
-//	UINT32 bufferElementSize = sizeof(XMFLOAT3);
-//	UINT32 offset1 = 0;
-//
-//	gDeviceContext->IASetInputLayout(gWireFrameLayout);
-//	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-//
-//	gDeviceContext->VSSetShader(gWireFrameVertexShader, nullptr, 0);
-//	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-//	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-//	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
-//	gDeviceContext->PSSetShader(gWireFramePixelShader, nullptr, 0);
-//
-//	/*for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
-//		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].boundingBoxVertexBuffer, &bufferElementSize, &offset1);
-//		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
-//		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
-//		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
-//		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-//		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-//		gDeviceContext->Draw(16, 0);
-//	}*/
+	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()))
+	{
+		if (var.GetActive())
+		{
+			
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+		//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+		
+	}
+
+	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()+1))
+	{
+		if (var.GetActive())
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+
+	}
+
+	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()))
+	{
+		
+		
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		
+
+	}
+
+	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()+1))
+	{
+		
+		
+		//	gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		
+
+	}
+
+	if (theCharacter->getDivision() != 0)
+	{
+		for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision() - 1))
+		{
+			
+			
+				//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+				gDeviceContext->IASetInputLayout(gVertexLayout);
+				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+				gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+				var.CalculateWorld();
+
+
+				var.material = MatPresets::Emerald;
+				matProperties.Material = var.material;
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+				XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+				XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+				WVP = XMMatrixIdentity();
+				WVP = var.world * CamView *CamProjection;
+
+				XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+				gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(var.nrElements * 3, 0);
+			
+
+		}
+	}
+	
+
+	if (theCharacter->getDivision() != 0)
+	{
+		for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision() - 1))
+		{
+			if (var.GetActive())
+			{
+				//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+				gDeviceContext->IASetInputLayout(gVertexLayout);
+				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+				gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+				gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+				var.CalculateWorld();
+
+
+				var.material = MatPresets::Emerald;
+				matProperties.Material = var.material;
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+				XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+				XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+				WVP = XMMatrixIdentity();
+				WVP = var.world * CamView *CamProjection;
+
+				XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+				gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(var.nrElements * 3, 0);
+			}
+
+		}
+	}
+	
+
+	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1))
+	{
+		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetInputLayout(gVertexLayout);
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+		var.CalculateWorld();
+
+
+		var.material = MatPresets::Emerald;
+		matProperties.Material = var.material;
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+		WVP = XMMatrixIdentity();
+		WVP = var.world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(var.nrElements * 3, 0);
+	}
+	if (theCharacter->getDivision() != 0)
+	{
+		for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision() - 1))
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetInputLayout(gVertexLayout);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+			gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+			gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+			var.CalculateWorld();
+
+
+			var.material = MatPresets::Emerald;
+			matProperties.Material = var.material;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+			XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+			WVP = XMMatrixIdentity();
+			WVP = var.world * CamView *CamProjection;
+
+			XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+			gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+	}
+	
+	//RENDER OBJ FILES
+	//gDeviceContext->IASetInputLayout(gVertexLayout);
+	//gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+	//gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+	//gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+	//gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+
+	/*for each (GameObject var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
+	{
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+	
+		
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		var.CalculateWorld();
+
+		var.material = MatPresets::Emerald;
+		matProperties.Material = var.material;
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+		
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, var.world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(var.world));
+		WVP = XMMatrixIdentity();
+		WVP = var.world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(var.nrElements * 3, 0);
+	}*/
+
+for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+	{
+		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
+
+
+		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
+
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material;
+
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+
+
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world));
+		WVP = XMMatrixIdentity();
+		WVP = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world * CamView *CamProjection;
+
+		XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+
+
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
+	}
+
+
+	//wireframe bbox
+	UINT32 bufferElementSize = sizeof(XMFLOAT3);
+	UINT32 offset1 = 0;
+
+	gDeviceContext->IASetInputLayout(gWireFrameLayout);
+	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+
+	gDeviceContext->VSSetShader(gWireFrameVertexShader, nullptr, 0);
+	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
+	gDeviceContext->PSSetShader(gWireFramePixelShader, nullptr, 0);
+
+	/*for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].boundingBoxVertexBuffer, &bufferElementSize, &offset1);
+		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
+		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
+		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
+		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+		gDeviceContext->Draw(16, 0);
+	}*/
 //
 
 

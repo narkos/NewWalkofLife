@@ -30,14 +30,17 @@ class Menu{
 
 public:
 	Menu();
+	void menuInit(ID3D11DeviceContext* gDeviceContext);
 	void scrollUp();
 	void scrollDown();
+	void Meterfunc(ID3D11DeviceContext* gDeviceContext, float width, int year);
 	void CreateTextures(ID3D11Device* gDevice);
 	std::unique_ptr<DirectX::SpriteBatch> MenuspriteBatch;
 	std::unique_ptr<DirectX::SpriteBatch> MenuspriteBatch2;
 	std::unique_ptr<DirectX::SpriteBatch> MenuspriteBatch3;
+	std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
 	
-	void ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* SwapChain);
+	void ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* SwapChain, bool HS);
 
 	/// Inputs
 	IDirectInputDevice8* DIKeyboard;
@@ -78,5 +81,21 @@ private:
 	ID3D11ShaderResourceView* RutTex32 = nullptr;
 	ID3D11ShaderResourceView* RutTex4 = nullptr;
 	ID3D11ShaderResourceView* RutTex42 = nullptr;
+	
+	ID3D11ShaderResourceView* Meter = nullptr;
+	ID3D11ShaderResourceView* Meter1 = nullptr;
+	ID3D11ShaderResourceView* Meter2 = nullptr;
+	ID3D11ShaderResourceView* Meter3 = nullptr;
+	ID3D11ShaderResourceView* Meter4 = nullptr;
+	ID3D11ShaderResourceView* Meter5 = nullptr;
+	ID3D11ShaderResourceView* Meter6 = nullptr;
+	ID3D11ShaderResourceView* Meter7 = nullptr;
+	ID3D11ShaderResourceView* Meter8 = nullptr;
+	ID3D11ShaderResourceView* Meter9 = nullptr;
+	ID3D11ShaderResourceView* Meter10 = nullptr;
+	ID3D11ShaderResourceView* Meter11 = nullptr;
+
+	ID3D11ShaderResourceView* HSbox = nullptr;
+	
 
 };

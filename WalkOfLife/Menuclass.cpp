@@ -14,12 +14,28 @@ void Menu::CreateTextures(ID3D11Device* gDevice)
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/High_2.dds", nullptr, &RutTex22);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_1.dds", nullptr, &RutTex3);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_2.dds", nullptr, &RutTex32);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Resume.dds", nullptr, &RutTex4);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Resume2.dds", nullptr, &RutTex42);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/matare.dds", nullptr, &RutTex4);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Highscorebox6.dds", nullptr, &HSbox);
+	/////
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter1.dds", nullptr, &Meter2);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter2.dds", nullptr, &Meter3);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter3.dds", nullptr, &Meter4);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter4.dds", nullptr, &Meter5);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter5.dds", nullptr, &Meter6);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter6.dds", nullptr, &Meter7);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter7.dds", nullptr, &Meter8);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter8.dds", nullptr, &Meter9);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter9.dds", nullptr, &Meter10);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter10.dds", nullptr, &Meter11);
+	
+
+
 	
 }
 
-void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain)
+void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS)
 {
 	
 	MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
@@ -34,9 +50,11 @@ void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float he
 		//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
 		//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
 		MenuspriteBatch->Begin();
-		MenuspriteBatch->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 100));
-		MenuspriteBatch->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5, 300));
-		MenuspriteBatch->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5, 500));
+		
+
+		MenuspriteBatch->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5, 100));
+		MenuspriteBatch->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 300));
+		MenuspriteBatch->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 500));
 		MenuspriteBatch->End();
 	}
 	else if (currentTab == 2)
@@ -44,9 +62,9 @@ void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float he
 		//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 		//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
 		MenuspriteBatch2->Begin();
-		MenuspriteBatch2->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5, 100));
-		MenuspriteBatch2->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 300));
-		MenuspriteBatch2->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5, 500));
+		MenuspriteBatch2->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 100));
+		MenuspriteBatch2->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5, 300));
+		MenuspriteBatch2->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 500));
 		
 		MenuspriteBatch2->End();
 	}
@@ -55,9 +73,9 @@ void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float he
 		//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 		//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
 		MenuspriteBatch3->Begin();
-		MenuspriteBatch3->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5, 100));
-		MenuspriteBatch3->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5, 300));
-		MenuspriteBatch3->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 500));
+		MenuspriteBatch3->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 100));
+		MenuspriteBatch3->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 300));
+		MenuspriteBatch3->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5, 500));
 
 		MenuspriteBatch3->End();
 	}
@@ -66,8 +84,88 @@ void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float he
 	//Drawing the menu
 
 	
-	
+	if (HS == TRUE)
+	{
+		MenuspriteBatch3->Begin();
+		MenuspriteBatch3->Draw(HSbox, DirectX::XMFLOAT2(width / 1.4, 100));
+
+		MenuspriteBatch3->End();
+	}
 	gSwapChain->Present(0, 0);
+	
+
+}
+
+void Menu::menuInit(ID3D11DeviceContext* gDeviceContext)
+{
+	//MeterSpriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
+}
+
+
+void Menu::Meterfunc(ID3D11DeviceContext* gDeviceContext, float width, int year)
+{
+	//mainCamera.getWindowWidth(), mainCamera.getWindowHeight()
+	float meterwidth = width;
+	MeterSpriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
+
+	if (year < 10)
+	{
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 10 && year < 20){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter1, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 20 && year < 30){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter2, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 30 && year < 40){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter3, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 40 && year < 50){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter4, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 50 && year < 60){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter6, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 60 && year < 70){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter7, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 70 && year < 80){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter8, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 80 && year < 90){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter9, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 90 && year < 100){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter10, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+	else if (year >= 100){
+		MeterSpriteBatch->Begin();
+		MeterSpriteBatch->Draw(Meter11, DirectX::XMFLOAT2(meterwidth / 3.5, 10));
+		MeterSpriteBatch->End();
+	}
+
+	
 	
 
 }

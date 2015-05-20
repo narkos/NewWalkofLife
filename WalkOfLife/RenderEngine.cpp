@@ -103,7 +103,7 @@ bool RenderEngine::Init(){
 
 	//Font
 	Fonts();
-
+	mainMenu.menuInit(gDeviceContext);
 	//highscore stuff
 	//theHighScore.AddScore(5, 2, 13);
 
@@ -297,8 +297,22 @@ void RenderEngine::TextureFunc(){
 
 	HRESULT texCheck;
 	texCheck = CreateDDSTextureFromFile(gDevice, L"Textures/Lowpoly_man.dds", nullptr, &ddsTex1);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter1.dds", nullptr, &Meter2);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter2.dds", nullptr, &Meter3);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter3.dds", nullptr, &Meter4);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter4.dds", nullptr, &Meter5);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter5.dds", nullptr, &Meter6);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter6.dds", nullptr, &Meter7);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter7.dds", nullptr, &Meter8);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter8.dds", nullptr, &Meter9);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter9.dds", nullptr, &Meter10);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter10.dds", nullptr, &Meter11);
 
 }
+
+
 
  // CREATE FONTS
 
@@ -629,21 +643,32 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
-			if (gCounter.theAge.years == 5)
+
+
+			
+			
+			
+			
+			
+			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
+			if (gCounter.theAge.years == 5 && haschanged == false)
 			{
 					//CurrChar.switchCharState(theCharacter1->xPos);
+				haschanged = true;
 				CurrChar.setCharState(1);
 				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 				theCharacter2->xPos = theCharacter1->xPos;
 				theCharacter2->yPos = theCharacter1->yPos;
 				
 			}
-				
+			
 			if (mainMenu.getPause() == FALSE)
 			{
+				
 				if ((gTimer.TotalTime() - time3) >= 0.012f)
 				{
 					fpscounter();
+					
 					
 					if (CurrChar.getCharSate() == 0)
 					{
@@ -663,6 +688,7 @@ int RenderEngine::Run(){
 					}
 					time3 = gTimer.TotalTime();
 				}
+				
 			}
 			if (mainMenu.getPause() == TRUE)
 			{
@@ -672,7 +698,8 @@ int RenderEngine::Run(){
 				//if (theHighScore.getHSbool() == FALSE)
 				{
 					MenuUpdate(0.0f);
-					mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+					mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
+					
 				}
 
 				if(theHighScore.getHSbool()==TRUE)
@@ -704,7 +731,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	if (mainMenu.getPause() == TRUE)
 	{
-		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
 	}
 	// Draw Text
 	spriteBatch->Begin();
@@ -739,6 +766,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
+	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 	///////////////////////////////////////////
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -1251,7 +1279,17 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		input = theInput.detectInput(hWindow);
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
-		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+
+		if (theCharacter.getDivision() != 0)
+		{
+			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
+		}
+
+		else
+			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+
+		
+		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
 		if (!theCollision->rightValid() && theCharacter.jumpMomentumX > 0)
 		{
@@ -1294,15 +1332,6 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacter.UpdateDivision(theBinaryTree->pixelsPerdivision);
 			//time4 = gTimer.TotalTime();
 		//}
-
-			if (theCharacter.getDivision() != 0)
-			{
-				theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()-1), theCharacter);
-			}
-
-			else
-				theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
-
 
 		
 
@@ -1602,7 +1631,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 0)
 	{
 
-		theCharacter1 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+		theCharacter1 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(10, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
 		theCharacter1->CreateBBOXVertexBuffer(gDevice);
 		theCharacter1->nrElements = objectTest.GetNrElements();
@@ -1630,7 +1659,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	if (type == 4)
 	{
 		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-		//theCharacter2->Scale(0.5f, 0.5f, 0.5f);
+		theCharacter2->Scale(0.5f, 0.5f, 0.5f);
 		theCharacter2->CreateBBOXVertexBuffer(gDevice);
 		theCharacter2->nrElements = objectTest.GetNrElements();
 		

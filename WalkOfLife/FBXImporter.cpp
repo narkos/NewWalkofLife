@@ -39,7 +39,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		int coinValue = meshInfo.coinValue;
 		int timeValue = meshInfo.timeValue;
 
-		if (xInterval < 0)
+
+		// Why? /Joakim
+		/*if (xInterval < 0)
 			xInterval = 0;
 		if (yInterval < 0)
 			yInterval = 0;
@@ -47,7 +49,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			xSpeed = 0;
 		if (ySpeed < 0)
 			ySpeed = 0;
-
+*/
 		int nrOfAnimations = meshInfo.nrAnimations;
 		int nrOfBones = meshInfo.nrBones;
 		int nrOfVertexPositions = meshInfo.nrPos;

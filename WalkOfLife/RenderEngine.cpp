@@ -600,7 +600,7 @@ int RenderEngine::Run(){
 		}
 		else{ //applikationen är fortfarande igång
 			gTimer.Tick();
-			if (gCounter.theAge.years == 5 && !Character2)
+			if (gCounter.theAge.years == 1000 && !Character2)
 			{
 				Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -806,6 +806,54 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		
 	}
 
+
+	//Render Moving Platforms
+	for each (Platform var in theBinaryTree->platformsMoving->at(theCharacter->getDivision()))
+	{
+		if (var.GetActive())
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			var.CalculateWorld();
+			//var.material = MatPresets::Emerald;
+			//matProperties.Material = var.material;
+			//matProperties.Material.UseTexture = 0;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+			UpdateMatricies(var.world, CamView, CamProjection);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+
+	}
+
+	//Render Deadly Moving Platforms
+	for each (Platform var in theBinaryTree->deadlyMoving->at(theCharacter->getDivision()))
+	{
+		if (var.GetActive())
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			var.CalculateWorld();
+			//var.material = MatPresets::Emerald;
+			//matProperties.Material = var.material;
+			//matProperties.Material.UseTexture = 0;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+			UpdateMatricies(var.world, CamView, CamProjection);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+
+	}
+
+	//Render Collectables
 	for each (CollectableObject var in theBinaryTree->collectables->at(theCharacter->getDivision()+1))
 	{
 		if (var.GetActive())
@@ -1103,7 +1151,10 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		}
 
 		else
-			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+		{
+			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);	
+		}
+
 
 		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
@@ -1269,18 +1320,41 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
 		theCharacter.CalculateWorld();
 
-		//förflyttar alla nonstatic objekt längs deras intervalbana (sin)
+		//MOVING PLATFORM POSITION UPDATE
 
-		for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter.getDivision()).size(); i++){
-			if (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetStatic() == false)
-				if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
+		//for (unsigned i = 0; i < theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
+		for (vector<int>::size_type i = 0; i != theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
+		{
+			if (theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
+			{
+				theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].PatrolInterval(gTimer.TotalTime());
+			}
+				/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
 					&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
+*/
+					//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
 
-					theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-
-					// MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
-					//theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].PatrolInterval(gTimer.TotalTime());
+					//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
+					
 		}
+
+		// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
+
+		for (vector<int>::size_type i = 0; i != theBinaryTree->deadlyMoving->at(theCharacter.getDivision()).size(); i++)
+		{
+			if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
+			{
+				theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+			}
+			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
+			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
+			*/
+			//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+
+			//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
+
+		}
+
 
 		lightProp01.lights[1].Type = l_Directional;
 		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);

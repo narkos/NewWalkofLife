@@ -32,6 +32,20 @@ public:
 	XMMATRIX pos;
 	float xPos;
 	float yPos;
+
+	//Slam Variables
+	float slamWaitTime;
+	float slamDeltaTime;
+	float slamStopTime;
+	float slamStartTime;
+	bool slamHasStopped;
+	float slamMomentum;
+	//bool slamHasBegun;
+	bool slamReturning;
+	int slamDirection;
+	float slamSpeedMultiplier;
+	bool slamReset;
+
 	Entity(XMFLOAT3 pos, bool isActive, bool isStatic){
 		this->isActive = isActive;
 		this->isStatic = isStatic;
@@ -65,7 +79,7 @@ public:
 		//bool slamHasBegun;
 		slamReturning = false;
 		slamHasStopped = false;
-		slamDirection = -1.0f;
+		//slamDirection = xSpeed;
 		slamSpeedMultiplier = 1.0f;
 		slamReset = false;
 
@@ -126,18 +140,7 @@ public:
 		this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
 	}
 
-	//Slam Variables
-	float slamWaitTime;
-	float slamDeltaTime;
-	float slamStopTime;
-	float slamStartTime;
-	bool slamHasStopped;
-	float slamMomentum;
-	//bool slamHasBegun;
-	bool slamReturning;
-	int slamDirection;
-	float slamSpeedMultiplier;
-	bool slamReset;
+
 	void SlamaJamma(float time)
 	{
 	

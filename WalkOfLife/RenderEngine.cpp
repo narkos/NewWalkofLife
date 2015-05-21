@@ -630,15 +630,14 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 
 			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-			if (gCounter.theAge.years == 5 && haschanged == false)
+			if (gCounter.theAge.years == 5 && !Character2)
 			{
 				Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
-				haschanged = true;
 				CurrChar.setCharState(1);
 				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-				theCharacter2->xPos = theCharacter1->xPos;
-				theCharacter2->yPos = theCharacter1->yPos;
+				theCharacters.at(1).xPos = theCharacters.at(0).xPos;
+				theCharacters.at(1).yPos = theCharacters.at(0).yPos;
 				
 			}
 			
@@ -1654,6 +1653,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 void RenderEngine::reset(PlayerObject* theCharacter)
 {
+	Character2 = false;
+	Character3 = false;
 	CurrChar.setCharState(0);
 	theCharacter->xPos = 4;
 	theCharacter->yPos = 9;

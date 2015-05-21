@@ -46,7 +46,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		if (yInterval < -1000)
 			yInterval = 0;
 		if (xSpeed < -1000)
-			xSpeed = -1000;
+			xSpeed = 0;
 		if (ySpeed < -1000)
 			ySpeed = 0;
 
@@ -281,6 +281,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.slamDirection = coinValue;
 			tempP.nrElements = nrOfFaces;
 			dynamicDeadlyObjects.push_back(tempP);
 		}

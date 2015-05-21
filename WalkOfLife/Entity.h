@@ -145,6 +145,9 @@ public:
 	void SlamaJamma(float time)
 	{
 	
+		//Slam Direction is set by the Coin Value in the custom format Exporter.
+		//Slam Object type is 6
+
 		if (!slamHasStopped)
 		{
 			if (slamReset)
@@ -158,7 +161,8 @@ public:
 
 		if (!slamReturning)
 		{
-			if (currIntervalPosition.y > -yInterval)
+		
+			if (slamDirection < 0 && currIntervalPosition.y > -yInterval || slamDirection > 0 && currIntervalPosition.y < yInterval)
 			{
 				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
 			}
@@ -189,7 +193,8 @@ public:
 		}
 		else
 		{
-			if (currIntervalPosition.y < yInterval)
+			
+			if (slamDirection < 0 && currIntervalPosition.y > -yInterval || slamDirection > 0 && currIntervalPosition.y < yInterval)
 			{
 				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
 			}

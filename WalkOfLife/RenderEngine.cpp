@@ -1438,7 +1438,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 		else
 		{
-			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 90);
+			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
 		}
 
 		lightProp01.lights[1].Type = l_Directional;

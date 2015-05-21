@@ -1379,9 +1379,6 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			thePhysics.DisableUpForce();
 		}
 
-		thePhysics.Gravitation(theCollision, &theCharacter);
-		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
-		theCharacter.CalculateWorld();
 
 		//MOVING PLATFORM POSITION UPDATE
 
@@ -1404,6 +1401,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
 
 		}
+		thePhysics.Gravitation(theCollision, &theCharacter);
+		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+		theCharacter.CalculateWorld();
 
 
 		lightProp01.lights[1].Type = l_Directional;

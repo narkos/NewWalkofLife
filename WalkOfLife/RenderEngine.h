@@ -82,6 +82,7 @@ public:
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;
 	Collision* theCollision;
+	Collision testStaticPlatforms, testDynamicPlatforms;
 	Collision tempD;
 	//Collision* theCollision2;
 	//Collision* theCollision3;

@@ -65,7 +65,10 @@ bool RenderEngine::Init(){
 
 	//Initialize Shaders and triangle data
 	Shaders();
-
+	Collision tempC(theCharacter1);
+	theCollision = &tempC;
+	testStaticPlatforms = tempC;
+	testDynamicPlatforms = tempC;
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	//theCustomImporter.GetPlayers()[0]
@@ -1157,7 +1160,6 @@ if (theCharacter->getDivision() != 0)
 // UPDATES
 
 void RenderEngine::Update(float dt, PlayerObject& theCharacter){
-	
 	soundBackground.PlayMp3();
 		Input theInput;
 		theInput.initInput(this->hInstance, hWindow);
@@ -1169,17 +1171,56 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		jump = theInput.detectJump(hWindow);
 		dash = theInput.detectDash(hWindow);
 
+		for (vector<int>::size_type i = 0; i != theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
+		{
+			if (theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
+			{
+				theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].PatrolInterval(gTimer.TotalTime());
+				theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].UpdateBBOX();
+			}
+			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
+			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
+			*/
+			//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+
+			//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
+
+		}
+
+
 		if (theCharacter.getDivision() != 0)
 		{
-			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
+			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), theCharacter);
+			testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
+			
 		}
 
 		else
 		{
-			theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);	
+			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theCharacter);
+			testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+			
 		}
 
+		if (testDynamicPlatforms.isGrounded() == true || testStaticPlatforms.isGrounded() == true)
+			theCollision->SetGrounded(true);
+		else
+			theCollision->SetGrounded(false);
 
+		if (testDynamicPlatforms.rightValid() == false || testStaticPlatforms.rightValid() == false)
+			theCollision->SetRightValid(false);
+		else 
+			theCollision->SetRightValid(true);
+
+		if (testDynamicPlatforms.leftValid() == false || testStaticPlatforms.leftValid() == false)
+			theCollision->SetLeftValid(false);
+		else
+			theCollision->SetLeftValid(true);
+
+		if (testDynamicPlatforms.upValid() == false || testStaticPlatforms.upValid() == false)
+			theCollision->SetUpValid(false);
+		else
+			theCollision->SetUpValid(true);
 		
 		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
@@ -1227,7 +1268,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		//}
 
 		
-		if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision())))
+		if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
 		{
 			reset(&theCharacter);
 		}
@@ -1345,20 +1386,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		//MOVING PLATFORM POSITION UPDATE
 
 		//for (unsigned i = 0; i < theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
-		for (vector<int>::size_type i = 0; i != theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
-		{
-			if (theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
-			{
-				theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].PatrolInterval(gTimer.TotalTime());
-			}
-				/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
-					&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
-*/
-					//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-
-					//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
-					
-		}
+	
 
 		// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
 
@@ -1549,8 +1577,6 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 		theCharacter1->CreateBBOXVertexBuffer(gDevice);
 		theCharacter1->nrElements = objectTest.GetNrElements();
-		Collision tempC(theCharacter1);
-		theCollision = &tempC;
 		//gameObjects.push_back(*theCharacter);
 	}
 

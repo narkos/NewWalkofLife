@@ -132,37 +132,19 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 	
 	}
 
-bool Collision::TestCollisionDeadly(vector<Platform> &platforms)
+	bool Collision::TestCollisionDeadly(vector<Platform> &platforms, PlayerObject* player)
 {
-
-
-	for (int i = 0; i < platforms.size(); i++){
-		if (player->TestRight(platforms[i]) == true){ //den träffa nått till höger
-			canGoRight = false;
-
+	for (int i = 0; i < platforms.size(); i++)
+	{
+		if (player->TestIntersect(platforms[i]) == true)
+		{
+		
+			platforms[i].SetActive(false);
+			return true;
 		}
-		if (player->TestLeft(platforms[i]) == true){ //borde nog vara mindre än 10, men testa!
-			canGoLeft = false;
-
-		}
-		if (player->TestUp(platforms[i]) == true){
-			canGoUp = false;
-		}
-
 	}
-	bool tempOnGround = false;
-	for (int i = 0; i < platforms.size(); i++){
-		if (player->TestDown(platforms[i], this->onGround) == true){
-			//groundPlatform = platforms[i]; //sen använder man denna för att kolla vilket y värde
-			tempOnGround = true;
-			break;
-			//testa först mot triangeln
-		}
-		else
-			tempOnGround = false;
-
-	}
-	return tempOnGround;
+	return false;
+	
 }
 
 

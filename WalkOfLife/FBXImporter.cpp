@@ -41,15 +41,15 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 
 
 		// Why? /Joakim
-		/*if (xInterval < 0)
+		if (xInterval < -1000)
 			xInterval = 0;
-		if (yInterval < 0)
+		if (yInterval < -1000)
 			yInterval = 0;
-		if (xSpeed < 0)
-			xSpeed = 0;
-		if (ySpeed < 0)
+		if (xSpeed < -1000)
+			xSpeed = -1000;
+		if (ySpeed < -1000)
 			ySpeed = 0;
-*/
+
 		int nrOfAnimations = meshInfo.nrAnimations;
 		int nrOfBones = meshInfo.nrBones;
 		int nrOfVertexPositions = meshInfo.nrPos;

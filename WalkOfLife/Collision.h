@@ -17,9 +17,9 @@ public:
 	float distUp;
 	float distDown;
 
-
+	
 	Collision(PlayerObject *player){
-	this->player = player;
+	//this->player = player;
 		onGround = false;
 	}
 
@@ -29,7 +29,7 @@ public:
 
 
 	void TestCollision(vector<Platform> &platforms, vector<Platform> &platforms2, vector<Platform> &platforms3, PlayerObject &theCharacter);
-	bool TestCollisionDeadly(vector<Platform> &platforms);
+	bool TestCollisionDeadly(vector<Platform> &platforms, PlayerObject* player);
 
 	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables, PlayerObject *theCharacter);
 
@@ -41,9 +41,14 @@ public:
 	bool upValid(){ return canGoUp; }
 	bool isGrounded(){ return onGround; }
 
+	void SetGrounded(bool b){ onGround = b; }
+	void SetRightValid(bool b){ canGoRight = b; }
+	void SetLeftValid(bool b){ canGoLeft = b; }
+	void SetUpValid(bool b){ canGoUp = b; }
+
 private:
 	//används för att kolla hur spelaren kommer kunna flytta sig
-	PlayerObject *player;
+	//PlayerObject *player;
 	
 
 	bool canGoRight;

@@ -79,7 +79,7 @@ public:
 		//bool slamHasBegun;
 		slamReturning = false;
 		slamHasStopped = false;
-		//slamDirection = xSpeed;
+		slamDirection = xSpeed;
 		slamSpeedMultiplier = 1.0f;
 		slamReset = false;
 
@@ -93,6 +93,7 @@ public:
 	}
 
 	XMMATRIX world;
+
 	void Translate(float x, float y, float z){
 		pos = XMMatrixTranslation(this->xPos + x, this->yPos + y, z);
 	}

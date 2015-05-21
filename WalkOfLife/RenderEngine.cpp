@@ -118,6 +118,12 @@ bool RenderEngine::Init(){
 	mainMenu.menuInit(gDeviceContext);
 	theCharacters.at(0).setJumpHeight(0.5f);
 	theCharacters.at(0).setRunSpeed(0.1f);
+	theCharacters.at(0).xPos = 4;
+	theCharacters.at(0).yPos = 9;
+	theCharacters.at(1).setRunSpeed(0.1f);
+	theCharacters.at(1).setJumpHeight(0.6f);
+	theCharacters.at(2).setRunSpeed(0.1f);
+	theCharacters.at(2).setJumpHeight(0.6f);
 	theCharacters.at(0).SetRayOrigins(-0.4f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 	theCharacters.at(1).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 
@@ -1371,15 +1377,24 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		}
 		if (input == 5)
 		{
+			theCharacters.at(0).xPos = theCharacter.xPos;
+			theCharacters.at(0).yPos = theCharacter.yPos;
 			CurrChar.setCharState(0);
+			
 		}
 		if (input == 6)
 		{
+			theCharacters.at(1).xPos = theCharacter.xPos;
+			theCharacters.at(1).yPos = theCharacter.yPos;
 			CurrChar.setCharState(1);
+			
 		}
 		if (input == 7)
 		{
+			theCharacters.at(2).xPos = theCharacter.xPos;
+			theCharacters.at(2).yPos = theCharacter.yPos;
 			CurrChar.setCharState(2);
+			
 		}
 
 		if (dash && theCharacter.dashAvailable)

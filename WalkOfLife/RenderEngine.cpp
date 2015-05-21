@@ -1126,6 +1126,29 @@ if (theCharacter->getDivision() != 0)
 	}
 }
 
+for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2).size(); i++)
+{
+	//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+	gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].vertexBuffer, &vertexSize, &offset);
+
+
+	theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].CalculateWorld();
+	theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material = MatPresets::Emerald;
+	theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material.SpecPow = 38.0f;
+
+	matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material;
+
+	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+	UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world, CamView, CamProjection);
+
+
+	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].nrElements * 3, 0);
+}
+
 
 
 	//wireframe bbox

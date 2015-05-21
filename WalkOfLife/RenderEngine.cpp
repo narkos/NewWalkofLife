@@ -70,7 +70,7 @@ bool RenderEngine::Init(){
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
-	theCustomImporter.ImportFBX(gDevice, "Objects/testFile2.bin");
+	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	//theCharacters = &theCustomImporter.GetPlayers()[0];
 	//theCharacter2 = theCustomImporter.GetPlayers[1];
 	//theCharacter3 = theCustomImporter.GetPlayers[2];
@@ -116,6 +116,14 @@ bool RenderEngine::Init(){
 	//Font
 	Fonts();
 	mainMenu.menuInit(gDeviceContext);
+	theCharacters.at(0).setJumpHeight(0.5f);
+	theCharacters.at(0).setRunSpeed(0.1f);
+	theCharacters.at(0).SetRayOrigins(-0.4f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
+	theCharacters.at(1).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
+
+	theCharacters.at(0).SetRayRanges(0.5f, 0.5f, 1.0f);
+	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 1.0f);
+
 	//highscore stuff
 	//theHighScore.AddScore(5, 2, 13);
 
@@ -630,7 +638,8 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 
 			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-			if (gCounter.theAge.years > 5 && !Character2)
+
+			if (gCounter.theAge.years == 1000 && !Character2)
 			{
 				Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -1363,8 +1372,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		}
 		if (input == 5)
 		{
-
+			CurrChar.setCharState(0);
+		}
+		if (input == 6)
+		{
 			CurrChar.setCharState(1);
+		}
+		if (input == 7)
+		{
+			CurrChar.setCharState(2);
 		}
 
 		if (dash && theCharacter.dashAvailable)

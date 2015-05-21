@@ -4,7 +4,7 @@ Camera::Camera()
 {
 
 	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), 0.0f, cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 50.0f);
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 1000.0f);
 
 }
 
@@ -45,7 +45,7 @@ void Camera::updateCamera()
 
 	//Sets and updates the camera's view- and projection matrices based of the calculations.
 	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 50.0f);
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 1000.0f);
 
 }
 

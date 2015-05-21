@@ -145,6 +145,17 @@ public:
 	float getJumpHeight();
 	void UpdatePosition(bool canGoRight, bool canGoLeft);
 
+
+	void setJumpHeight(float height)
+	{
+		this->jumpHeight = height;
+	}
+
+	void setRunSpeed(float inspeed)
+	{
+		this->speed = inspeed;
+	}
+
 	void SetRayOrigins(float low, float middle, float high, int nrSideChecks, float distancePerSideCheck, float widthValue){
 		lowValue = low, middleValue = middle, highValue = high;
 		extraXValue = widthValue; //är för fot och huvud checksen

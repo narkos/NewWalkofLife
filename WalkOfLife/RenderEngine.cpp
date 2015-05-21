@@ -638,7 +638,7 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 
 			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-			if (gCounter.theAge.years == 5 && !Character2)
+			if (gCounter.theAge.years == 1000 && !Character2)
 			{
 				Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -1369,8 +1369,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		}
 		if (input == 5)
 		{
-
+			CurrChar.setCharState(0);
+		}
+		if (input == 6)
+		{
 			CurrChar.setCharState(1);
+		}
+		if (input == 7)
+		{
+			CurrChar.setCharState(2);
 		}
 
 		if (dash && theCharacter.dashAvailable)

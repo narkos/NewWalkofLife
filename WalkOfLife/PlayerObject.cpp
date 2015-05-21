@@ -33,11 +33,7 @@ void PlayerObject::UpdatePosition(bool canGoRight, bool canGoLeft){
 		this->xPos += currPlatformPos.x - lastFrameCurrPlatformPos.x;
 	}
 
-	if (currPlatformPos.x > 0 || currPlatformPos.x < 0){
-		this->xPos = xPos;
-	}
-
-	if (canGoLeft == true && currPlatformPos.x - lastFrameCurrPlatformPos.x <= 0){
+	else if (canGoLeft == true && currPlatformPos.x - lastFrameCurrPlatformPos.x <= 0){
 		this->xPos += currPlatformPos.x - lastFrameCurrPlatformPos.x;
 	}
 

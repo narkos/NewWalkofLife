@@ -220,6 +220,8 @@ public:
 		if (isGrounded == false){ //denna blir kallad flera gånger även om den inte ska det!
 			startPlatformPos = pObj.GetCurrIntervalPos();
 			pObj.playerStartIntervalPosition = startPlatformPos;
+			currPlatformPos = XMFLOAT3(0, 0, 0);
+			lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
 		}
 		currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
 		return true;
@@ -242,7 +244,7 @@ public:
 					}
 					return true;
 					
-				}			
+				}		
 			}
 			if (pObj.GetBBOX().Intersects(originLowRight, down, rayLength) == true){
 				if (rayLength < rayRangeDown){
@@ -274,12 +276,10 @@ public:
 				}
 			}
 			else{
-				currPlatformPos = XMFLOAT3(0, 0, 0);
-				lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
 				return false;
 			}
 		}
-		else return false;
+		return false;
 	}
 
 	bool TestRight(Platform pObj){

@@ -92,5 +92,20 @@ namespace MatPresets
 		XMFLOAT4(0.633, 0.727811, 0.633, 1.0),
 		float(76.8f));
 		
-	
+	const MatInfo Copper(
+		XMFLOAT4(0.19125, 0.0735, 0.0225, 1.0),
+		XMFLOAT4(0.7038, 0.27048, 0.0828, 1.0),
+		XMFLOAT4(0.256777, 0.137622, 0.086014, 1.0),
+		float(0.1f));
+	const MatInfo Lambert(
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0),
+		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0),
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0),
+		float(0.0f));
+
+	const MatInfo BlinnBase(
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0),
+		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0),
+		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0),
+		float(0.3f));
 }

@@ -18,9 +18,16 @@ float4 PS_main(VS_OUT input) : SV_Target
 
 	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
+	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+		if (Material.UseTexture == 1)
+		{
+			Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
+			Texdiffuse = saturate(Texdiffuse);
+		}
 
+	/*if ()
 			float4 Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
-		
+		*/
 
 		float4 emissive = Material.Emissive;
 		float4 ambient = GlobalAmbient*Material.Ambient;

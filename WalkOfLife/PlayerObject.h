@@ -26,9 +26,7 @@ protected:
 	float lowValue = -2.1f, middleValue = -1.8f, highValue = 0.8f, extraXValue = 0.3f;
 	
 	XMVECTOR up, down, right, left;
-	BoundingBox footBox, originalFootBox;
-	
-	
+		
 
 	struct Vec
 	{
@@ -126,10 +124,6 @@ public:
 		right = XMVectorSet(1, 0, 0, 0);
 		left = XMVectorSet(-1, 0, 0, 0);
 
-		footBox.Center = XMFLOAT3(XMVectorGetX(originLow), XMVectorGetY(originLow), XMVectorGetZ(originLow));
-		footBox.Extents = bbox.Extents;
-		footBox.Extents.y = 10;
-		originalFootBox = footBox; //används vid transformation av bbox
 
 		currPlatformPos = XMFLOAT3(0, 0, 0);
 		lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
@@ -149,8 +143,21 @@ public:
 	float getJumpHeight();
 	void UpdatePosition(bool canGoRight, bool canGoLeft);
 
-	void SetRayOrigins(float low, float middle, float high){
+	void SetRayOrigins(float low, float middle, float high, int nrSideChecks, float distancePerSideCheck, float widthValue){
 		lowValue = low, middleValue = middle, highValue = high;
+		extraXValue = widthValue; //är för fot och huvud checksen
+
+		originSides.clear();
+		originsYValues.clear();
+		for (int i = 0; i < nrSideChecks; i++){
+			AddOriginSides(lowValue + distancePerSideCheck * i + 0.001f);
+		}
+	}
+
+	void SetRayRanges(float rangeDown, float rangeUp, float rangeSides){
+		rayRangeDown = rangeDown;
+		rayRangeUp = rangeUp;
+		rayRangeSides = rangeSides;
 	}
 
 
@@ -344,17 +351,6 @@ public:
 		tempB = originalBox;
 		tempB.Transform(tempB, 1.0f, XMVectorSet(0, 0, 0, 1), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0, 1));
 		bbox = tempB;
-
-		tempB = originalFootBox;
-		tempB.Transform(tempB, 1.0f, XMVectorSet(0, 0, 0, 1), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0, 1));
-		footBox = tempB;
-
-
-
-		/*left = XMVectorSet((XMVectorGetX(left) + xPos), (XMVectorGetY(left) + yPos), 0, 0);
-		right = XMVectorSet((XMVectorGetX(right) + xPos), (XMVectorGetY(right) + yPos), 0, 0);
-		up = XMVectorSet((XMVectorGetX(up) + xPos), (XMVectorGetY(up) + yPos), 0, 0);
-		down = XMVectorSet((XMVectorGetX(down) + xPos), (XMVectorGetY(down) + yPos), 0, 0);*/
 	}
 
 	////dessa två är bara här för att virtuell mojset ska stämma överens

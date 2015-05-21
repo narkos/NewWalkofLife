@@ -198,7 +198,7 @@
       <Filter>Header Files\SwitchChar</Filter>
     </ClInclude>
     <ClInclude Include="PlayerObject.h">
-      <Filter>Header Files\Shadows</Filter>
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

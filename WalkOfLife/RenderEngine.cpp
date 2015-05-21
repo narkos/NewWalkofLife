@@ -1190,16 +1190,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 		if (theCharacter.getDivision() != 0)
 		{
-			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), theCharacter);
 			testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
-			
+			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), theCharacter);
 		}
 
 		else
 		{
-			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theCharacter);
 			testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
-			
+			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theCharacter);
+
 		}
 
 		if (testDynamicPlatforms.isGrounded() == true || testStaticPlatforms.isGrounded() == true)

@@ -106,7 +106,9 @@ public:
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
 		this->dashDisabling = true;
-
+		/*pos.x = bbox.Center.x;
+		pos.y = bbox.Center.y;
+		pos.z = bbox.Center.z;*/
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
 		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1); //groundchecks
@@ -142,6 +144,17 @@ public:
 	float getSpeed();
 	float getJumpHeight();
 	void UpdatePosition(bool canGoRight, bool canGoLeft);
+
+
+	void setJumpHeight(float height)
+	{
+		this->jumpHeight = height;
+	}
+
+	void setRunSpeed(float inspeed)
+	{
+		this->speed = inspeed;
+	}
 
 	void SetRayOrigins(float low, float middle, float high, int nrSideChecks, float distancePerSideCheck, float widthValue){
 		lowValue = low, middleValue = middle, highValue = high;

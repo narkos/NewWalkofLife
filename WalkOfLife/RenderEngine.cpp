@@ -70,7 +70,7 @@ bool RenderEngine::Init(){
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
-	theCustomImporter.ImportFBX(gDevice, "Objects/testFile2.bin");
+	theCustomImporter.ImportFBX(gDevice, "Objects/testFile3.bin");
 	//theCharacters = &theCustomImporter.GetPlayers()[0];
 	//theCharacter2 = theCustomImporter.GetPlayers[1];
 	//theCharacter3 = theCustomImporter.GetPlayers[2];
@@ -116,6 +116,12 @@ bool RenderEngine::Init(){
 	//Font
 	Fonts();
 	mainMenu.menuInit(gDeviceContext);
+	theCharacters.at(0).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
+	theCharacters.at(1).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
+
+	theCharacters.at(0).SetRayRanges(0.5f, 0.5f, 1.0f);
+	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 1.0f);
+
 	//highscore stuff
 	//theHighScore.AddScore(5, 2, 13);
 
@@ -637,8 +643,8 @@ int RenderEngine::Run(){
 				haschanged = true;
 				CurrChar.setCharState(1);
 				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-				theCharacter2->xPos = theCharacter1->xPos;
-				theCharacter2->yPos = theCharacter1->yPos;
+				theCharacters.at(1).xPos = theCharacters.at(0).xPos;
+				theCharacters.at(1).yPos = theCharacters.at(0).yPos;
 				
 			}
 			

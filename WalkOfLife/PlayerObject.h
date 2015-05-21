@@ -106,7 +106,9 @@ public:
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
 		this->dashDisabling = true;
-
+		/*pos.x = bbox.Center.x;
+		pos.y = bbox.Center.y;
+		pos.z = bbox.Center.z;*/
 
 		originLow = XMVectorSet(pos.x, pos.y + lowValue, pos.z, 1); 
 		originLowRight = XMVectorSet(pos.x + extraXValue, pos.y + lowValue, pos.z, 1); //groundchecks

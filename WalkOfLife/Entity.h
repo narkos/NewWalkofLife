@@ -45,6 +45,7 @@ public:
 	int slamDirection;
 	float slamSpeedMultiplier;
 	bool slamReset;
+	float slamTimeOffset;
 
 	Entity(XMFLOAT3 pos, bool isActive, bool isStatic){
 		this->isActive = isActive;
@@ -82,6 +83,7 @@ public:
 		slamDirection = xSpeed;
 		slamSpeedMultiplier = 1.0f;
 		slamReset = false;
+		slamTimeOffset = 0.0f;
 
 	}
 
@@ -152,10 +154,10 @@ public:
 		{
 			if (slamReset)
 			{
-				slamStartTime = time;
+				slamStartTime = time + slamTimeOffset;
 				slamReset = false;
 			}
-			slamMomentum = (time - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
+			slamMomentum = ((time+slamTimeOffset) - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
 			this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
 		}
 
@@ -170,19 +172,19 @@ public:
 			{
 				if (!slamHasStopped)
 				{
-					slamStopTime = time;
+					slamStopTime = (time + slamTimeOffset);
 					slamMomentum = 0.0f;
 					slamHasStopped = true;
 				}
 
-				slamDeltaTime = time - slamStopTime;
+				slamDeltaTime = (time + slamTimeOffset) - slamStopTime;
 
 				if (slamDeltaTime >= slamWaitTime)
 				{
 					slamDirection = slamDirection * -1.0f;
 					slamSpeedMultiplier = 0.1f; //Decrease the speed on Slammer return cycle
 					slamMomentum = 0.0f;
-					slamStartTime = time;
+					slamStartTime = (time + slamTimeOffset);
 					slamReturning = true;
 					slamHasStopped = false;
 					slamDeltaTime = 0.0f;
@@ -202,18 +204,18 @@ public:
 			{
 				if (!slamHasStopped)
 				{
-					slamStopTime = time;
+					slamStopTime = (time + slamTimeOffset);
 					slamMomentum = 0.0f;
 					slamHasStopped = true;
 				}
 
-				slamDeltaTime = time - slamStopTime;
+				slamDeltaTime = (time + slamTimeOffset) - slamStopTime;
 				if (slamDeltaTime >= slamWaitTime)
 				{
 					slamDirection = slamDirection * -1.0f;
 					slamSpeedMultiplier = 1.0f; //Set full speed for slam
 					slamMomentum = 0.0f;
-					slamStartTime = time;
+					slamStartTime = (time + slamTimeOffset);
 					slamReturning = false;
 					slamHasStopped = false;
 					slamDeltaTime = 0.0f;

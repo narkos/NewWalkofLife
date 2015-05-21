@@ -819,6 +819,8 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
+
+	matProperties.Material = MatPresets::Lambert;
 	//TEST CUSTOM FORMAT
 	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
@@ -1247,43 +1249,10 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].nrElements * 3, 0);
 }
 
-
-	//wireframe bbox
-	/*UINT32 bufferElementSize = sizeof(XMFLOAT3);
-	UINT32 offset1 = 0;
-
-	gDeviceContext->IASetInputLayout(gWireFrameLayout);
-	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-
-	gDeviceContext->VSSetShader(gWireFrameVertexShader, nullptr, 0);
-	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->PSSetShader(gWireFramePixelShader, nullptr, 0);*/
-
-	/*for (int i = 0; i < theBinaryTree->testPlatforms->at(theCharacter->getDivision()).size(); i++){
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].boundingBoxVertexBuffer, &bufferElementSize, &offset1);
-		theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].CalculateWorld();
-		XMStoreFloat4x4(&perObjCBData.InvWorld, XMMatrixTranspose(XMMatrixInverse(nullptr, theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world)));
-		XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(theBinaryTree->testPlatforms->at(theCharacter->getDivision())[i].world));
-		gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-		gDeviceContext->Draw(16, 0);
-	}*/
-//
-
-	
-
 	// Shouldn't need to set shaders again if we don't change them in the above loops.
 	// Leaving it meanwhile
 	gDeviceContext->PSSetShaderResources(1, 1, &ddsTex2);
-	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->IASetVertexBuffers(0, 1, &theCharacter->vertexBuffer, &vertexSize, &offset);
-	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
 	theCharacter->CalculateWorld();
 	
@@ -1292,7 +1261,11 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
+	
 
+	matProperties.Material = MatPresets::Lambert;
+	matProperties.Material.UseTexture = 1;
+	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
 
@@ -1576,18 +1549,18 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
 		}
 
-		lightProp01.lights[1].Type = l_Directional;
-		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
-		lightProp01.lights[1].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		lightProp01.lights[0].Type = l_Directional;
+		lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
+		lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
-		lightProp01.lights[0].Type = l_Point;
-		lightProp01.lights[0].Position = XMFLOAT4(0.0f, 0.2f, -5.0f, 1.0f);
-		lightProp01.lights[0].Color = XMFLOAT4(Colors::WhiteSmoke);
-		lightProp01.lights[0].AttConst = 1.2f;
-		lightProp01.lights[0].AttLinear = 0.3f;
-		lightProp01.lights[0].AttQuadratic = 0.0f;
-		lightProp01.lights[0].Range = 10.0f;
+		lightProp01.lights[1].Type = l_Point;
+		lightProp01.lights[1].Position = XMFLOAT4(theCharacter.xPos, theCharacter.yPos, 0.0f, 1.0f);
+		lightProp01.lights[1].Color = XMFLOAT4(Colors::WhiteSmoke);
+		lightProp01.lights[1].AttConst = 0.2f;
+		lightProp01.lights[1].AttLinear = 0.3f;
+		lightProp01.lights[1].AttQuadratic = 0.5f;
+		lightProp01.lights[1].Range = 10.0f;
 
 		float moveL = 0.0f;
 

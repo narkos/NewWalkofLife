@@ -285,6 +285,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.slamDirection = coinValue;
+			tempP.slamTimeOffset = xInterval;
 			tempP.nrElements = nrOfFaces;
 			dynamicDeadlyObjects.push_back(tempP);
 		}

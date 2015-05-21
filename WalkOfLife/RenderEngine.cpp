@@ -630,7 +630,7 @@ int RenderEngine::Run(){
 			gTimer.Tick();
 
 			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-			if (gCounter.theAge.years == 5 && !Character2)
+			if (gCounter.theAge.years > 5 && !Character2)
 			{
 				Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -1293,6 +1293,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 		if (input == 1 && theCollision->leftValid() == true)
 		{
+			rightDirection = false;
 			if (theCharacter.jumpMomentumState)
 			{
 				if (theCharacter.jumpMomentumX > theCharacter.getSpeed() * -1)
@@ -1309,13 +1310,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			else
 			{
 				theCharacter.Move(false); //left
-				rightDirection = false;
+				
 			}
 			
 		}
 
 		else if (input == 2 && theCollision->rightValid() == true)
 		{
+			rightDirection = true;
 			if (theCharacter.jumpMomentumState)
 			{
 				if (theCharacter.jumpMomentumX < theCharacter.getSpeed())
@@ -1333,7 +1335,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			{
 			
 				theCharacter.Move(true); //right
-				rightDirection = true;
+				
 			}
 			
 
@@ -1413,6 +1415,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
 		theCharacter.CalculateWorld();
 
+		if (rightDirection)
+		{
+			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 0);
+		}
+
+		else
+		{
+			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 90);
+		}
 
 		lightProp01.lights[1].Type = l_Directional;
 		lightProp01.lights[1].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);

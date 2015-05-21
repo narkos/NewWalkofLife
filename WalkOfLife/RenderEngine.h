@@ -72,7 +72,7 @@ public:
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
 
 
-
+	std::vector<PlayerObject> theCharacters;
 	Sound soundJump;
 	Sound soundCoin;
 	Sound soundCigg;

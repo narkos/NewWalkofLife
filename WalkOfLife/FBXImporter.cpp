@@ -20,7 +20,10 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		fbxFile.read((char*)&meshInfo.ySpeed, sizeof(float));
 		fbxFile.read((char*)&meshInfo.coinValue, sizeof(int));
 		fbxFile.read((char*)&meshInfo.timeValue, sizeof(int));
-
+		if (i == 329)
+		{
+			int bajs = 2;
+		}
 		fbxFile.read((char*)&meshInfo.nrAnimations, sizeof(int));
 		fbxFile.read((char*)&meshInfo.nrBones, sizeof(int));
 		fbxFile.read((char*)&meshInfo.nrPos, sizeof(int));

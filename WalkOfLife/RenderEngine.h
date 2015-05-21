@@ -102,6 +102,7 @@ public:
 
 	std::wstring mainwname;
 	bool rightDirection;
+	bool haschanged = false;
 
 	//Light Shit
 	LightClass testLight[20];
@@ -208,6 +209,23 @@ protected:
 	ID3D11VertexShader* gWireFrameVertexShader = nullptr;
 	ID3D11PixelShader* gWireFramePixelShader = nullptr;
 	ID3D11InputLayout* gWireFrameLayout = nullptr;
+
+	////
+	//std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
+	ID3D11ShaderResourceView* Meter = nullptr;
+	ID3D11ShaderResourceView* Meter1 = nullptr;
+	ID3D11ShaderResourceView* Meter2 = nullptr;
+	ID3D11ShaderResourceView* Meter3 = nullptr;
+	ID3D11ShaderResourceView* Meter4 = nullptr;
+	ID3D11ShaderResourceView* Meter5 = nullptr;
+	ID3D11ShaderResourceView* Meter6 = nullptr;
+	ID3D11ShaderResourceView* Meter7 = nullptr;
+	ID3D11ShaderResourceView* Meter8 = nullptr;
+	ID3D11ShaderResourceView* Meter9 = nullptr;
+	ID3D11ShaderResourceView* Meter10 = nullptr;
+	ID3D11ShaderResourceView* Meter11 = nullptr;
+	void Meterfunc();
+	float meterwidth = mainCamera.getWindowWidth();
 	//////////////////////Anton
 	float pauseTime = 0;
 	float menuTime = 0;

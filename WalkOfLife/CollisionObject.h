@@ -19,7 +19,7 @@ public:
 		yInterval = yInter;
 		this->xSpeed = xSpeed;
 		this->ySpeed = ySpeed;
-		this->slamDirection = xSpeed;
+		
 	}
 
 	CollisionObject(){}

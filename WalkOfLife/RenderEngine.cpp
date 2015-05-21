@@ -70,7 +70,10 @@ bool RenderEngine::Init(){
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
-	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
+	theCustomImporter.ImportFBX(gDevice, "Objects/testFile2.bin");
+	//theCharacters = &theCustomImporter.GetPlayers()[0];
+	//theCharacter2 = theCustomImporter.GetPlayers[1];
+	//theCharacter3 = theCustomImporter.GetPlayers[2];
 	//theCustomImporter.GetPlayers()[0]
 	for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
 	{
@@ -101,6 +104,12 @@ bool RenderEngine::Init(){
 		theBinaryTree->addDeadlyPlatforms(theCustomImporter.GetStaticDeadlyObjects().at(i));
 	}
 
+	for (int i = 0; i < theCustomImporter.GetPlayers().size(); i++)
+	{
+		theCharacters.push_back(theCustomImporter.GetPlayers().at(i));
+		
+	}
+
 	TextureFunc();
 	mainMenu.CreateTextures(gDevice);
 
@@ -116,9 +125,9 @@ bool RenderEngine::Init(){
 	//theHighScore.ReOrganizeLists();
 	////Import
 	
-	ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
+	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
 	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 4, false);
-	ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
+	//ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
 	
 	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
 	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
@@ -643,19 +652,19 @@ int RenderEngine::Run(){
 					
 					if (CurrChar.getCharSate() == 0)
 					{
-						Update(0.0f, *theCharacter1);
-						Render(theCharacter1);
+						Update(0.0f, theCharacters.at(0));
+						Render(&theCharacters.at(0));
 					}
 					else if (CurrChar.getCharSate() == 1)
 					{
 						//theCollision
-						Update(0.0f, *theCharacter2);
-						Render(theCharacter2);
+						Update(0.0f, theCharacters.at(1));
+						Render(&theCharacters.at(1));
 					}
 					else if (CurrChar.getCharSate() == 2)
 					{
-						Update(0.0f, *theCharacter3);
-						Render(theCharacter3);
+						Update(0.0f, theCharacters.at(2));
+						Render(&theCharacters.at(2));
 					}
 					time3 = gTimer.TotalTime();
 				}

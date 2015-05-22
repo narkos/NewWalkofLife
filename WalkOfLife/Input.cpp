@@ -130,3 +130,19 @@ bool Input::detectDash(HWND hWindow)
 		return false;
 	}
 }
+
+bool Input::detectCameraLean(HWND)
+{
+	BYTE keyboardState[256];
+
+	DIKeyboard->Acquire();
+
+	DIKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
+
+	if (keyboardState[DIK_LCONTROL])
+	{
+		return true;
+	}
+	else
+		return false;
+}

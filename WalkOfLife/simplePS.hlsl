@@ -16,7 +16,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 {
 
 
-	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
+	//LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
 
 		float4	Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);

@@ -17,4 +17,5 @@ public:
 	int detectInput(HWND);
 	bool detectJump(HWND);
 	bool detectDash(HWND);
+	bool detectCameraLean(HWND);
 };

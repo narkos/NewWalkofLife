@@ -20,15 +20,20 @@ float4 PS_main(VS_OUT input) : SV_Target
 {
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 	//SHADOW TESTING 4 DUMMIES
-	//0 = Render the scene as usual
-	//1 = Render the depth value
-	//2 = Render shadowed and non shadowed parts in two contrasts (Shadows = Black, Lit parts = White)
-	int shadowTesting = 0;
+	//0 = Render the scene as usual WITHOUT shadows
+	//1 = Render the scene as usual WITH shadows
+	//2 = Render the depth value
+	//3 = Render shadowed and non shadowed parts in two contrasts (Shadows = Black, Lit parts = White)
+	int shadowTesting = 1;
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
-	if (shadowTesting == 0)
+	if (shadowTesting == 0 || shadowTesting == 1)
 	{
-		LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor), input.lightViewPos, depthMapTexture, sampAni);
+		int shadowz = 0;
+		if (shadowTesting == 1)
+			shadowz = 1;
+
+		LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor), input.lightViewPos, depthMapTexture, sampAni, shadowz);
 
 		float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -53,7 +58,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----
 	//-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////
 
-	if (shadowTesting == 1)
+	if (shadowTesting == 2)
 	{
 		//////ALL OF THE BELOW IS FOR SHADOW TESTING PURPOSES
 		float bias = 0.001f;
@@ -68,7 +73,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 		return depthValue;
 	}
 
-	if (shadowTesting == 2)
+	if (shadowTesting == 3)
 	{
 		float bias = 0.001f;	//Set the bias value for fixing the floating point precision issues.
 		float2 projectTexCoord;

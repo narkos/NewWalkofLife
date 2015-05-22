@@ -941,6 +941,29 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	}
 
+	for each (Platform var in theBinaryTree->platformsMoving->at(theCharacter->getDivision() + 1))
+	{
+		if (var.GetActive())
+		{
+
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+
+			var.CalculateWorld();
+			//var.material = MatPresets::Emerald;
+			//matProperties.Material = var.material;
+			//matProperties.Material.UseTexture = 0;
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+			UpdateMatricies(var.world, currView, currProjection);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(var.nrElements * 3, 0);
+		}
+
+	}
+
 	//Render Deadly Moving Platforms
 	for each (Platform var in theBinaryTree->deadlyMoving->at(theCharacter->getDivision()))
 	{
@@ -1478,6 +1501,25 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		{
 			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
 		}
+
+		for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()).size(); i++)
+		{
+			theBinaryTree->collectables->at(theCharacter.getDivision()).at(i).rotate();
+		}
+
+		for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()+1).size(); i++)
+		{
+			theBinaryTree->collectables->at(theCharacter.getDivision()+1).at(i).rotate();
+		}
+
+		if (theCharacter.getDivision() != 0)
+		{
+			for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision() - 1).size(); i++)
+			{
+				theBinaryTree->collectables->at(theCharacter.getDivision() - 1).at(i).rotate();
+			}
+		}
+		
 
 		lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
 		lightProp01.lights[0].Type = l_Directional;

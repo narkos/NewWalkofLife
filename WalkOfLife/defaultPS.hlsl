@@ -58,7 +58,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 
 		float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
 
-		return finalColor;
+		return Texdiffuse;
 	}
 
 	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----

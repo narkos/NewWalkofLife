@@ -9,8 +9,8 @@ using namespace DirectX;
 class Camera{
 
 private:
-	float WINDOW_WIDTH = 1280.0f;		//The game window width.
-	float WINDOW_HEIGHT = 720.0f;		//The game window height.
+	float WINDOW_WIDTH = 1920;		//The game window width.
+	float WINDOW_HEIGHT = 1080;		//The game window height.
 
 	float cameraXPos = 0.0f;
 	float cameraYPos = 0.0f;

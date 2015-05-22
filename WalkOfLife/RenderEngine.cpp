@@ -1520,7 +1520,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 0;
+		lightProp01.lights[1].Active = 1;
 		lightProp01.lights[2].Active = 1;
 		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);

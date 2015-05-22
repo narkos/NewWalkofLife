@@ -123,8 +123,23 @@ LightingResult createDirectional(Light light, float3 V, float4 P, float4 N)
 //
 //}
 
-LightingResult ComputeLighting(float4 P, float4 N)
+LightingResult ComputeLighting(float4 P, float4 N, float4 lightViewPos, Texture2D depthMap, SamplerState samplerType, int shadowz)
 {
+	//SHADOW MAPPING-----------////-----------////-----------////-----------////
+	//Shadow mapping requires a bias adjustment when comparing the depth of the light and the depth of the object due to the low floating point precision of the depth map.
+	float bias = 0.001f;	//Set the bias value for fixing the floating point precision issues.
+	float2 projectTexCoord;
+	float depthValue;
+	float lightDepthValue;
+
+	lightViewPos.xyz /= lightViewPos.w;
+
+	//Calculate the projected texture coordinates for sampling the shadow map (depth buffer texture) based on the light's viewing position
+	//lightViewPos.xy is in [-1, 1], but to sample the shadow map we need [0, 1], so scale by ½ and add ½
+	projectTexCoord.x = lightViewPos.x / 2.0f + 0.5f;
+	projectTexCoord.y = -lightViewPos.y / 2.0f + 0.5f;
+	//SHADOW MAPPING-----------////-----------////-----------////-----------////
+
 	LightingResult finalResult = { { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
 	
 	float3 V = normalize(CamPosition - P).xyz;
@@ -132,9 +147,6 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		[unroll]
 	for (int i = 0; i < MAX_LIGHTS; ++i)
 	{
-
-		
-
 		LightingResult result = { { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
 		if (lights[i].Active != 1) continue; // Continue if light isn't active
 
@@ -142,7 +154,35 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		{
 		case L_DIRECTIONAL:
 		{
-			result = createDirectional(lights[i], V, P, N);
+			if (shadowz == 1)
+			{
+				//SHADOW MAPPING-----------////-----------////-----------////-----------////
+				//Check if the projected coordinates are in the view of the light, if not then the pixel gets just an ambient value.
+				//Determine if the projected coordinates are in the 0 to 1 range.  If so then this pixel is in the view of the light.
+				if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+				{
+					//Now that we are in the view of the light we will retrieve the depth value from the shadow map (depthMap). 
+					//The depth value we get from the texture translates into the distance to the nearest object.
+					//Sample the shadow map depth value from the depth texture using the sampler at the projected texture coordinate location.
+					depthValue = depthMap.Sample(samplerType, projectTexCoord).r;	//We only sample the RED channel couse its a greyscale map
+
+					//Now that we have the depth of the object for this pixel we need the depth of the light to determine if it is in front or behind the object.
+					//We get this from the lightViewPosition. Note that we need to subtract the bias from this or we will get the floating point precision issue.
+					lightDepthValue = lightViewPos.z / lightViewPos.w;		//Calculate the depth of the light.
+					lightDepthValue = lightDepthValue - bias;		//Subtract the bias from the lightDepthValue.
+
+					//Now we perform the comparison between the light depth and the object depth. If the light is closer to us then no shadow.
+					//But if the light is behind an object in the shadow map then it gets shadowed. Note that a shadow just means we only apply ambient light. 
+					//Compare the depth of the shadow map value and the depth of the light to determine whether to shadow or to light this pixel.
+					if (lightDepthValue < depthValue)	//If the light is in front of the object then light the pixel, if not then shadow this pixel since an object (occluder) is casting a shadow on it.
+					{
+						result = createDirectional(lights[i], V, P, N);
+					}
+				}
+				//SHADOW MAPPING-----------////-----------////-----------////-----------////
+			}
+			else
+				result = createDirectional(lights[i], V, P, N);
 		}
 		break;
 		case L_POINT:

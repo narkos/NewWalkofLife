@@ -1,6 +1,7 @@
 //PIXEL SHADER
 #include "LightComputations.fx"
 Texture2D txDiffuse : register(t0);
+Texture2D depthMapTexture : register(t1);	//The Shadow Map, it contains the scene depth buffer rendered from the light's perspective.
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
 
@@ -10,24 +11,37 @@ struct VS_OUT
 	float2 Tex		: TEXCOORD;
 	float4 Nor		: NORMAL;
 	float4 wPos		: POSITION;
+
+	//Shadow Calculations
+	float4 lightViewPos : TEXCOORD1;
 };
 
 float4 PS_main(VS_OUT input) : SV_Target
 {
-	
+	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
+	//SHADOW TESTING 4 DUMMIES
+	//0 = Render the scene as usual WITHOUT shadows
+	//1 = Render the scene as usual WITH shadows
+	//2 = Render the depth value
+	//3 = Render shadowed and non shadowed parts in two contrasts (Shadows = Black, Lit parts = White)
+	int shadowTesting = 1;
+	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
-	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
+	if (shadowTesting == 0 || shadowTesting == 1)
+	{
+		int shadowz = 0;
+		if (shadowTesting == 1)
+			shadowz = 1;
 
-	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+		LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor), input.lightViewPos, depthMapTexture, sampAni, shadowz);
+
+		float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 		if (Material.UseTexture == 1)
 		{
 			Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
 			Texdiffuse = saturate(Texdiffuse);
 		}
-
-	/*if ()
-			float4 Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
-		*/
 
 		float4 emissive = Material.Emissive;
 		float4 ambient = GlobalAmbient*Material.Ambient;
@@ -36,9 +50,56 @@ float4 PS_main(VS_OUT input) : SV_Target
 
 		float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
 
-		return (finalColor);
-		
+		return finalColor;
+	}
 
+	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----
+	//-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////
+	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----
+	//-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////
+
+	if (shadowTesting == 2)
+	{
+		//////ALL OF THE BELOW IS FOR SHADOW TESTING PURPOSES
+		float bias = 0.001f;
+		float2 projectTexCoord;
+		projectTexCoord.x = input.lightViewPos.x / 2.0f + 0.5f;
+		projectTexCoord.y = -input.lightViewPos.y / 2.0f + 0.5f;
+		float depthValue = depthMapTexture.Sample(sampAni, projectTexCoord).r;	//We only sample the RED channel couse its a greyscale map
+
+		float lightDepthValue = input.lightViewPos.z / input.lightViewPos.w;	//Calculate the depth of the light.
+		lightDepthValue = lightDepthValue - bias;	//Subtract the bias from the lightDepthValue.
+
+		return depthValue;
+	}
+
+	if (shadowTesting == 3)
+	{
+		float bias = 0.001f;	//Set the bias value for fixing the floating point precision issues.
+		float2 projectTexCoord;
+		float depthValue;
+		float lightDepthValue;
+
+		input.lightViewPos.xyz /= input.lightViewPos.w;
+
+		projectTexCoord.x = input.lightViewPos.x / 2.0f + 0.5f;
+		projectTexCoord.y = -input.lightViewPos.y / 2.0f + 0.5f;
+
+		float3 depthDiffuse = depthMapTexture.Sample(sampAni, projectTexCoord).r;
+		if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+		{
+			depthValue = depthMapTexture.Sample(sampAni, projectTexCoord).r;	//We only sample the RED channel couse its a greyscale map
+			lightDepthValue = input.lightViewPos.z / input.lightViewPos.w;	//Calculate the depth of the light.
+			lightDepthValue = lightDepthValue - bias;	//Subtract the bias from the lightDepthValue.
+			if (lightDepthValue < depthValue)	//If the light is in front of the object then light the pixel, if not then shadow this pixel since an object (occluder) is casting a shadow on it.
+			{
+				return float4(1.0f, 1.0f, 1.0f, 1.0f);
+				//return float4(0.0, 0.0, 0.3, 1.0);	//DARK BLUE
+			}
+		}
+		//return float4(0.3, 0.0, 0.0, 1.0);		//DARK RED
+		return float4(0.0f, 0.0f, 0.0f, 1.0f);
+	}
 };
 
 

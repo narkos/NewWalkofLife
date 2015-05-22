@@ -7,6 +7,10 @@ cbuffer World : register (c0)
 	matrix WorldSpace;
 	matrix InvWorld;
 	matrix WVP;
+
+	//Shadow Calculations
+	matrix lightView;
+	matrix lightProjection;
 };
 
 struct VS_IN
@@ -24,6 +28,8 @@ struct VS_OUT
 	float4 Nor		: NORMAL;
 	float4 wPos		: POSITION;
 
+	//Shadow Calculations
+	float4 lightViewPos : TEXCOORD1;
 };
 //-----------------------------------------------------------------------------------------
 // VertexShader: VSScene
@@ -36,6 +42,12 @@ VS_OUT VS_main(VS_IN input)
 	output.Tex = input.Tex;
 	output.Nor = (float4(input.Nor, 0.0f) );
 	output.wPos = mul(float4(input.Pos, 1.0f), WorldSpace);
+
+	//Shadow Calculations
+	//Calculate the vertex pos from the lights view
+	output.lightViewPos = mul(float4(input.Pos, 1.0), WorldSpace);
+	output.lightViewPos = mul(output.lightViewPos, lightView);
+	output.lightViewPos = mul(output.lightViewPos, lightProjection);
 
 	return output;
 };

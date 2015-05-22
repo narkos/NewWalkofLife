@@ -4,12 +4,8 @@
 //###																																																																									   ###	
 //############################################################################################################################################################################################################################################################################################################
 
-
-
 #include "RenderEngine.h"
 #include <string.h>
-
-
 
 namespace{
 	RenderEngine* pRenderEngine; //pointer to the application
@@ -115,6 +111,13 @@ bool RenderEngine::Init(){
 
 	//Font
 	Fonts();
+
+	//SHADOWS
+	Shadows tempShadows(mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gDevice, gDeviceContext);
+	shadows = tempShadows;
+	shadows.createShadowMap();
+
+
 	mainMenu.menuInit(gDeviceContext);
 	theCharacters.at(0).setJumpHeight(0.5f);
 	theCharacters.at(0).setRunSpeed(0.1f);
@@ -139,45 +142,6 @@ bool RenderEngine::Init(){
 	////theHighScore.AddScore(1, 2, 1);
 	//theHighScore.ReOrganizeLists();
 	////Import
-	
-	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
-	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 4, false);
-	//ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
-	
-	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
-	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-
-	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
-	//theBinaryTree->testPlatforms->at(0).at(0).Translate(0.0f, -2000.0f, 0.0f);
-	//ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
-	//ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
-	//ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
-
-//	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
-	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
-	int test = 1;
-//	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2, true);
-
-
-	////LIGHT TEST ZONE BITCHES
-
-	//testLight[0] = LightClass(l_Directional, XMFLOAT3(0.0f, -1.0f, 0.0f), true, true);
-	//testLight[0].lightObject.Color = XMFLOAT4(Colors::White);
-	////testLight[0].ToggleActive();
-
-	//testLight[1] = LightClass(l_Point, XMFLOAT3(-3.3f, 8.0f, -4.0f), true, true);
-
-	//testLight[1].lightObject.Color = XMFLOAT4(Colors::LightCyan);
-	//testLight[1].lightObject.AttConst = 1.0f;
-	//testLight[1].lightObject.AttLinear = 0.8f;
-	//testLight[1].lightObject.AttQuadratic = 0.0001f;
-	//testLight[1].lightObject.Range = 10.0f;
-	////testLight[1].ToggleActive();
-
-	//lightProp01.lights[0] = testLight[0].lightObject;
-	//lightProp01.lights[1] = testLight[1].lightObject;
-
- //	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Yellow);
 
 
 	// Rotatation And transform Buffer
@@ -351,8 +315,6 @@ void RenderEngine::TextureFunc(){
 
 
 }
-
-
 
  // CREATE FONTS
 
@@ -566,34 +528,36 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 
 		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
 
-		D3D11_DEPTH_STENCIL_DESC dsDesc;
-		ZeroMemory(&dsDesc, sizeof(dsDesc));
-		//Depth test settings
-		dsDesc.DepthEnable = true;
-		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		//Stencil tests
-		dsDesc.StencilEnable = true;
-		dsDesc.StencilReadMask = 0xFF;
-		dsDesc.StencilWriteMask = 0xFF;
-		//Stencil operations - Pixel Front Facing
-		dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		//Stencil operations - Pixel Back Facing
-		dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		//NEEDED?
 
-		HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
-		gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
+		//D3D11_DEPTH_STENCIL_DESC dsDesc;
+		//ZeroMemory(&dsDesc, sizeof(dsDesc));
+		////Depth test settings
+		//dsDesc.DepthEnable = true;
+		//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		//dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		////Stencil tests
+		//dsDesc.StencilEnable = true;
+		//dsDesc.StencilReadMask = 0xFF;
+		//dsDesc.StencilWriteMask = 0xFF;
+		////Stencil operations - Pixel Front Facing
+		//dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		//dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		//dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		//dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		////Stencil operations - Pixel Back Facing
+		//dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		//dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		//dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		//dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		//HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
+		//gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 
 		
 		
 		// set the render target as the back buffer
-		gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
+		//gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 
 		return true; //returnerar att den HAR klarat av att skapa device och swapchain
 	}
@@ -730,16 +694,39 @@ void RenderEngine::UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &
 // RENDER
 
 void RenderEngine::Render(PlayerObject* theCharacter){
-	
-	static float rot = 0.00f;
-	UINT32 vertexSize = sizeof(float) * 8;
+	//SHADOW MAPPING-----------////-----------////-----------////-----------////
+
+	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos());	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
+	WVP = shadows.getLightWVP();	//Transpose the matrices (WVP To lights POV) to prepare them for the shader, For Shadow mapping in this case
+	//XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(shadows.getShadowWorld()));
+	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
+	XMStoreFloat4x4(&perObjCBData.lightView, XMMatrixTranspose(shadows.getLightView()));
+	XMStoreFloat4x4(&perObjCBData.lightProjection, XMMatrixTranspose(shadows.getLightProjection()));
+
+	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
+	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+	//gDeviceContext->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
+	//gDeviceContext->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
+
+	gDeviceContext->IASetInputLayout(gVertexLayout);	//Set the vertex input layout.
+	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	//Set the vertex and pixel shaders that will be used to render
+
+	//RENDER THE SHADOW MAP
+	drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+
+	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
+	//SHADOW MAPPING-----------////-----------////-----------////-----------////
+
+	//static float rot = 0.00f;
+	UINT32 vertexSize = sizeof(float)* 8;
 	UINT32 offset = 0;
-	rot += 0.01;
-	float clearColor[] = { 0.15f,0.6f,1.0f, 0.2f };
+	//rot += 0.01;
+
+	float clearColor[] = { 0.15f, 0.6f, 1.0f, 0.2f };
 	gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
 	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
-	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
 
 	if (mainMenu.getPause() == TRUE)
 	{
@@ -788,16 +775,15 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);
 
-	mainCamera.updateCamera();
 	//WORLD
-	XMMATRIX YRotation = XMMatrixRotationY(rot);
+	//XMMATRIX YRotation = XMMatrixRotationY(rot);
 
 	//The Camera Matrices are now defined in the camera class (mainCamera)
 
-	XMMATRIX CamView = mainCamera.getCamView();
-	XMMATRIX CamProjection = mainCamera.getCamProjection();
-	XMMATRIX identityM = XMMatrixIdentity();
-	XMMATRIX WorldInv = XMMatrixInverse(nullptr, XMMatrixIdentity());
+	CamView = mainCamera.getCamView();					//Defined in .h file
+	CamProjection = mainCamera.getCamProjection();		//Defined in .h file
+	identityM = XMMatrixIdentity();						//Defined in .h file
+	WorldInv = XMMatrixInverse(nullptr, XMMatrixIdentity());		//Defined in .h file
 
 	// LIGHT BUFFER UPDATE
 	lightProp01.CamPosition = XMFLOAT4(mainCamera.getCameraXPos(), mainCamera.getCameraYPos(), mainCamera.getCameraZPos(), 0.0f);
@@ -807,10 +793,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetConstantBuffers(1, 1, &matConstBuff);
 	// END LIGHT BUFFER UPDATE
 
-
-	XMMATRIX WVP;
-	
-
+	//XMMATRIX WVP;		//Defined in .h file
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -820,19 +803,47 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
 
+	drawScene(2, theCharacter);	// 1 = From lights POV. 2 = From mainCameras POV.
+
+	gSwapChain->Present(0, 0); //växla back/front buffer
+}
+
+void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
+{
+	XMMATRIX currProjection;
+	XMMATRIX currView;
+
+	if (viewPoint == 1)
+	{
+		currProjection = shadows.getLightProjection();
+		currView = shadows.getLightView();
+	}
+	if (viewPoint == 2)
+	{
+		currProjection = CamProjection;
+		currView = CamView;
+	}
+
+	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
+
 	matProperties.Material = MatPresets::Lambert;
 	//TEST CUSTOM FORMAT
+
+	//######################################################################################################################################################
+	//###													SHADOW CASTING OBJECTS GOES HERE BELOW							  							 ###	
+	//######################################################################################################################################################
+
 	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-		
+
 		var.CalculateWorld();
 		//var.material = MatPresets::Emerald;
 		//matProperties.Material = var.material;
 		//matProperties.Material.UseTexture = 0;
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-		UpdateMatricies(var.world, CamView, CamProjection);
+		UpdateMatricies(var.world, currView, currProjection);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
@@ -842,7 +853,6 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	{
 		if (var.GetActive())
 		{
-			
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -851,7 +861,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 			//matProperties.Material = var.material;
 			//matProperties.Material.UseTexture = 0;
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(var.world, CamView, CamProjection);
+			UpdateMatricies(var.world, currView, currProjection);
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(var.nrElements * 3, 0);
@@ -859,14 +869,11 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		
 	}
 
-
 	//Render Moving Platforms
 	for each (Platform var in theBinaryTree->platformsMoving->at(theCharacter->getDivision()))
 	{
 		if (var.GetActive())
 		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -875,7 +882,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 			//matProperties.Material = var.material;
 			//matProperties.Material.UseTexture = 0;
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(var.world, CamView, CamProjection);
+			UpdateMatricies(var.world, currView, currProjection);
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(var.nrElements * 3, 0);
@@ -888,8 +895,6 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	{
 		if (var.GetActive())
 		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -898,7 +903,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 			//matProperties.Material = var.material;
 			//matProperties.Material.UseTexture = 0;
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(var.world, CamView, CamProjection);
+			UpdateMatricies(var.world, currView, currProjection);
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(var.nrElements * 3, 0);
@@ -911,8 +916,6 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	{
 		if (var.GetActive())
 		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -921,7 +924,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 			//matProperties.Material = var.material;
 			//matProperties.Material.UseTexture = 0;
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(var.world, CamView, CamProjection);
+			UpdateMatricies(var.world, currView, currProjection);
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(var.nrElements * 3, 0);
@@ -931,8 +934,6 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()))
 	{
-		
-		
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -941,18 +942,14 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		//matProperties.Material = var.material;
 		//matProperties.Material.UseTexture = 0;
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-		UpdateMatricies(var.world, CamView, CamProjection);
+		UpdateMatricies(var.world, currView, currProjection);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
-		
-
 	}
 
 	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()+1))
 	{
-		
-		
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -961,12 +958,10 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		//matProperties.Material = var.material;
 		//matProperties.Material.UseTexture = 0;
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-		UpdateMatricies(var.world, CamView, CamProjection);
+		UpdateMatricies(var.world, currView, currProjection);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
-		
-
 	}
 
 	if (theCharacter->getDivision() != 0)
@@ -981,11 +976,10 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 			//matProperties.Material = var.material;
 			//matProperties.Material.UseTexture = 0;
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(var.world, CamView, CamProjection);
+			UpdateMatricies(var.world, currView, currProjection);
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(var.nrElements * 3, 0);
-			
 		}
 	}
 	
@@ -1004,20 +998,16 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 				//matProperties.Material = var.material;
 				//matProperties.Material.UseTexture = 0;
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(var.world, CamView, CamProjection);
+				UpdateMatricies(var.world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 				gDeviceContext->Draw(var.nrElements * 3, 0);
 			}
-
 		}
 	}
-	
 
 	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1))
 	{
-		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -1026,17 +1016,16 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		//matProperties.Material = var.material;
 		//matProperties.Material.UseTexture = 0;
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-		UpdateMatricies(var.world, CamView, CamProjection);
+		UpdateMatricies(var.world, currView, currProjection);
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 		gDeviceContext->Draw(var.nrElements * 3, 0);
 	}
+
 	if (theCharacter->getDivision() != 0)
 	{
 		for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision() - 1))
 		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
 			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
@@ -1045,209 +1034,206 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 			//matProperties.Material = var.material;
 			//matProperties.Material.UseTexture = 0;
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(var.world, CamView, CamProjection);
+			UpdateMatricies(var.world, currView, currProjection);
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(var.nrElements * 3, 0);
 		}
 	}
 	
-	
-for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+		{
+			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
+
+
+			theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
+			theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
+			theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
+
+			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material;
+
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world, currView, currProjection);
+
+
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
+		}
+
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()+1).size(); i++)
 	{
-		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].vertexBuffer, &vertexSize, &offset);
 
 
-		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material.SpecPow = 38.0f;
 
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material;
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material;
 
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world, CamView, CamProjection);
+		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].world, currView, currProjection);
 
 
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].nrElements * 3, 0);
+
+
+		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
 	}
 
-for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()+1).size(); i++)
-{
+	if (theCharacter->getDivision() != 0)
+	{
+		for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1).size(); i++)
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-	gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].vertexBuffer, &vertexSize, &offset);
-
-
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].CalculateWorld();
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material = MatPresets::Emerald;
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material.SpecPow = 38.0f;
-
-	matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material;
-
-	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-	UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].world, CamView, CamProjection);
+			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].vertexBuffer, &vertexSize, &offset);
 
 
-	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].CalculateWorld();
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material = MatPresets::Emerald;
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material.SpecPow = 38.0f;
 
-	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].nrElements * 3, 0);
+			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material;
+
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world, currView, currProjection);
 
 
-	//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-}
+			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].nrElements * 3, 0);
+		}
+	}
 
-if (theCharacter->getDivision() != 0)
-{
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1).size(); i++)
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2).size(); i++)
 	{
 		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].vertexBuffer, &vertexSize, &offset);
 
 
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material.SpecPow = 38.0f;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material.SpecPow = 38.0f;
 
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material;
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material;
 
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world, CamView, CamProjection);
+		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].world, currView, currProjection);
 
 
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].nrElements * 3, 0);
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].nrElements * 3, 0);
 	}
-}
 
-for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2).size(); i++)
-{
-	//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-	gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].vertexBuffer, &vertexSize, &offset);
-
-
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].CalculateWorld();
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material = MatPresets::Emerald;
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material.SpecPow = 38.0f;
-
-	matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material;
-
-	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-	UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].world, CamView, CamProjection);
-
-
-	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].nrElements * 3, 0);
-}
-
-for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3).size(); i++)
-{
-	//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-	gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].vertexBuffer, &vertexSize, &offset);
-
-
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].CalculateWorld();
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material = MatPresets::Emerald;
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material.SpecPow = 38.0f;
-
-	matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material;
-
-	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-	UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].world, CamView, CamProjection);
-
-
-	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].nrElements * 3, 0);
-}
-
-if (theCharacter->getDivision() >1)
-{
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2).size(); i++)
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3).size(); i++)
 	{
 		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].vertexBuffer, &vertexSize, &offset);
 
 
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material.SpecPow = 38.0f;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material.SpecPow = 38.0f;
 
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material;
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material;
 
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].world, CamView, CamProjection);
+		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].world, currView, currProjection);
 
 
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].nrElements * 3, 0);
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].nrElements * 3, 0);
 	}
-}
 
-if (theCharacter->getDivision() > 2)
-{
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3).size(); i++)
+	if (theCharacter->getDivision() >1)
+	{
+		for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2).size(); i++)
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].vertexBuffer, &vertexSize, &offset);
+
+
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].CalculateWorld();
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material = MatPresets::Emerald;
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material.SpecPow = 38.0f;
+
+			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material;
+
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].world, currView, currProjection);
+
+
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].nrElements * 3, 0);
+		}
+	}
+
+	if (theCharacter->getDivision() > 2)
+	{
+		for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3).size(); i++)
+		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
+			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].vertexBuffer, &vertexSize, &offset);
+
+
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].CalculateWorld();
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material = MatPresets::Emerald;
+			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material.SpecPow = 38.0f;
+
+			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material;
+
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+
+			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].world, currView, currProjection);
+
+
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].nrElements * 3, 0);
+		}
+	}
+
+	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4).size(); i++)
 	{
 		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].vertexBuffer, &vertexSize, &offset);
+		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].vertexBuffer, &vertexSize, &offset);
 
 
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material.SpecPow = 38.0f;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].CalculateWorld();
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material = MatPresets::Emerald;
+		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material.SpecPow = 38.0f;
 
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material;
+		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material;
 
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].world, CamView, CamProjection);
+		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].world, currView, currProjection);
 
 
 		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].nrElements * 3, 0);
+		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].nrElements * 3, 0);
 	}
-}
-
-for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4).size(); i++)
-{
-	//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-	gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].vertexBuffer, &vertexSize, &offset);
-
-
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].CalculateWorld();
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material = MatPresets::Emerald;
-	theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material.SpecPow = 38.0f;
-
-	matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material;
-
-	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-	UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].world, CamView, CamProjection);
-
-
-	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-	gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].nrElements * 3, 0);
-}
 
 	// Shouldn't need to set shaders again if we don't change them in the above loops.
 	// Leaving it meanwhile
@@ -1257,7 +1243,7 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 	theCharacter->CalculateWorld();
 	
 	
-	UpdateMatricies(theCharacter->world, CamView, CamProjection);
+	UpdateMatricies(theCharacter->world, currView, currProjection);
 
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
@@ -1269,94 +1255,114 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
 
-	//////////////////////////////////////////////////////////////
-	
-	gSwapChain->Present(0, 0); //växla back/front buffer
+	//######################################################################################################################################################
+	//###												*NON* SHADOW CASTING OBJECTS GOES HERE BELOW						  							 ###	
+	//######################################################################################################################################################
+
+	if (viewPoint == 2)		//If object only should be rendered from cameras POV, and therefore not to the shadow map to cast shadows.
+	{
+
+	}
 }
 
 // UPDATES
 
-void RenderEngine::Update(float dt, PlayerObject& theCharacter){
+void RenderEngine::Update(float dt, PlayerObject& theCharacter)
+{
 	soundBackground.PlayMp3();
-		Input theInput;
-		theInput.initInput(this->hInstance, hWindow);
-		int input = 0;
-		bool jump = false;
-		bool dash = false;
+	Input theInput;		//Defined in .h file
+	theInput.initInput(this->hInstance, hWindow);
+	int input = 0;
+	bool jump = false;
+	bool dash = false;
 
-		input = theInput.detectInput(hWindow);
-		jump = theInput.detectJump(hWindow);
-		dash = theInput.detectDash(hWindow);
 
-		for (vector<int>::size_type i = 0; i != theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
+	input = theInput.detectInput(hWindow);
+	jump = theInput.detectJump(hWindow);
+	dash = theInput.detectDash(hWindow);
+
+	if (theInput.detectCameraLean(hWindow))
+	{
+		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
+	}
+	else
+	{
+		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
+		mainCamera.updateCamera();
+	}
+
+	for (vector<int>::size_type i = 0; i != theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
+	{
+		if (theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
 		{
-			if (theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
-			{
-				theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].PatrolInterval(gTimer.TotalTime());
-				theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].UpdateBBOX();
-			}
-			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
-			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
-			*/
-			//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-
-			//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
-
+			theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].PatrolInterval(gTimer.TotalTime());
+			theBinaryTree->platformsMoving->at(theCharacter.getDivision())[i].UpdateBBOX();
 		}
+		/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
+		&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
+		*/
+		//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+
+		//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
+
+	}
 
 
-		if (theCharacter.getDivision() != 0)
-		{
-			testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
-			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), theCharacter);
-		}
+	if (theCharacter.getDivision() != 0)
+	{
+		testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
+		testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), theCharacter);
+	}
 
-		else
-		{
-			testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
-			testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theCharacter);
+	else
+	{
+		testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+		testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theCharacter);
 
-		}
+	}
 
-		if (testDynamicPlatforms.isGrounded() == true || testStaticPlatforms.isGrounded() == true)
-			theCollision->SetGrounded(true);
-		else
-			theCollision->SetGrounded(false);
+	if (testDynamicPlatforms.isGrounded() == true || testStaticPlatforms.isGrounded() == true)
+		theCollision->SetGrounded(true);
+	else
+		theCollision->SetGrounded(false);
 
-		if (testDynamicPlatforms.rightValid() == false || testStaticPlatforms.rightValid() == false)
-			theCollision->SetRightValid(false);
-		else 
-			theCollision->SetRightValid(true);
+	if (testDynamicPlatforms.rightValid() == false || testStaticPlatforms.rightValid() == false)
+		theCollision->SetRightValid(false);
+	else
+		theCollision->SetRightValid(true);
 
-		if (testDynamicPlatforms.leftValid() == false || testStaticPlatforms.leftValid() == false)
-			theCollision->SetLeftValid(false);
-		else
-			theCollision->SetLeftValid(true);
+	if (testDynamicPlatforms.leftValid() == false || testStaticPlatforms.leftValid() == false)
+		theCollision->SetLeftValid(false);
+	else
+		theCollision->SetLeftValid(true);
 
-		if (testDynamicPlatforms.upValid() == false || testStaticPlatforms.upValid() == false)
-			theCollision->SetUpValid(false);
-		else
-			theCollision->SetUpValid(true);
-		
-		//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
+	if (testDynamicPlatforms.upValid() == false || testStaticPlatforms.upValid() == false)
+		theCollision->SetUpValid(false);
+	else
+		theCollision->SetUpValid(true);
+
+	//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
 
-		if (!theCollision->rightValid() && theCharacter.jumpMomentumX > 0)
-		{
-			theCharacter.jumpMomentumX = 0;
-		}
+	if (!theCollision->rightValid() && theCharacter.jumpMomentumX > 0)
+	{
+		theCharacter.jumpMomentumX = 0;
+	}
 
-		if (!theCollision->leftValid() && theCharacter.jumpMomentumX < 0)
-		{
-			theCharacter.jumpMomentumX = 0;
-		}
+	if (!theCollision->leftValid() && theCharacter.jumpMomentumX < 0)
+	{
+		theCharacter.jumpMomentumX = 0;
+	}
 
-		if (!theCollision->isGrounded() && !theCharacter.jumpMomentumState)
-		{
-			theCharacter.setJumpMomentum(rightDirection);
-		}
+	if (!theCollision->isGrounded() && !theCharacter.jumpMomentumState)
+	{
+		theCharacter.setJumpMomentum(rightDirection);
+	}
 
-		if (gTimer.TotalTime() - theCharacter.dashTimer > 0.30f && !theCharacter.dashDisabling)
+	if (gTimer.TotalTime() - theCharacter.dashTimer > 0.30f && !theCharacter.dashDisabling)
+	{
+		theCharacter.momentum = 1;
+		if (theCharacter.jumpMomentumX < 0)
 		{
 			theCharacter.momentum = 1;
 			if (theCharacter.jumpMomentumX < 0)
@@ -1373,168 +1379,187 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		}
 
 		if (gTimer.TotalTime() - theCharacter.dashTimer > 2.00f && !theCharacter.dashAvailable)
-		{
-			theCharacter.dashAvailable = true;
+
+			theCharacter.jumpMomentumX = -0.1;
 		}
+
+		if (theCharacter.jumpMomentumX > 0)
+
+		{
+			theCharacter.jumpMomentumX = 0.1;
+		}
+
+		theCharacter.dashDisabling = true;
+	}
+
+	if (gTimer.TotalTime() - theCharacter.dashTimer > 4.00f && !theCharacter.dashAvailable)
+	{
+		theCharacter.dashAvailable = true;
+	}
 
 	//	if ((gTimer.TotalTime() - time4) >= 1.00f)
-		//{
-		theCharacter.UpdateDivision(theBinaryTree->pixelsPerdivision);
-			//time4 = gTimer.TotalTime();
-		//}
+	//{
+	theCharacter.UpdateDivision(theBinaryTree->pixelsPerdivision);
+	//time4 = gTimer.TotalTime();
+	//}
 
-		
-		if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
+
+
+	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
+	{
+		reset(&theCharacter);
+	}
+
+	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
+	{
+		reset(&theCharacter);
+	}
+	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
+
+
+	//theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
+
+
+
+	XMFLOAT2 tempPickUpValue;
+	tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
+	gCounter.addCollectable(tempPickUpValue);
+
+	if (input == 1 && theCollision->leftValid() == true)
+	{
+		rightDirection = false;
+		if (theCharacter.jumpMomentumState)
 		{
-			reset(&theCharacter);
-		}
-		////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
-
-		
-		//theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
-
-	
-		
-		XMFLOAT2 tempPickUpValue;
-		tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
-			gCounter.addCollectable(tempPickUpValue); 
-
-		if (input == 1 && theCollision->leftValid() == true)
-		{
-			rightDirection = false;
-			if (theCharacter.jumpMomentumState)
+			if (theCharacter.jumpMomentumX > theCharacter.getSpeed() * -1)
 			{
-				if (theCharacter.jumpMomentumX > theCharacter.getSpeed() * -1)
-				{
-					theCharacter.jumpMomentumX -= 0.005;
-				}
-
-				else
-				{
-					//theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
-				}
-				
+				theCharacter.jumpMomentumX -= 0.005;
 			}
+
 			else
 			{
-				theCharacter.Move(false); //left
-				
+				//theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
 			}
-			
-		}
-
-		else if (input == 2 && theCollision->rightValid() == true)
-		{
-			rightDirection = true;
-			if (theCharacter.jumpMomentumState)
-			{
-				if (theCharacter.jumpMomentumX < theCharacter.getSpeed())
-				{
-					theCharacter.jumpMomentumX += 0.005;
-				}
-
-				else
-				{
-					//theCharacter->jumpMomentumX = theCharacter->getSpeed();
-				}
-				
-			}
-			else
-			{
-			
-				theCharacter.Move(true); //right
-				
-			}
-			
 
 		}
-
 		else
-			theCharacter.momentum = 0;
+		{
+			theCharacter.Move(false); //left
 
-		if (input == 3)
-		{
-			//reset();
-			pausYearCount = gCounter.theAge.years;
-			pausMonthCount = gCounter.theAge.months;
-			pauseTime = gTimer.TotalTime();
-			menuTime = gTimer.TotalTime();
-			gTimer.Stop();
-
-			//pauseTime = 100;
-
-			mainMenu.setPause(TRUE);
-		}
-		if (input == 4)
-		{
-			reset(&theCharacter);
-		}
-		if (input == 5)
-		{
-			theCharacters.at(0).xPos = theCharacter.xPos;
-			theCharacters.at(0).yPos = theCharacter.yPos;
-			CurrChar.setCharState(0);
-			
-		}
-		if (input == 6)
-		{
-			theCharacters.at(1).xPos = theCharacter.xPos;
-			theCharacters.at(1).yPos = theCharacter.yPos;
-			CurrChar.setCharState(1);
-			
-		}
-		if (input == 7)
-		{
-			theCharacters.at(2).xPos = theCharacter.xPos;
-			theCharacters.at(2).yPos = theCharacter.yPos;
-			CurrChar.setCharState(2);
-			
 		}
 
-		if (dash && theCharacter.dashAvailable)
+	}
+
+	else if (input == 2 && theCollision->rightValid() == true)
+	{
+		rightDirection = true;
+		if (theCharacter.jumpMomentumState)
 		{
-			theCharacter.Dash();
-			theCharacter.dashTimer = gTimer.TotalTime();
-		}
-
-		
-		if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
-
-		{
-			thePhysics.Jump(theCollision, &theCharacter);
-			thePhysics.onPlatform = false;
-			soundJump.PlayMp3();
-			soundJump.daCapo();
-			theCharacter.jumpTimer = gTimer.TotalTime();
-		}
-
-
-		if (theCollision->upValid() == false){
-			thePhysics.DisableUpForce();
-		}
-
-
-		//MOVING PLATFORM POSITION UPDATE
-
-		//for (unsigned i = 0; i < theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
-	
-
-		// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
-
-		for (vector<int>::size_type i = 0; i != theBinaryTree->deadlyMoving->at(theCharacter.getDivision()).size(); i++)
-		{
-			if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
+			if (theCharacter.jumpMomentumX < theCharacter.getSpeed())
 			{
-				theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+				theCharacter.jumpMomentumX += 0.005;
 			}
+
+			else
+			{
+				//theCharacter->jumpMomentumX = theCharacter->getSpeed();
+			}
+
+		}
+		else
+		{
+
+			theCharacter.Move(true); //right
+
+		}
+
+
+	}
+
+	else
+		theCharacter.momentum = 0;
+
+	if (input == 3)
+	{
+		//reset();
+		pausYearCount = gCounter.theAge.years;
+		pausMonthCount = gCounter.theAge.months;
+		pauseTime = gTimer.TotalTime();
+		menuTime = gTimer.TotalTime();
+		gTimer.Stop();
+
+		//pauseTime = 100;
+
+		mainMenu.setPause(TRUE);
+	}
+	if (input == 4)
+	{
+		reset(&theCharacter);
+	}
+	if (input == 5)
+	{
+		theCharacters.at(0).xPos = theCharacter.xPos;
+		theCharacters.at(0).yPos = theCharacter.yPos;
+		CurrChar.setCharState(0);
+
+	}
+	if (input == 6)
+	{
+		theCharacters.at(1).xPos = theCharacter.xPos;
+		theCharacters.at(1).yPos = theCharacter.yPos;
+		CurrChar.setCharState(1);
+
+	}
+	if (input == 7)
+	{
+		theCharacters.at(2).xPos = theCharacter.xPos;
+		theCharacters.at(2).yPos = theCharacter.yPos;
+		CurrChar.setCharState(2);
+
+	}
+
+	if (dash && theCharacter.dashAvailable)
+	{
+		theCharacter.Dash();
+		theCharacter.dashTimer = gTimer.TotalTime();
+	}
+
+
+	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
+
+	{
+		thePhysics.Jump(theCollision, &theCharacter);
+		thePhysics.onPlatform = false;
+		soundJump.PlayMp3();
+		soundJump.daCapo();
+		theCharacter.jumpTimer = gTimer.TotalTime();
+	}
+
+
+	if (theCollision->upValid() == false){
+		thePhysics.DisableUpForce();
+	}
+
+
+	//MOVING PLATFORM POSITION UPDATE
+
+	//for (unsigned i = 0; i < theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
+
+
+	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
+
+	for (vector<int>::size_type i = 0; i != theBinaryTree->deadlyMoving->at(theCharacter.getDivision()).size(); i++)
+	{
+		if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
+		{
+			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].CalculateWorld();
 			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
 			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
 			*/
 			//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
 
-			//MOVING PLATFORM CALL ** DO NOT REMOVE ** ONLY COMMENTED FOR SLAM TESTING PURPOSES
-
 		}
+	}
 		thePhysics.Gravitation(theCollision, &theCharacter);
 		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
 		theCharacter.CalculateWorld();
@@ -1549,8 +1574,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
 		}
 
+		lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
 		lightProp01.lights[0].Type = l_Directional;
-		lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
+		lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
 		lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
@@ -1569,7 +1595,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			lightOffsetTest += moveL;
 			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
 		}
-		
+
 
 
 		lightProp01.lights[2].Type = l_Point;
@@ -1589,14 +1615,13 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 
 		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 1;
+		lightProp01.lights[1].Active = 0;
 		lightProp01.lights[2].Active = 1;
 		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
 
-		
-	
 }
+
 void RenderEngine::MenuUpdate(float tt){
 	Menu Menuinput;
 	Menuinput.menuInit(this->hInstance, hWindow);

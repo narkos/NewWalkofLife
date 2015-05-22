@@ -37,6 +37,7 @@ public:
 	Camera();
 
 	void updateCamera();
+	void leanCamera(bool state);
 
 	float characterXPos;
 

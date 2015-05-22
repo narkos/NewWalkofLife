@@ -16,7 +16,6 @@
 
 //INLCUDE H FILES HERE
 
-
 //#include "GameObject.h"
 #include "BinaryTree.h"
 #include "Quadtree.h"
@@ -37,17 +36,14 @@
 #include "Menuclass.h"
 #include "HighScore.h"
 #include "CharSwitch.h"
+#include "Shadows.h"
 
 using namespace DirectX;
-
-
 
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
-
-
-class RenderEngine{ //DENNA KLASSEN ?R ABSTRAKT - g?r inte instantiera
+class RenderEngine{ //DENNA KLASSEN ÄR ABSTRAKT - går inte instantiera
 
 public:
 	HWND hWindow;
@@ -68,9 +64,8 @@ public:
 	void fpscounter();
 	void reset(PlayerObject* theCharacter);
 	void LoadSounds();
-
+	void drawScene(int viewPoint, PlayerObject* theCharacter);
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
-
 
 	std::vector<PlayerObject> theCharacters;
 	Sound soundJump;
@@ -96,8 +91,10 @@ public:
 	PlayerObject* theCharacter2;
 	PlayerObject* theCharacter3;
 	Camera mainCamera;
+	Shadows shadows;
 	Menu mainMenu;
 	CharSwitch CurrChar;
+	//Input theInput;
 	bool Character2 = false;
 	bool Character3 = false;
 
@@ -111,17 +108,14 @@ public:
 	XMFLOAT4 globalAmb;
 	LightProperties lightProp01;
 	XMFLOAT4 camPos;
-	float camxPos;
-	float camyPos;
+	//float camxPos;
+	//float camyPos;
 	
 	float lightOffsetTest;
-
-
 
 	//Material Shit
 	ID3D11Buffer* matConstBuff;
 	MaterialProperties matProperties;
-
 
 	//Import Functions
 	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic);// , bool isStatic, XMMATRIX startPosMatrix);
@@ -164,6 +158,10 @@ public:
 		XMFLOAT4X4 WorldSpace;
 		XMFLOAT4X4 InvWorld;
 		XMFLOAT4X4 WVP;
+
+		//Shadow Stuff
+		XMFLOAT4X4 lightView;
+		XMFLOAT4X4 lightProjection;
 	};
 
 	World perObjCBData;
@@ -236,4 +234,16 @@ protected:
 	float scrolltime;
 	int iz = 1;
 
+	UINT32 vertexSize = sizeof(float)* 8;
+	UINT32 offset = 0;
+
+	//World perObjCBData;
+	XMMATRIX WVP;
+
+	//Shadow implement
+	//The Camera Matrices are now defined in the camera class (mainCamera)
+	XMMATRIX CamView;
+	XMMATRIX CamProjection;
+	XMMATRIX identityM;
+	XMMATRIX WorldInv;
 };

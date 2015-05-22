@@ -244,7 +244,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		else if (meshType == 1){ //nonstatic
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.nrElements = nrOfFaces;
 			dynamicPlatforms.push_back(tempP);
@@ -252,7 +252,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		else if (meshType == 2){ //player
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
 			tempPlayer.nrElements = nrOfFaces;
 			players.push_back(tempPlayer);
@@ -266,7 +266,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		else if (meshType == 4){ //collectable
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempC.nrElements = nrOfFaces;
 			staticCollectableObjects.push_back(tempC);
@@ -274,7 +274,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		else if (meshType == 5){ //deadly
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.nrElements = nrOfFaces;
 			staticDeadlyObjects.push_back(tempP);
@@ -282,7 +282,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		else if (meshType == 6){ //deadlymoving
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.slamDirection = coinValue;
 			tempP.slamTimeOffset = xInterval;
@@ -292,7 +292,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		else if (meshType == 7){ //collectablemoving
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempC.nrElements = nrOfFaces;
 			dynamicCollectableObjects.push_back(tempC);

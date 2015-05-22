@@ -37,6 +37,7 @@
 #include "Menuclass.h"
 #include "HighScore.h"
 #include "CharSwitch.h"
+#include "Startmeny.h"
 
 using namespace DirectX;
 
@@ -61,7 +62,8 @@ public:
 	void SetViewport();
 	virtual bool Init();
 	void Update(float dt, PlayerObject& theCharacter);
-	void MenuUpdate(float tt);
+	void MenuUpdate(float tt); 
+	void StartMenuUpdate(float tt);
 	void Render(PlayerObject* theCharacter);
 	virtual void Release();
 	void Fonts();
@@ -98,6 +100,7 @@ public:
 	Camera mainCamera;
 	Menu mainMenu;
 	CharSwitch CurrChar;
+	Startmenu StartMenu;
 	bool Character2 = false;
 	bool Character3 = false;
 
@@ -164,6 +167,7 @@ public:
 		XMFLOAT4X4 WorldSpace;
 		XMFLOAT4X4 InvWorld;
 		XMFLOAT4X4 WVP;
+		//BOOL hasNormMap;
 	};
 
 	World perObjCBData;
@@ -235,5 +239,6 @@ protected:
 	int Tabofdoom;
 	float scrolltime;
 	int iz = 1;
+	int izz = 1;
 
 };

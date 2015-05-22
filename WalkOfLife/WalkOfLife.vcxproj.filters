@@ -120,6 +120,9 @@
     <ClCompile Include="CharSwitch.cpp">
       <Filter>Header Files\SwitchChar</Filter>
     </ClCompile>
+    <ClCompile Include="Startmeny.cpp">
+      <Filter>Header Files\Meny</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameTimer.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="PlayerObject.h">
       <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Startmeny.h">
+      <Filter>Header Files\Meny</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

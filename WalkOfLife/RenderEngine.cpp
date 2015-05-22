@@ -69,6 +69,7 @@ bool RenderEngine::Init(){
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
+	//theHighScore.LoadHighScore();
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile3.bin");
 	//theCharacters = &theCustomImporter.GetPlayers()[0];
@@ -112,10 +113,13 @@ bool RenderEngine::Init(){
 
 	TextureFunc();
 	mainMenu.CreateTextures(gDevice);
-
+	
+	StartMenu.CreateTextures(gDevice);
 	//Font
 	Fonts();
-	mainMenu.menuInit(gDeviceContext);
+	//StartMenu.menuInit(gDeviceContext);
+	//mainMenu.menuInit(gDeviceContext);
+	
 	theCharacters.at(0).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 	theCharacters.at(1).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 
@@ -632,70 +636,85 @@ int RenderEngine::Run(){
 			DispatchMessage(&msg);
 		}
 		else{ //applikationen är fortfarande igång
-
-			gTimer.Tick();
-
-			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-			if (gCounter.theAge.years == 5 && haschanged == false)
-			{
-				Character2 = true;
-					//CurrChar.switchCharState(theCharacter1->xPos);
-				haschanged = true;
-				CurrChar.setCharState(1);
-				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-				theCharacters.at(1).xPos = theCharacters.at(0).xPos;
-				theCharacters.at(1).yPos = theCharacters.at(0).yPos;
-				
-			}
 			
-			if (mainMenu.getPause() == FALSE)
+			gTimer.Tick();
+			if (StartMenu.getstartmeny() == true)
 			{
 				
-				if ((gTimer.TotalTime() - time3) >= 0.012f)
-				{
-					fpscounter();
-					
-					
-					if (CurrChar.getCharSate() == 0)
-					{
-						Update(0.0f, theCharacters.at(0));
-						Render(&theCharacters.at(0));
-					}
-					else if (CurrChar.getCharSate() == 1)
-					{
-						//theCollision
-						Update(0.0f, theCharacters.at(1));
-						Render(&theCharacters.at(1));
-					}
-					else if (CurrChar.getCharSate() == 2)
-					{
-						Update(0.0f, theCharacters.at(2));
-						Render(&theCharacters.at(2));
-					}
-					time3 = gTimer.TotalTime();
-				}
-				
-			}
-			if (mainMenu.getPause() == TRUE)
-			{
-
-				/*	scrolltime = gTimer.TotalTime();
-				if (gTimer.TotalTime() >= scrolltime+1.0f)*/
-				//if (theHighScore.getHSbool() == FALSE)
-				{
-					MenuUpdate(0.0f);
-					mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
-					
-				}
-
-				if(theHighScore.getHSbool()==TRUE)
+				StartMenuUpdate(0.0f);
+				StartMenu.ActivestartMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
+				if (theHighScore.getHSbool() == true)
 				{
 					theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
 				}
+				
+			}
+			else if (StartMenu.getstartmeny() == false)
+			{
+				
+				theHighScore.setHSbool(false);
+				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
+				if (gCounter.theAge.years == 5 && haschanged == false)
+				{
+					Character2 = true;
+					//CurrChar.switchCharState(theCharacter1->xPos);
+					haschanged = true;
+					CurrChar.setCharState(1);
+					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
+					theCharacters.at(1).xPos = theCharacters.at(0).xPos;
+					theCharacters.at(1).yPos = theCharacters.at(0).yPos;
 
+				}
+
+				if (mainMenu.getPause() == FALSE)
+				{
+
+					if ((gTimer.TotalTime() - time3) >= 0.012f)
+					{
+						fpscounter();
+
+
+						if (CurrChar.getCharSate() == 0)
+						{
+							Update(0.0f, theCharacters.at(0));
+							Render(&theCharacters.at(0));
+						}
+						else if (CurrChar.getCharSate() == 1)
+						{
+							//theCollision
+							Update(0.0f, theCharacters.at(1));
+							Render(&theCharacters.at(1));
+						}
+						else if (CurrChar.getCharSate() == 2)
+						{
+							Update(0.0f, theCharacters.at(2));
+							Render(&theCharacters.at(2));
+						}
+						time3 = gTimer.TotalTime();
+					}
+
+				}
+				if (mainMenu.getPause() == TRUE)
+				{
+
+					/*	scrolltime = gTimer.TotalTime();
+					if (gTimer.TotalTime() >= scrolltime+1.0f)*/
+				//	if (theHighScore.getHSbool() == FALSE)
+					{
+						MenuUpdate(0.0f);
+						mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
+
+					}
+
+					if (theHighScore.getHSbool() == TRUE)
+					{
+						theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+					}
+
+
+				}
 
 			}
-			
 		}
 	}
 	return static_cast<int>(msg.wParam);
@@ -1503,32 +1522,36 @@ void RenderEngine::MenuUpdate(float tt){
 
 		if (input2 == 3)
 		{
-			//run wichever tab i currently selected --------------------------------------- button functions
-			if (mainMenu.getCurrentTab() == 1)
+			if (gTimer.TotalTime() >= menuTime + 0.55f) // Om det gått 0.14 sec sen ditt senaste knapptryck
 			{
-				//gTimer.setPausedTime(pauseTime);
-				//gTimer.setCurrTime(pauseTime);
-				gTimer.Start(pauseTime);
-				mainMenu.setPause(FALSE);
-				theHighScore.setHSbool(FALSE);
-				menuTime = 0;
-			}
-			else if (mainMenu.getCurrentTab() == 2)
-			{
-				// open highscores
-				if (theHighScore.getHSbool() == FALSE)
+				//run wichever tab i currently selected --------------------------------------- button functions
+				if (mainMenu.getCurrentTab() == 1)
 				{
-					theHighScore.setHSbool(TRUE);
-				}
-				else if(theHighScore.getHSbool() == TRUE)
-				{
+					//gTimer.setPausedTime(pauseTime);
+					//gTimer.setCurrTime(pauseTime);
+					gTimer.Start(pauseTime);
+					mainMenu.setPause(FALSE);
 					theHighScore.setHSbool(FALSE);
-
+					menuTime = gTimer.TotalTime();
 				}
-			}
-			else if (mainMenu.getCurrentTab() == 3)
-			{
-				PostMessage(hWindow, WM_QUIT, 0, 0);
+				else if (mainMenu.getCurrentTab() == 2)
+				{
+					// open highscores
+					if (theHighScore.getHSbool() == FALSE)
+					{
+						theHighScore.setHSbool(TRUE);
+					}
+					else if (theHighScore.getHSbool() == TRUE)
+					{
+						theHighScore.setHSbool(FALSE);
+
+					}
+					menuTime = gTimer.TotalTime();
+				}
+				else if (mainMenu.getCurrentTab() == 3)
+				{
+					PostMessage(hWindow, WM_QUIT, 0, 0);
+				}
 			}
 
 
@@ -1545,6 +1568,102 @@ void RenderEngine::MenuUpdate(float tt){
 			//__int64 Paous = gTimer.TotalTime() - pauseTime;
 			//gTimer.setPausedTime(Paous);
 			mainMenu.setPause(FALSE);
+			theHighScore.setHSbool(FALSE);
+			menuTime = 0;
+
+			//float gTimer.TotalTime() = pauseTime;
+
+		}
+	}
+
+
+
+}
+
+void RenderEngine::StartMenuUpdate(float tt){
+	Startmenu Menuinput;
+	Menuinput.menuInit(this->hInstance, hWindow);
+	int input3 = 0;
+
+	int currentTabTemp = StartMenu.getCurrentTab();
+	int scrolltime = gTimer.TotalTime();
+	//if (gTimer.TotalTime() >= scrolltime + 1.0f)
+
+	if (gTimer.TotalTime() >= menuTime + 0.14f) // Om det gått 0.14 sec sen ditt senaste knapptryck
+	{
+		input3 = Menuinput.menuInput(hWindow);
+
+		if (input3 == 2)
+		{
+			if (izz < 3)
+				izz++;
+			else
+				izz = 1;
+			menuTime = gTimer.TotalTime();
+
+		}
+		if (input3 == 1)
+		{
+			if (izz > 1)
+				izz--;
+			else
+				izz = 3;
+
+			menuTime = gTimer.TotalTime();
+		}
+
+		if (input3 == 3)
+		{
+			if (gTimer.TotalTime() >= menuTime + 0.55f) // Om det gått 0.14 sec sen ditt senaste knapptryck
+			{
+				//run wichever tab i currently selected --------------------------------------- button functions
+				if (StartMenu.getCurrentTab() == 1)
+				{
+					//gTimer.setPausedTime(pauseTime);
+					//gTimer.setCurrTime(pauseTime);
+					gTimer.Reset();
+					gTimer.Start(pauseTime);
+					//mainMenu.setPause(FALSE);
+					//theHighScore.setHSbool(FALSE);
+					StartMenu.setstartmeny(false);
+					menuTime = 0;
+					menuTime = gTimer.TotalTime();
+				}
+				else if (StartMenu.getCurrentTab() == 2)
+				{
+					// open highscores
+					if (theHighScore.getHSbool() == FALSE)
+					{
+						theHighScore.setHSbool(TRUE);
+						menuTime = gTimer.TotalTime();
+					}
+					else if (theHighScore.getHSbool() == TRUE)
+					{
+						theHighScore.setHSbool(FALSE);
+						menuTime = gTimer.TotalTime();
+
+					}
+				}
+				else if (StartMenu.getCurrentTab() == 3)
+				{
+					PostMessage(hWindow, WM_QUIT, 0, 0);
+				}
+
+
+			}
+		}
+
+		StartMenu.setCurrentTab(izz);
+
+
+		if (input3 == 4)
+		{
+			gTimer.Start(pauseTime);
+
+			//gTimer.setCurrTime(pauseTime);
+			//__int64 Paous = gTimer.TotalTime() - pauseTime;
+			//gTimer.setPausedTime(Paous);
+			
 			theHighScore.setHSbool(FALSE);
 			menuTime = 0;
 

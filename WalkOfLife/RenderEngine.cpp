@@ -1361,18 +1361,18 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			theCharacter.momentum = 1;
 			if (theCharacter.jumpMomentumX < 0)
 			{
-				theCharacter.jumpMomentumX = -0.1;
+				theCharacter.jumpMomentumX = -0.1f;
 			}
 			
 			if (theCharacter.jumpMomentumX > 0)
 			{
-				theCharacter.jumpMomentumX = 0.1;
+				theCharacter.jumpMomentumX = 0.1f;
 			}
 	
 			theCharacter.dashDisabling = true;
 		}
 
-		if (gTimer.TotalTime() - theCharacter.dashTimer > 4.00f && !theCharacter.dashAvailable)
+		if (gTimer.TotalTime() - theCharacter.dashTimer > 2.00f && !theCharacter.dashAvailable)
 		{
 			theCharacter.dashAvailable = true;
 		}

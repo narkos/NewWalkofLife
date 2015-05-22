@@ -32,6 +32,7 @@ bool HighScore::SaveHighScore(){
 	saveFile.open(fileNameSave);
 	if (saveFile.is_open() == true){
 		saveFile.clear();
+		int i = 0;
 		for each(Score s in highScoreList){
 			saveFile << "c" << s.coins;
 			saveFile << "\n";
@@ -39,6 +40,9 @@ bool HighScore::SaveHighScore(){
 			saveFile << "\n";
 			saveFile << "p" << s.points;
 			saveFile << "\n";
+			if (i > maxListSize)
+				break;
+			i++;
 		}
 		saveFile.close();
 		return true;

@@ -1,5 +1,5 @@
 #include "FBXImporter.h"
-
+#include "string"
 void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 	ifstream fbxFile;
 	fbxFile.open(fileName, ifstream::binary);
@@ -9,9 +9,23 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 	fbxFile.read((char*)&fileInfo.nrLights, sizeof(int));
 	//fbxFile.read((char*)&fileInfo.nrMaterials, sizeof(int));
 
-
+	int mesnNumberInt=0;
 	for (int i = 0; i < fileInfo.nrMeshes; i++){ //loopa igenom alla meshes
 		MeshInfo meshInfo;
+		
+		fbxFile.read((char*)&meshInfo.nrTex, sizeof(int));
+		
+		fbxFile.read((char*)meshInfo.name.c_str(), meshInfo.nrTex);
+		std::string qs = std::to_string(meshInfo.nrTex);
+	testTexNameArray.push_back(meshInfo.name.c_str());
+
+		
+		if (i>335)
+		{
+			int bajs = 2;
+		}
+
+	
 		
 		fbxFile.read((char*)&meshInfo.meshType, sizeof(int));
 		fbxFile.read((char*)&meshInfo.xInterval, sizeof(float));
@@ -20,10 +34,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		fbxFile.read((char*)&meshInfo.ySpeed, sizeof(float));
 		fbxFile.read((char*)&meshInfo.coinValue, sizeof(int));
 		fbxFile.read((char*)&meshInfo.timeValue, sizeof(int));
-		if (i == 329)
-		{
-			int bajs = 2;
-		}
+	
 		fbxFile.read((char*)&meshInfo.nrAnimations, sizeof(int));
 		fbxFile.read((char*)&meshInfo.nrBones, sizeof(int));
 		fbxFile.read((char*)&meshInfo.nrPos, sizeof(int));
@@ -239,61 +250,78 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 1000);
 			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.nrElements = nrOfFaces;
+			tempP.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			staticPlatforms.push_back(tempP);
 		}
 		else if (meshType == 1){ //nonstatic
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.nrElements = nrOfFaces;
+			tempP.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			dynamicPlatforms.push_back(tempP);
 		}
 		else if (meshType == 2){ //player
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
 			tempPlayer.nrElements = nrOfFaces;
+			tempPlayer.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			players.push_back(tempPlayer);
 		}
 		else if (meshType == 3){ //backgroundobj
 			GameObject tempO(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, xInterval, yInterval, xSpeed, ySpeed);
 			tempO.xPos = centerX;
 			tempO.nrElements = nrOfFaces;
+			tempO.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			backGroundObjects.push_back(tempO);
 		}
 		else if (meshType == 4){ //collectable
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempC.nrElements = nrOfFaces;
+			tempC.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			staticCollectableObjects.push_back(tempC);
 		}
 		else if (meshType == 5){ //deadly
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.nrElements = nrOfFaces;
+			tempP.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			staticDeadlyObjects.push_back(tempP);
 		}
 		else if (meshType == 6){ //deadlymoving
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.slamDirection = coinValue;
+			tempP.slamTimeOffset = xInterval;
 			tempP.nrElements = nrOfFaces;
+			tempP.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			dynamicDeadlyObjects.push_back(tempP);
 		}
 		else if (meshType == 7){ //collectablemoving
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 0);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempC.nrElements = nrOfFaces;
+			tempC.nrElements = nrOfFaces;		
+			tempC.indexT = mesnNumberInt;
+			mesnNumberInt++;
 			dynamicCollectableObjects.push_back(tempC);
 		}
 		//delete meshVertexBuffer
@@ -314,4 +342,50 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 
 	
 	fbxFile.close();
+
+	int cp = 0;
+		for (int f = 0; f < testTexNameArray.size(); f++){
+			
+			const char* cmpString3 =testTexNameArray[f].c_str();
+			if (f == 0){
+				std::string finalTexPath =cmpString3;
+
+				texNameArray.push_back(finalTexPath.c_str());
+			}
+			else if (f > 0){
+				std::string finalTexPath1;
+				for (int f2 = 0; f2 < texNameArray.size(); f2++){
+					
+					int t2 = 0;
+					if (cmpString3 != texNameArray[f2]){
+				
+						t2 = 1;
+						finalTexPath1 = cmpString3;
+						for (int f3 = 0; f3 < texNameArray.size(); f3++){
+						if (cmpString3 == texNameArray[f3])
+							t2=0;
+						
+						
+					}
+					if (f2 == texNameArray.size() - 1 && t2 == 1){
+						finalTexPath1 =  cmpString3;
+						texNameArray.push_back(finalTexPath1.c_str());
+						cp++;
+					}
+					}
+			}
+			}
+		}
+		for (int f = 0; f < testTexNameArray.size(); f++){
+			const char* cmpString3 = testTexNameArray[f].c_str();
+			for (int f5 = 0; f5 < texNameArray.size(); f5++){			
+				if (cmpString3 == texNameArray[f5]){
+					indexArray.push_back(f5);
+				}
+
+			}
+		}
+
+		int qbajs = 0;
+
 }

@@ -15,6 +15,9 @@ using namespace std;
 
 //infos
 
+//vector<ID3D11ShaderResourceView>texArray;
+
+
 class FBXImporter{
 private:
 	vector<Platform> staticPlatforms;
@@ -48,7 +51,9 @@ private:
 		int nrUV;
 		int nrTangents;
 		int nrFaces;
-
+		int nrTex;
+		string name;
+		int texIndex;
 	};
 
 	struct VertexData{
@@ -94,11 +99,27 @@ public:
 	FBXImporter(){}
 	~FBXImporter(){}
 
+	vector<string> texNameArray;
+	vector<string> testTexNameArray;
+	vector<int> indexArray;
+	std::string mapName = "Textures/";
+
 	void ImportFBX(ID3D11Device* gDevice, char* fileName);
 
 	vector<Platform> GetStaticPlatforms(){
 		return staticPlatforms;
 	}
+
+	vector<string> GettexNameArray(){
+		return texNameArray;
+	}
+	vector<string> GettestTexNameArray(){
+		return testTexNameArray;
+	}
+	vector<int> GetindexArray(){
+		return indexArray;
+	}
+
 	vector<Platform> GetDynamicPlatforms(){
 		return dynamicPlatforms;
 	}

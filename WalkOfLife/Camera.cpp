@@ -4,7 +4,7 @@ Camera::Camera()
 {
 
 	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), 0.0f, cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 50.0f);
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 1000.0f);
 
 }
 
@@ -45,7 +45,37 @@ void Camera::updateCamera()
 
 	//Sets and updates the camera's view- and projection matrices based of the calculations.
 	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 50.0f);
+	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 1000.0f);
+
+}
+
+void Camera::leanCamera(bool state)
+{
+	if (state)
+	{
+		if (cameraZPos < (-3.0))
+		{
+			if (cameraYPos < (playerYPos + 3.0))
+			{
+				cameraYPos += 0.1f;
+			}
+			cameraZPos += 0.3f;
+			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+		}
+	}
+	else
+	{
+		if (cameraZPos >(-15.0))
+		{
+			if (cameraYPos > playerYPos)
+			{
+				cameraYPos -= 0.1f;
+			}
+			cameraZPos -= 0.3f;
+			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+		}
+		//updateCamera();
+	}
 
 }
 

@@ -1,6 +1,6 @@
 //PIXEL SHADER
 #include "LightComputations.fx"
-Texture2D txDiffuse : register(t1);
+Texture2D txDiffuse : register(t0);
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
 
@@ -16,7 +16,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 {
 
 
-	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
+	//LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
 
 		float4	Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);

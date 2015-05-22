@@ -37,6 +37,8 @@ private:
 	vector<Score> coinList;
 	vector<Score> timeList;
 	bool HSbool = FALSE;
+
+	int maxListSize = 10;
 	//anton
 	
 

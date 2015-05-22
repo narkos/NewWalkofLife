@@ -16,7 +16,6 @@
 
 //INLCUDE H FILES HERE
 
-
 //#include "GameObject.h"
 #include "BinaryTree.h"
 #include "Quadtree.h"
@@ -34,21 +33,20 @@
 #include "Extra DirectXLibs\Inc\SpriteFont.h"
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
 #include "Extra DirectXLibs\Inc\SimpleMath.h"
+#include "Extra DirectXLibs\Inc\WICTextureLoader.h"
 #include "Menuclass.h"
 #include "HighScore.h"
 #include "CharSwitch.h"
 #include "Startmeny.h"
+#include "Shadows.h"
+
 
 using namespace DirectX;
-
-
 
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
-
-
-class RenderEngine{ //DENNA KLASSEN ?R ABSTRAKT - g?r inte instantiera
+class RenderEngine{ //DENNA KLASSEN ÄR ABSTRAKT - går inte instantiera
 
 public:
 	HWND hWindow;
@@ -70,9 +68,8 @@ public:
 	void fpscounter();
 	void reset(PlayerObject* theCharacter);
 	void LoadSounds();
-
+	void drawScene(int viewPoint, PlayerObject* theCharacter);
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
-
 
 	std::vector<PlayerObject> theCharacters;
 	Sound soundJump;
@@ -98,9 +95,13 @@ public:
 	PlayerObject* theCharacter2;
 	PlayerObject* theCharacter3;
 	Camera mainCamera;
+	Shadows shadows;
 	Menu mainMenu;
 	CharSwitch CurrChar;
+
 	Startmenu StartMenu;
+
+	//Input theInput;
 	bool Character2 = false;
 	bool Character3 = false;
 
@@ -114,17 +115,14 @@ public:
 	XMFLOAT4 globalAmb;
 	LightProperties lightProp01;
 	XMFLOAT4 camPos;
-	float camxPos;
-	float camyPos;
+	//float camxPos;
+	//float camyPos;
 	
 	float lightOffsetTest;
-
-
 
 	//Material Shit
 	ID3D11Buffer* matConstBuff;
 	MaterialProperties matProperties;
-
 
 	//Import Functions
 	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic);// , bool isStatic, XMMATRIX startPosMatrix);
@@ -168,10 +166,23 @@ public:
 		XMFLOAT4X4 InvWorld;
 		XMFLOAT4X4 WVP;
 		//BOOL hasNormMap;
+
+		//Shadow Stuff
+		XMFLOAT4X4 lightView;
+		XMFLOAT4X4 lightProjection;
 	};
 
 	World perObjCBData;
 	
+	struct shadowSettings
+	{
+		int shadowTesting;
+		int pad1;
+		int pad2;
+		int pad3;
+	};
+	shadowSettings shadowBufferData;
+
 protected:
 	 //handle till f?nstret
 	HINSTANCE hInstance;
@@ -196,13 +207,22 @@ protected:
 	ID3D11Buffer* gVertexBuffer = nullptr;
 	ID3D11Buffer* gVertexBuffer2 = nullptr;
 	ID3D11Buffer* gWorld;
-	ID3D11Buffer* cWorld;
+	ID3D11Buffer* shadowBuffer = nullptr;
 
 	ID3D11SamplerState* sampState1 = nullptr;
 
 	ID3D11ShaderResourceView* gTextureView = nullptr;
 	ID3D11ShaderResourceView* ddsTex1 = nullptr;
 	ID3D11ShaderResourceView* ddsTex2 = nullptr;
+	ID3D11ShaderResourceView* ddsTex3 = nullptr;
+	ID3D11ShaderResourceView* ddsTex4 = nullptr;
+	ID3D11ShaderResourceView* ddsTex5 = nullptr;
+	ID3D11ShaderResourceView* ddsTex6 = nullptr;
+	ID3D11ShaderResourceView* ddsTex7 = nullptr;
+	ID3D11ShaderResourceView* ddsTex8 = nullptr;
+	ID3D11ShaderResourceView* ddsTex9 = nullptr;
+	ID3D11ShaderResourceView* ddsTex10 = nullptr;
+	ID3D11ShaderResourceView** RSWArray = nullptr;
 
 	ID3D11InputLayout* gVertexLayout = nullptr;
 	ID3D11VertexShader* gVertexShader = nullptr;
@@ -215,6 +235,8 @@ protected:
 	ID3D11PixelShader* gWireFramePixelShader = nullptr;
 	ID3D11InputLayout* gWireFrameLayout = nullptr;
 
+
+	vector<int> intArrayTex;
 	////
 	//std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
 	ID3D11ShaderResourceView* Meter = nullptr;
@@ -241,4 +263,16 @@ protected:
 	int iz = 1;
 	int izz = 1;
 
+	UINT32 vertexSize = sizeof(float)* 8;
+	UINT32 offset = 0;
+
+	//World perObjCBData;
+	XMMATRIX WVP;
+
+	//Shadow implement
+	//The Camera Matrices are now defined in the camera class (mainCamera)
+	XMMATRIX CamView;
+	XMMATRIX CamProjection;
+	XMMATRIX identityM;
+	XMMATRIX WorldInv;
 };

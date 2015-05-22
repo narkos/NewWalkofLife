@@ -69,9 +69,17 @@ int Input::detectInput(HWND hWindow)
 	{
 		return 4;
 	}
-	if (keyboardState[DIK_F])
+	if (keyboardState[DIK_1])
 	{
 		return 5;
+	}
+	if (keyboardState[DIK_2])
+	{
+		return 6;
+	}
+	if (keyboardState[DIK_3])
+	{
+		return 7;
 	}
 	
 
@@ -120,5 +128,47 @@ bool Input::detectDash(HWND hWindow)
 	else
 	{
 		return false;
+	}
+}
+
+bool Input::detectCameraLean(HWND)
+{
+	BYTE keyboardState[256];
+
+	DIKeyboard->Acquire();
+
+	DIKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
+
+	if (keyboardState[DIK_LCONTROL])
+	{
+		return true;
+	}
+	else
+		return false;
+}
+
+int Input::detectRenderState(HWND)
+{
+	BYTE keyboardState[256];
+
+	DIKeyboard->Acquire();
+
+	DIKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
+
+	if (keyboardState[DIK_F1])
+	{
+		return 0;
+	}
+	if (keyboardState[DIK_F2])
+	{
+		return 1;
+	}
+	if (keyboardState[DIK_F3])
+	{
+		return 2;
+	}
+	if (keyboardState[DIK_F4])
+	{
+		return 3;
 	}
 }

@@ -142,45 +142,6 @@ bool RenderEngine::Init(){
 	////theHighScore.AddScore(1, 2, 1);
 	//theHighScore.ReOrganizeLists();
 	////Import
-	
-	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 0, false);
-	//ImportObj("Objects/testPlayer1.obj", "Objects/testPlayer1.mtl", gDevice, 4, false);
-	//ImportObj("Objects/Char_man.obj", "Objects/Char_man.mtl", gDevice, 4, false);
-	
-	//ImportObj("Objects/mapPart1.obj", "Objects/mapPart1.mtl", gDevice, false);
-	//ImportObj("Objects/mapPart2.obj", "Objects/mapPart2.mtl", gDevice, false);
-
-	//ImportObj("Objects/mapPart3.obj", "Objects/mapPart3.mtl", gDevice, 1, true);
-	//theBinaryTree->testPlatforms->at(0).at(0).Translate(0.0f, -2000.0f, 0.0f);
-	//ImportObj("Objects/mapPart4.obj", "Objects/mapPart4.mtl", gDevice, 1, true);
-	//ImportObj("Objects/mapPart5.obj", "Objects/mapPart5.mtl", gDevice, 1, false);
-	//ImportObj("Objects/mapPart6.obj", "Objects/mapPart6.mtl", gDevice, 1, true);
-
-//	ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 1, true);
-	//ImportObj("Objects/mapPart7.obj", "Objects/mapPart7.mtl", gDevice, 2);
-	int test = 1;
-//	ImportObj("Objects/sphrThingy_01.obj", "Objects/sphrThingy_01.mtl", gDevice, 2, true);
-
-
-	////LIGHT TEST ZONE BITCHES
-
-	//testLight[0] = LightClass(l_Directional, XMFLOAT3(0.0f, -1.0f, 0.0f), true, true);
-	//testLight[0].lightObject.Color = XMFLOAT4(Colors::White);
-	////testLight[0].ToggleActive();
-
-	//testLight[1] = LightClass(l_Point, XMFLOAT3(-3.3f, 8.0f, -4.0f), true, true);
-
-	//testLight[1].lightObject.Color = XMFLOAT4(Colors::LightCyan);
-	//testLight[1].lightObject.AttConst = 1.0f;
-	//testLight[1].lightObject.AttLinear = 0.8f;
-	//testLight[1].lightObject.AttQuadratic = 0.0001f;
-	//testLight[1].lightObject.Range = 10.0f;
-	////testLight[1].ToggleActive();
-
-	//lightProp01.lights[0] = testLight[0].lightObject;
-	//lightProp01.lights[1] = testLight[1].lightObject;
-
- //	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Yellow);
 
 
 	// Rotatation And transform Buffer
@@ -1574,7 +1535,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
 		{
 			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-
+			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].CalculateWorld();
 			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
 			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
 			*/
@@ -1637,7 +1598,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 1;
+		lightProp01.lights[1].Active = 0;
 		lightProp01.lights[2].Active = 1;
 		lightProp01.lights[3].Active = 1;
 		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);

@@ -77,7 +77,7 @@ void Shadows::renderSceneToShadowMap(XMMATRIX worldMatrix, XMFLOAT4 lightPositio
 	///////////ORTHOGRAPHIC SHADOW PROJECTION
 	lightProjectionMatrix = XMMatrixOrthographicLH(60, 30, 0.5f, 100.0f);	//Check
 
-	lightLookAt = XMVectorSet(lookAtX, 0.0f, 0.0f, 1.0f);
+	lightLookAt = XMVectorSet(lookAtX, 0.0f, 3.0f, 1.0f);
 	lightViewUp = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Create the lights view matrix for shadow mapping

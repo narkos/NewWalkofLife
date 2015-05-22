@@ -1,6 +1,7 @@
 //PIXEL SHADER
 #include "LightComputations.fx"
 Texture2D txDiffuse : register(t0);
+//Texture2D ObjNormMap: register(t1); //-----------------> normap
 Texture2D depthMapTexture : register(t1);	//The Shadow Map, it contains the scene depth buffer rendered from the light's perspective.
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
@@ -19,13 +20,37 @@ struct VS_OUT
 	float2 Tex		: TEXCOORD;
 	float4 Nor		: NORMAL;
 	float4 wPos		: POSITION;
+	//float4 tangent : TANGENT;
 
 	//Shadow Calculations
 	float4 lightViewPos : TEXCOORD1;
 };
 
+//cbuffer cbPerObject : register(b1)
+//{
+//	float4x4 WVP;
+//	float4x4 World;
+//	bool hasNormMap;
+//};
+
 float4 PS_main(VS_OUT input) : SV_Target
 {
+
+	
+	//if (hasNormMap == true)
+	//{
+	//	float4 normalMap = ObjNormMap.Sample(sampAni, input.Tex);
+	//	//Change normal map range from [0, 1] to [-1, 1]
+	//	normalMap = (2.0f*normalMap) - 1.0f;
+	//	//
+	//	float3 biTangent = cross(input.normal, input.tangent);
+	//	biTangent = normalize(biTangent);
+
+	//	float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
+	//	input.normal = mul(normalMap, texSpace);
+	//	normalize(input.normal);
+	//}
+
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 	//SHADOW TESTING 4 DUMMIES
 	//0 = Render the scene as usual WITHOUT shadows

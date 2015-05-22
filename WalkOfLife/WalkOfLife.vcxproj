@@ -140,6 +140,7 @@
     <ClCompile Include="Counters.cpp" />
     <ClCompile Include="Shadows.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="Startmeny.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="Shadows.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="Startmeny.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="defaultVS.hlsl">

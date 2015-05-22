@@ -37,7 +37,9 @@
 #include "Menuclass.h"
 #include "HighScore.h"
 #include "CharSwitch.h"
+#include "Startmeny.h"
 #include "Shadows.h"
+
 
 using namespace DirectX;
 
@@ -58,7 +60,8 @@ public:
 	void SetViewport();
 	virtual bool Init();
 	void Update(float dt, PlayerObject& theCharacter);
-	void MenuUpdate(float tt);
+	void MenuUpdate(float tt); 
+	void StartMenuUpdate(float tt);
 	void Render(PlayerObject* theCharacter);
 	virtual void Release();
 	void Fonts();
@@ -95,6 +98,9 @@ public:
 	Shadows shadows;
 	Menu mainMenu;
 	CharSwitch CurrChar;
+
+	Startmenu StartMenu;
+
 	//Input theInput;
 	bool Character2 = false;
 	bool Character3 = false;
@@ -159,6 +165,7 @@ public:
 		XMFLOAT4X4 WorldSpace;
 		XMFLOAT4X4 InvWorld;
 		XMFLOAT4X4 WVP;
+		//BOOL hasNormMap;
 
 		//Shadow Stuff
 		XMFLOAT4X4 lightView;
@@ -254,6 +261,7 @@ protected:
 	int Tabofdoom;
 	float scrolltime;
 	int iz = 1;
+	int izz = 1;
 
 	UINT32 vertexSize = sizeof(float)* 8;
 	UINT32 offset = 0;

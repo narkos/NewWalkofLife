@@ -597,7 +597,7 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		
 		
 		// set the render target as the back buffer
-		//gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
+		gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 
 		return true; //returnerar att den HAR klarat av att skapa device och swapchain
 	}
@@ -657,24 +657,12 @@ int RenderEngine::Run(){
 				{
 					theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
 				}
-
+			//	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 			}
 			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
 
 			else if (StartMenu.getstartmeny() == false)
 			{
-				
-			if (gCounter.theAge.years == 1000 && !Character2)
-			{
-				Character2 = true;
-					//CurrChar.switchCharState(theCharacter1->xPos);
-				CurrChar.setCharState(1);
-				//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-				theCharacters.at(1).xPos = theCharacters.at(0).xPos;
-				theCharacters.at(1).yPos = theCharacters.at(0).yPos;
-
-				
-			}
 				theHighScore.setHSbool(false);
 				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
 				if (gCounter.theAge.years == 5 && haschanged == false)

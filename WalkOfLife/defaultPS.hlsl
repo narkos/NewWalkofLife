@@ -2,7 +2,7 @@
 #include "LightComputations.fx"
 Texture2D txDiffuse : register(t0);
 //Texture2D ObjNormMap: register(t1); //-----------------> normap
-Texture2D depthMapTexture : register(t2);	//The Shadow Map, it contains the scene depth buffer rendered from the light's perspective.
+Texture2D depthMapTexture : register(t1);	//The Shadow Map, it contains the scene depth buffer rendered from the light's perspective.
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
 

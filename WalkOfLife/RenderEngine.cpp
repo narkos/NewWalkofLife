@@ -1379,7 +1379,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 
 		if (gTimer.TotalTime() - theCharacter.dashTimer > 2.00f && !theCharacter.dashAvailable)
-
+		{
 			theCharacter.jumpMomentumX = -0.1;
 		}
 

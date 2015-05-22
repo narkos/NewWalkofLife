@@ -5,6 +5,14 @@ Texture2D depthMapTexture : register(t1);	//The Shadow Map, it contains the scen
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
 
+cbuffer shadowSettings : register (b3)
+{
+	int shadowTesting;
+	int pad1;
+	int pad2;
+	int pad3;
+};
+
 struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
@@ -24,13 +32,13 @@ float4 PS_main(VS_OUT input) : SV_Target
 	//1 = Render the scene as usual WITH shadows
 	//2 = Render the depth value
 	//3 = Render shadowed and non shadowed parts in two contrasts (Shadows = Black, Lit parts = White)
-	int shadowTesting = 1;
+	int shadowTest = shadowTesting;
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
-	if (shadowTesting == 0 || shadowTesting == 1)
+	if (shadowTest == 0 || shadowTest == 1)
 	{
 		int shadowz = 0;
-		if (shadowTesting == 1)
+		if (shadowTest == 0)
 			shadowz = 1;
 
 		LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor), input.lightViewPos, depthMapTexture, sampAni, shadowz);
@@ -58,7 +66,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----
 	//-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////
 
-	if (shadowTesting == 2)
+	if (shadowTest == 2)
 	{
 		//////ALL OF THE BELOW IS FOR SHADOW TESTING PURPOSES
 		float bias = 0.001f;
@@ -73,7 +81,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 		return depthValue;
 	}
 
-	if (shadowTesting == 3)
+	if (shadowTest == 3)
 	{
 		float bias = 0.001f;	//Set the bias value for fixing the floating point precision issues.
 		float2 projectTexCoord;
@@ -100,6 +108,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 		//return float4(0.3, 0.0, 0.0, 1.0);		//DARK RED
 		return float4(0.0f, 0.0f, 0.0f, 1.0f);
 	}
+	return float4(0.3, 0.0, 0.0, 1.0);
 };
 
 

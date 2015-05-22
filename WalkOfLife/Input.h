@@ -18,4 +18,5 @@ public:
 	bool detectJump(HWND);
 	bool detectDash(HWND);
 	bool detectCameraLean(HWND);
+	int detectRenderState(HWND);
 };

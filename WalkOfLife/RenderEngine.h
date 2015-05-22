@@ -166,6 +166,15 @@ public:
 
 	World perObjCBData;
 	
+	struct shadowSettings
+	{
+		int shadowTesting;
+		int pad1;
+		int pad2;
+		int pad3;
+	};
+	shadowSettings shadowBufferData;
+
 protected:
 	 //handle till f?nstret
 	HINSTANCE hInstance;
@@ -190,7 +199,7 @@ protected:
 	ID3D11Buffer* gVertexBuffer = nullptr;
 	ID3D11Buffer* gVertexBuffer2 = nullptr;
 	ID3D11Buffer* gWorld;
-	ID3D11Buffer* cWorld;
+	ID3D11Buffer* shadowBuffer = nullptr;
 
 	ID3D11SamplerState* sampState1 = nullptr;
 

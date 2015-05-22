@@ -117,6 +117,15 @@ bool RenderEngine::Init(){
 	shadows = tempShadows;
 	shadows.createShadowMap();
 
+	D3D11_BUFFER_DESC shadowSettingsDESC;
+	memset(&shadowSettingsDESC, 0, sizeof(shadowSettingsDESC));
+	shadowSettingsDESC.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	shadowSettingsDESC.Usage = D3D11_USAGE_DEFAULT;
+	shadowSettingsDESC.ByteWidth = sizeof(shadowSettings);
+
+	HRESULT hr1212 = gDevice->CreateBuffer(&shadowSettingsDESC, NULL, &shadowBuffer);
+	//__________________________________________________________________________________________________________________________________________________________________________________
+
 
 	mainMenu.menuInit(gDeviceContext);
 	theCharacters.at(0).setJumpHeight(0.5f);
@@ -152,8 +161,6 @@ bool RenderEngine::Init(){
 	transformbuffer.ByteWidth = sizeof(World);
 
 	HRESULT hr1112 = gDevice->CreateBuffer(&transformbuffer, NULL, &gWorld);
-	hr1112 = gDevice->CreateBuffer(&transformbuffer, NULL, &cWorld);
-
 
 	// Light Buffer
 	lightProp01.lights[2].Position = XMFLOAT4(5.0f, -3.0f, 0.0f, 1.0f);
@@ -692,6 +699,14 @@ void RenderEngine::UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &
 
 
 // RENDER
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
+//SHADOW TESTING 4 DUMMIES
+//0 = Render the scene as usual WITHOUT shadows
+//1 = Render the scene as usual WITH shadows
+//2 = Render the depth value
+//3 = Render shadowed and non shadowed parts in two contrasts (Shadows = Black, Lit parts = White)
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 void RenderEngine::Render(PlayerObject* theCharacter){
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -1276,10 +1291,13 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	bool jump = false;
 	bool dash = false;
 
-
 	input = theInput.detectInput(hWindow);
 	jump = theInput.detectJump(hWindow);
 	dash = theInput.detectDash(hWindow);
+
+	shadowBufferData.shadowTesting = theInput.detectRenderState(hWindow);
+	gDeviceContext->PSSetConstantBuffers(3, 1, &shadowBuffer);
+	gDeviceContext->UpdateSubresource(shadowBuffer, 0, NULL, &shadowBufferData, 0, 0);
 
 	if (theInput.detectCameraLean(hWindow))
 	{

@@ -34,6 +34,7 @@
 #include "Extra DirectXLibs\Inc\SpriteFont.h"
 #include "Extra DirectXLibs\Inc\SpriteBatch.h"
 #include "Extra DirectXLibs\Inc\SimpleMath.h"
+#include "Extra DirectXLibs\Inc\WICTextureLoader.h"
 #include "Menuclass.h"
 #include "HighScore.h"
 #include "CharSwitch.h"
@@ -199,6 +200,15 @@ protected:
 	ID3D11ShaderResourceView* gTextureView = nullptr;
 	ID3D11ShaderResourceView* ddsTex1 = nullptr;
 	ID3D11ShaderResourceView* ddsTex2 = nullptr;
+	ID3D11ShaderResourceView* ddsTex3 = nullptr;
+	ID3D11ShaderResourceView* ddsTex4 = nullptr;
+	ID3D11ShaderResourceView* ddsTex5 = nullptr;
+	ID3D11ShaderResourceView* ddsTex6 = nullptr;
+	ID3D11ShaderResourceView* ddsTex7 = nullptr;
+	ID3D11ShaderResourceView* ddsTex8 = nullptr;
+	ID3D11ShaderResourceView* ddsTex9 = nullptr;
+	ID3D11ShaderResourceView* ddsTex10 = nullptr;
+	ID3D11ShaderResourceView** RSWArray = nullptr;
 
 	ID3D11InputLayout* gVertexLayout = nullptr;
 	ID3D11VertexShader* gVertexShader = nullptr;
@@ -211,6 +221,8 @@ protected:
 	ID3D11PixelShader* gWireFramePixelShader = nullptr;
 	ID3D11InputLayout* gWireFrameLayout = nullptr;
 
+
+	vector<int> intArrayTex;
 	////
 	//std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
 	ID3D11ShaderResourceView* Meter = nullptr;

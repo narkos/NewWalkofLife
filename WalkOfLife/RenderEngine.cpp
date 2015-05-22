@@ -1306,7 +1306,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 // UPDATES
 
-void RenderEngine::Update(float dt, PlayerObject& theCharacter){
+void RenderEngine::Update(float dt, PlayerObject& theCharacter)
+{
 	soundBackground.PlayMp3();
 	Input theInput;		//Defined in .h file
 	theInput.initInput(this->hInstance, hWindow);
@@ -1366,7 +1367,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 	if (testDynamicPlatforms.rightValid() == false || testStaticPlatforms.rightValid() == false)
 		theCollision->SetRightValid(false);
-	else 
+	else
 		theCollision->SetRightValid(true);
 
 	if (testDynamicPlatforms.leftValid() == false || testStaticPlatforms.leftValid() == false)
@@ -1378,7 +1379,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCollision->SetUpValid(false);
 	else
 		theCollision->SetUpValid(true);
-		
+
 	//theCollision->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision()+1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
 
 
@@ -1404,12 +1405,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		{
 			theCharacter.jumpMomentumX = -0.1;
 		}
-			
+
 		if (theCharacter.jumpMomentumX > 0)
 		{
 			theCharacter.jumpMomentumX = 0.1;
 		}
-	
+
 		theCharacter.dashDisabling = true;
 	}
 
@@ -1418,33 +1419,33 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacter.dashAvailable = true;
 	}
 
-//	if ((gTimer.TotalTime() - time4) >= 1.00f)
+	//	if ((gTimer.TotalTime() - time4) >= 1.00f)
 	//{
 	theCharacter.UpdateDivision(theBinaryTree->pixelsPerdivision);
-		//time4 = gTimer.TotalTime();
+	//time4 = gTimer.TotalTime();
 	//}
 
-		
 
-		if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
-		{
-			reset(&theCharacter);
-		}
 
-		if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
-		{
-			reset(&theCharacter);
-		}
-		////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
+	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
+	{
+		reset(&theCharacter);
+	}
 
-		
+	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
+	{
+		reset(&theCharacter);
+	}
+	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
+
+
 	//theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
-	
-		
+
+
 	XMFLOAT2 tempPickUpValue;
 	tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
-		gCounter.addCollectable(tempPickUpValue); 
+	gCounter.addCollectable(tempPickUpValue);
 
 	if (input == 1 && theCollision->leftValid() == true)
 	{
@@ -1460,14 +1461,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			{
 				//theCharacter->jumpMomentumX = theCharacter->getSpeed() * -1;
 			}
-				
+
 		}
 		else
 		{
 			theCharacter.Move(false); //left
-				
+
 		}
-			
+
 	}
 
 	else if (input == 2 && theCollision->rightValid() == true)
@@ -1484,15 +1485,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 			{
 				//theCharacter->jumpMomentumX = theCharacter->getSpeed();
 			}
-				
+
 		}
 		else
 		{
-			
+
 			theCharacter.Move(true); //right
-				
+
 		}
-			
+
 
 	}
 
@@ -1521,21 +1522,21 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacters.at(0).xPos = theCharacter.xPos;
 		theCharacters.at(0).yPos = theCharacter.yPos;
 		CurrChar.setCharState(0);
-			
+
 	}
 	if (input == 6)
 	{
 		theCharacters.at(1).xPos = theCharacter.xPos;
 		theCharacters.at(1).yPos = theCharacter.yPos;
 		CurrChar.setCharState(1);
-			
+
 	}
 	if (input == 7)
 	{
 		theCharacters.at(2).xPos = theCharacter.xPos;
 		theCharacters.at(2).yPos = theCharacter.yPos;
 		CurrChar.setCharState(2);
-			
+
 	}
 
 	if (dash && theCharacter.dashAvailable)
@@ -1544,7 +1545,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		theCharacter.dashTimer = gTimer.TotalTime();
 	}
 
-		
+
 	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
 
 	{
@@ -1564,7 +1565,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 	//MOVING PLATFORM POSITION UPDATE
 
 	//for (unsigned i = 0; i < theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
-	
+
 
 	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
 
@@ -1573,72 +1574,74 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
 		{
 			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-						
+
 			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
 			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
 			*/
 			//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
 
+		}
 	}
-	thePhysics.Gravitation(theCollision, &theCharacter);
-	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
-	theCharacter.CalculateWorld();
+		thePhysics.Gravitation(theCollision, &theCharacter);
+		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+		theCharacter.CalculateWorld();
 
-	if (rightDirection)
-	{
-		theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 0);
-	}
+		if (rightDirection)
+		{
+			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 0);
+		}
 
-	else
-	{
-		theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
-	}
+		else
+		{
+			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
+		}
 
-	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
-	lightProp01.lights[0].Type = l_Directional;
-	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
-	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-
-
-	lightProp01.lights[1].Type = l_Point;
-	lightProp01.lights[1].Position = XMFLOAT4(theCharacter.xPos, theCharacter.yPos, 0.0f, 1.0f);
-	lightProp01.lights[1].Color = XMFLOAT4(Colors::WhiteSmoke);
-	lightProp01.lights[1].AttConst = 0.2f;
-	lightProp01.lights[1].AttLinear = 0.3f;
-	lightProp01.lights[1].AttQuadratic = 0.5f;
-	lightProp01.lights[1].Range = 10.0f;
-
-	float moveL = 0.0f;
-
-	if (lightOffsetTest < 1.0f);
-	{
-		lightOffsetTest += moveL;
-		lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
-	}
-		
+		lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
+		lightProp01.lights[0].Type = l_Directional;
+		lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
+		lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
-	lightProp01.lights[2].Type = l_Point;
-	lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	lightProp01.lights[2].AttConst = 0.3f;
-	lightProp01.lights[2].AttLinear = 0.2f;
-	lightProp01.lights[2].AttQuadratic = 0.5f;
-	lightProp01.lights[2].Range = 15.0f;
+		lightProp01.lights[1].Type = l_Point;
+		lightProp01.lights[1].Position = XMFLOAT4(theCharacter.xPos, theCharacter.yPos, 0.0f, 1.0f);
+		lightProp01.lights[1].Color = XMFLOAT4(Colors::WhiteSmoke);
+		lightProp01.lights[1].AttConst = 0.2f;
+		lightProp01.lights[1].AttLinear = 0.3f;
+		lightProp01.lights[1].AttQuadratic = 0.5f;
+		lightProp01.lights[1].Range = 10.0f;
 
-	lightProp01.lights[3].Type = l_Point;
-	lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
-	lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	lightProp01.lights[3].AttConst = 0.7f;
-	lightProp01.lights[3].AttLinear = 0.2f;
-	lightProp01.lights[3].AttQuadratic = 0.0f;
-	lightProp01.lights[3].Range = 15.0f;
+		float moveL = 0.0f;
+
+		if (lightOffsetTest < 1.0f);
+		{
+			lightOffsetTest += moveL;
+			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
+		}
 
 
-	lightProp01.lights[0].Active = 1;
-	lightProp01.lights[1].Active = 1;
-	lightProp01.lights[2].Active = 1;
-	lightProp01.lights[3].Active = 1;
-	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
+
+		lightProp01.lights[2].Type = l_Point;
+		lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		lightProp01.lights[2].AttConst = 0.3f;
+		lightProp01.lights[2].AttLinear = 0.2f;
+		lightProp01.lights[2].AttQuadratic = 0.5f;
+		lightProp01.lights[2].Range = 15.0f;
+
+		lightProp01.lights[3].Type = l_Point;
+		lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
+		lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		lightProp01.lights[3].AttConst = 0.7f;
+		lightProp01.lights[3].AttLinear = 0.2f;
+		lightProp01.lights[3].AttQuadratic = 0.0f;
+		lightProp01.lights[3].Range = 15.0f;
+
+
+		lightProp01.lights[0].Active = 1;
+		lightProp01.lights[1].Active = 1;
+		lightProp01.lights[2].Active = 1;
+		lightProp01.lights[3].Active = 1;
+		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
+
 }
 
 void RenderEngine::MenuUpdate(float tt){

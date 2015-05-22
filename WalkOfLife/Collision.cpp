@@ -137,9 +137,7 @@ void Collision::TestCollision(vector<Platform> &platforms, vector<Platform> &pla
 	for (int i = 0; i < platforms.size(); i++)
 	{
 		if (player->TestIntersect(platforms[i]) == true)
-		{
-		
-			platforms[i].SetActive(false);
+		{			
 			return true;
 		}
 	}

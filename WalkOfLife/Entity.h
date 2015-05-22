@@ -33,6 +33,8 @@ public:
 	float xPos;
 	float yPos;
 
+
+	int indexT;
 	//Slam Variables
 	float slamWaitTime;
 	float slamDeltaTime;

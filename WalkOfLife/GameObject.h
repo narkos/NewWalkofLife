@@ -39,6 +39,7 @@ struct MaterialProperties
 
 class GameObject : public Entity{
 public:
+	int texIndex;
 	GameObject(ID3D11Buffer *b, XMFLOAT3 pos, bool isActive, bool isStatic, float xInter, float yInter, float xSpeed, float ySpeed) : Entity(pos, isActive, isStatic){
 		this->vertexBuffer = b;
 		xInterval = xInter;
@@ -73,6 +74,7 @@ public:
 
 	//Material Info
 	MatInfo material;
+
 
 protected:
 	struct Triangle{

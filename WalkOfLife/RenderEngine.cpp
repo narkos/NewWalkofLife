@@ -67,6 +67,7 @@ bool RenderEngine::Init(){
 	testDynamicPlatforms = tempC;
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
+	intArrayTex = theCustomImporter.GetindexArray();
 	//theCharacters = &theCustomImporter.GetPlayers()[0];
 	//theCharacter2 = theCustomImporter.GetPlayers[1];
 	//theCharacter3 = theCustomImporter.GetPlayers[2];
@@ -299,14 +300,38 @@ void RenderEngine::fpscounter()
 
 	
 }
-
+std::wstring string2wString(const std::string& s){
+	int len;
+	int slength = (int)s.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
+	return r;
+}
 // CREATE TEXTURES
-
+#include <AtlBase.h>
+#include <atlconv.h>
 void RenderEngine::TextureFunc(){
 
 	HRESULT texCheck;
-	texCheck = CreateDDSTextureFromFile(gDevice, L"Textures/temp.dds", nullptr, &ddsTex1);
-	texCheck = CreateDDSTextureFromFile(gDevice, L"Textures/Lowpoly_man.dds", nullptr, &ddsTex2);
+	vector<string> texNames = theCustomImporter.GettexNameArray();
+	RSWArray = new ID3D11ShaderResourceView*[texNames.size()];
+	std::wstring fest = L"Textures/";
+	for (int texIt = 0; texIt < texNames.size(); texIt++){
+
+		std::wstring fest2 = fest + string2wString(texNames[texIt]);;
+		const wchar_t* texNameS = fest2.c_str(); 
+		texCheck = CreateDDSTextureFromFile(gDevice, texNameS, nullptr, &RSWArray[texIt]);
+		if (texCheck == E_FAIL){
+			CreateWICTextureFromFile(gDevice, texNameS, nullptr, &RSWArray[texIt]);
+		}
+	}
+
+
+
+	
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter1.dds", nullptr, &Meter2);
@@ -384,9 +409,9 @@ void RenderEngine::Shaders(){
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.MaxAnisotropy = 16;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
@@ -700,6 +725,7 @@ void RenderEngine::UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &
 
 // RENDER
 
+
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 //SHADOW TESTING 4 DUMMIES
 //0 = Render the scene as usual WITHOUT shadows
@@ -707,6 +733,8 @@ void RenderEngine::UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &
 //2 = Render the depth value
 //3 = Render shadowed and non shadowed parts in two contrasts (Shadows = Black, Lit parts = White)
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
+
+int tex = 0;
 
 void RenderEngine::Render(PlayerObject* theCharacter){
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -768,7 +796,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 
-
+	
 	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
 
 	if (gCounter.theAge.years == 100){
@@ -850,9 +878,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
 	{
+		tex = intArrayTex[var.indexT];
+		gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
+		gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+		
 		var.CalculateWorld();
 		//var.material = MatPresets::Emerald;
 		//matProperties.Material = var.material;
@@ -868,8 +899,10 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		if (var.GetActive())
 		{
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+		
 
 			var.CalculateWorld();
 			//var.material = MatPresets::Emerald;
@@ -889,9 +922,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		if (var.GetActive())
 		{
-			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			
 			var.CalculateWorld();
 			//var.material = MatPresets::Emerald;
 			//matProperties.Material = var.material;
@@ -910,9 +946,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		if (var.GetActive())
 		{
-			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			
 			var.CalculateWorld();
 			//var.material = MatPresets::Emerald;
 			//matProperties.Material = var.material;
@@ -931,9 +969,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		if (var.GetActive())
 		{
-			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+			
 			var.CalculateWorld();
 			//var.material = MatPresets::Emerald;
 			//matProperties.Material = var.material;
@@ -949,8 +989,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()))
 	{
+	
+		tex = intArrayTex[var.indexT];
+		gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+		
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+
 
 		var.CalculateWorld();
 		//var.material = MatPresets::Emerald;
@@ -965,9 +1009,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision()+1))
 	{
+		tex = intArrayTex[var.indexT];
+		gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+		
 		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
+		
 		var.CalculateWorld();
 		//var.material = MatPresets::Emerald;
 		//matProperties.Material = var.material;
@@ -983,9 +1029,10 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		for each (Platform var in theBinaryTree->deadly->at(theCharacter->getDivision() - 1))
 		{	
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
+		
 			var.CalculateWorld();
 			//var.material = MatPresets::Emerald;
 			//matProperties.Material = var.material;
@@ -1005,9 +1052,10 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		{
 			if (var.GetActive())
 			{
+				tex = intArrayTex[var.indexT];
+				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-				gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
+				
 				var.CalculateWorld();
 				//var.material = MatPresets::Emerald;
 				//matProperties.Material = var.material;
@@ -1023,9 +1071,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()+1))
 	{
-		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-		gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
 
+		tex = intArrayTex[var.indexT];
+		gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
+		
 		var.CalculateWorld();
 		//var.material = MatPresets::Emerald;
 		//matProperties.Material = var.material;
@@ -1041,9 +1091,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision() - 1))
 		{
+			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
+			tex = intArrayTex[var.indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 			gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-			gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
+		
 			var.CalculateWorld();
 			//var.material = MatPresets::Emerald;
 			//matProperties.Material = var.material;
@@ -1056,203 +1108,37 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		}
 	}
 	
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()).size(); i++)
+	for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
+	{
+		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
 		{
-			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].vertexBuffer, &vertexSize, &offset);
+			tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
 
-			theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].CalculateWorld();
-			theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material = MatPresets::Emerald;
-			theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material.SpecPow = 38.0f;
+			theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
+			theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+			theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;
 
-			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].material;
+			matProperties.Material = theBinaryTree->renderObjects->at(i)[j].material;
 
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].world, currView, currProjection);
+			UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
+
 
 
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision())[i].nrElements * 3, 0);
-		}
-
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()+1).size(); i++)
-	{
-
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].vertexBuffer, &vertexSize, &offset);
-
-
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material.SpecPow = 38.0f;
-
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].material;
-
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].world, currView, currProjection);
-
-
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 1)[i].nrElements * 3, 0);
-
-
-		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-	}
-
-	if (theCharacter->getDivision() != 0)
-	{
-		for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1).size(); i++)
-		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].vertexBuffer, &vertexSize, &offset);
-
-
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].CalculateWorld();
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material = MatPresets::Emerald;
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material.SpecPow = 38.0f;
-
-			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].material;
-
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].world, currView, currProjection);
-
-
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 1)[i].nrElements * 3, 0);
+			gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
 		}
 	}
 
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2).size(); i++)
-	{
-		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].vertexBuffer, &vertexSize, &offset);
-
-
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material.SpecPow = 38.0f;
-
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].material;
-
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].world, currView, currProjection);
-
-
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 2)[i].nrElements * 3, 0);
-	}
-
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3).size(); i++)
-	{
-		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].vertexBuffer, &vertexSize, &offset);
-
-
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material.SpecPow = 38.0f;
-
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].material;
-
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].world, currView, currProjection);
-
-
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 3)[i].nrElements * 3, 0);
-	}
-
-	if (theCharacter->getDivision() >1)
-	{
-		for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2).size(); i++)
-		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].vertexBuffer, &vertexSize, &offset);
-
-
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].CalculateWorld();
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material = MatPresets::Emerald;
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material.SpecPow = 38.0f;
-
-			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].material;
-
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].world, currView, currProjection);
-
-
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 2)[i].nrElements * 3, 0);
-		}
-	}
-
-	if (theCharacter->getDivision() > 2)
-	{
-		for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3).size(); i++)
-		{
-			//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].vertexBuffer, &vertexSize, &offset);
-
-
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].CalculateWorld();
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material = MatPresets::Emerald;
-			theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material.SpecPow = 38.0f;
-
-			matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].material;
-
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-			UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].world, currView, currProjection);
-
-
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-			gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() - 3)[i].nrElements * 3, 0);
-		}
-	}
-
-	for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4).size(); i++)
-	{
-		//gDeviceContext->PSSetShaderResources(0, 1, &ddsTex1);
-
-		gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].vertexBuffer, &vertexSize, &offset);
-
-
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].CalculateWorld();
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material = MatPresets::Emerald;
-		theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material.SpecPow = 38.0f;
-
-		matProperties.Material = theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].material;
-
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-
-		UpdateMatricies(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].world, currView, currProjection);
-
-
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-		gDeviceContext->Draw(theBinaryTree->renderObjects->at(theCharacter->getDivision() + 4)[i].nrElements * 3, 0);
-	}
 
 	// Shouldn't need to set shaders again if we don't change them in the above loops.
 	// Leaving it meanwhile
-	gDeviceContext->PSSetShaderResources(1, 1, &ddsTex2);
+
 	gDeviceContext->IASetVertexBuffers(0, 1, &theCharacter->vertexBuffer, &vertexSize, &offset);
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
 	theCharacter->CalculateWorld();
@@ -1263,7 +1149,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 	
-
+	tex = intArrayTex[theCharacter->indexT];
+	gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 	matProperties.Material = MatPresets::Lambert;
 	matProperties.Material.UseTexture = 1;
 	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);

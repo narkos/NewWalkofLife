@@ -1,6 +1,6 @@
 //PIXEL SHADER
 #include "LightComputations.fx"
-Texture2D txDiffuse : register(t1);
+Texture2D txDiffuse : register(t0);
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
 

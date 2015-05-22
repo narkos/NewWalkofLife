@@ -1277,7 +1277,7 @@ for (int i = 0; i < theBinaryTree->renderObjects->at(theCharacter->getDivision()
 // UPDATES
 
 void RenderEngine::Update(float dt, PlayerObject& theCharacter){
-	soundBackground.PlayMp3();
+	//soundBackground.PlayMp3();
 		Input theInput;
 		theInput.initInput(this->hInstance, hWindow);
 		int input = 0;
@@ -1523,10 +1523,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 		for (vector<int>::size_type i = 0; i != theBinaryTree->deadlyMoving->at(theCharacter.getDivision()).size(); i++)
 		{
-			if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
-			{
-				theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-			}
+			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
 			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
 			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
 			*/

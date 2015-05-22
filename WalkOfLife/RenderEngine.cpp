@@ -1132,33 +1132,38 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			gDeviceContext->Draw(var.nrElements * 3, 0);
 		}
 	}
-	
-	for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
+	if (viewPoint == 2)
 	{
-		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
+		for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
 		{
-			tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
-			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
+			for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
+			{
+				tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
+				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
 
-			theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
-			theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-			theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;
+				theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
+				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+				theBinaryTree->renderObjects->at(i)[j].material.Emissive = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+				theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
 
-			matProperties.Material = theBinaryTree->renderObjects->at(i)[j].material;
+				matProperties.Material = theBinaryTree->renderObjects->at(i)[j].material;
 
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-			UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
+				UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
 
 
 
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-			gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
+				gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
+			}
 		}
 	}
+
 
 
 	// Shouldn't need to set shaders again if we don't change them in the above loops.

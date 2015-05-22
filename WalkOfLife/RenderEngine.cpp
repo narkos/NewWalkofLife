@@ -1388,6 +1388,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 		{
 			reset(&theCharacter);
 		}
+
+		if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
+		{
+			reset(&theCharacter);
+		}
 		////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
 		
@@ -1523,7 +1528,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter){
 
 		for (vector<int>::size_type i = 0; i != theBinaryTree->deadlyMoving->at(theCharacter.getDivision()).size(); i++)
 		{
+
 			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
+						
 			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
 			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
 			*/

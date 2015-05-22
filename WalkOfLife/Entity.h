@@ -146,7 +146,8 @@ public:
 
 	void SlamaJamma(float time)
 	{
-	
+
+		
 		//Slam Direction is set by the Coin Value in the custom format Exporter.
 		//Slam Object type is 6
 

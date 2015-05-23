@@ -46,9 +46,6 @@ void GameTimer::Reset()
 
 }
 
-
-
-
 float GameTimer::TotalTime()const
 {
 	/*if (mStopped)

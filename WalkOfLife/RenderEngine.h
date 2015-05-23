@@ -1,4 +1,9 @@
 #pragma once
+
+#ifndef RENDERENGINE_H
+#define RENDERENGINE_H
+#endif
+
 #include <windows.h>
 #include <DirectXMath.h>
 #include <DirectXMathMatrix.inl>
@@ -13,6 +18,7 @@
 #include <DirectXCollision.h>
 #include "HighScore.h"
 #include "FBXImporter.h"
+#include "BillboardTextureEffect.h"
 
 //INLCUDE H FILES HERE
 
@@ -96,6 +102,7 @@ public:
 	PlayerObject* theCharacter3;
 	Camera mainCamera;
 	Shadows shadows;
+	vector <BillboardTextureEffect> particleEffects; //gör det till en vektor
 	Menu mainMenu;
 	CharSwitch CurrChar;
 
@@ -235,6 +242,9 @@ protected:
 	ID3D11PixelShader* gWireFramePixelShader = nullptr;
 	ID3D11InputLayout* gWireFrameLayout = nullptr;
 
+	ID3D11VertexShader* gFakeBillboardVertexShader = nullptr;
+	ID3D11PixelShader* gFakeBillboardPixelShader = nullptr;
+	ID3D11InputLayout* gFakeBillboardLayout = nullptr;
 
 	vector<int> intArrayTex;
 	////

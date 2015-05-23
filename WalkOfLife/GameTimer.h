@@ -1,6 +1,6 @@
 //Edited by Oskar Hellström	
 //Edited 2015-01-20  23:00
-
+#pragma once
 
 #include <windows.h>
 #include <string.h>

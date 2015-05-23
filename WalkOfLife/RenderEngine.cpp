@@ -61,7 +61,7 @@ bool RenderEngine::Init(){
 
 	//Initialize Shaders and triangle data
 	Shaders();
-	BillboardTextureEffect temp(gDevice, 5, 1, 2.0f, 2.0f, "SpriteExplosion", ".png");
+	BillboardTextureEffect temp(gDevice, 5, 1, 400.0f, 400.0f, "SpriteExplosion", ".png");
 	particleEffects.push_back(temp);
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
@@ -1102,12 +1102,13 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 
 	//PARTIKLEMOJSSSSSSSS!!
+	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
 	gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
 	gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
 
 	for (int i = 0; i < particleEffects.size(); i++){
-		if (particleEffects[i].playing == true){
+		//if (particleEffects[i].playing == true){
 			particleEffects[i].PlayBillboard(gTimer.TotalTime());
 
 			gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
@@ -1118,7 +1119,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(4, 0);
-		}
+		//}
 	}
 
 	//######################################################################################################################################################

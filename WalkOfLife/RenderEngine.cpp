@@ -135,20 +135,34 @@ bool RenderEngine::Init(){
 
 
 	mainMenu.menuInit(gDeviceContext);
-	theCharacters.at(0).setJumpHeight(0.43f);
+	theCharacters.at(0).setJumpHeight(0.66f);
 	theCharacters.at(0).setRunSpeed(0.1f);
 	theCharacters.at(0).xPos = 4;
 	theCharacters.at(0).yPos = 9;
 	theCharacters.at(1).setRunSpeed(0.1f);
-	theCharacters.at(1).setJumpHeight(0.6f);
+	theCharacters.at(1).setJumpHeight(0.9f);
 	theCharacters.at(2).setRunSpeed(0.1f);
 	theCharacters.at(2).setJumpHeight(0.6f);
-	theCharacters.at(0).SetRayOrigins(-0.4f, -1.0f, 0.3f, 3, 0.3f, 0.3f);
+	theCharacters.at(0).SetRayOrigins(-0.4f, -1.0f, 0.3f, 3, 0.3f, 0.2f);
 	theCharacters.at(1).SetRayOrigins(-0.6f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 	theCharacters.at(2).SetRayOrigins(-0.5f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 
-	theCharacters.at(0).SetRayRanges(0.4f, 0.5f, 1.0f);
+	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
 	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 1.0f);
+
+
+	//Baby World Start Pos
+	resetXpos[0] = 4.0f;
+	resetYpos[0] = 9.0f;
+
+	resetXpos[1] = 200.0f;
+	resetYpos[1] = 20.0f;
+
+	resetXpos[2] = 364.0f;
+	resetYpos[2] = 20.0f;
+
+
+	
 
 	//highscore stuff
 	//theHighScore.AddScore(5, 2, 13);
@@ -1369,6 +1383,28 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
+
+
+	//TEMPORARY RESET FUNCTIONS
+	if (input == 8)
+	{
+		resetValues[0] = resetXpos[0];
+		resetValues[1] = resetYpos[0];
+		reset(&theCharacter);
+	}
+	if (input == 9)
+	{
+		resetValues[0] = resetXpos[1];
+		resetValues[1] = resetYpos[1];
+		reset(&theCharacter);
+	}
+	if (input == 10)
+	{
+		resetValues[0] = resetXpos[2];
+		resetValues[1] = resetYpos[2];
+		reset(&theCharacter);
+	}
+
 	//MOVING PLATFORM POSITION UPDATE
 
 	//for (unsigned i = 0; i < theBinaryTree->platformsMoving->at(theCharacter.getDivision()).size(); i++)
@@ -1376,19 +1412,26 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
 
-	for (vector<int>::size_type i = 0; i != theBinaryTree->deadlyMoving->at(theCharacter.getDivision()).size(); i++)
+	tempDiv = -1;
+	if (theCharacter.getDivision() == 0)
 	{
-		if (theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].GetStatic() == false)
-		{
-			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-			theBinaryTree->deadlyMoving->at(theCharacter.getDivision())[i].CalculateWorld();
-			/*if (theCharacter.xPos >= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos - (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() - 3.0f)
-			&& theCharacter.xPos <= theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].xPos + (theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].GetXInterval() + 3.0f))
-			*/
-			//theBinaryTree->testPlatforms->at(theCharacter.getDivision())[i].SlamaJamma(gTimer.TotalTime());
-
-		}
+		tempDiv = 0;
 	}
+	for (int i = theCharacter.getDivision() + tempDiv; i <= theCharacter.getDivision() + 1; i++)
+	{
+
+		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
+		{
+			
+			
+			theBinaryTree->deadlyMoving->at(i)[j].SlamaJamma(gTimer.TotalTime());
+			theBinaryTree->deadlyMoving->at(i)[j].UpdateBBOX();
+			theBinaryTree->deadlyMoving->at(i)[j].CalculateWorld();
+		}
+
+	}
+
+	
 		thePhysics.Gravitation(theCollision, &theCharacter);
 		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
 		theCharacter.CalculateWorld();
@@ -1746,8 +1789,8 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	Character2 = false;
 	Character3 = false;
 	CurrChar.setCharState(0);
-	theCharacter->xPos = 4;
-	theCharacter->yPos = 9;
+	theCharacter->xPos = resetValues[0];
+	theCharacter->yPos = resetValues[1];
 	theCharacter->Translate(0, 0, 0);
 	theCharacter->setDivision(0);
 	theCharacter->momentum = 0;
@@ -1767,8 +1810,9 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	//	{
 	//		theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
 	//	}*/
-
 	}
+	resetValues[0] = resetXpos[0];
+	resetValues[1] = resetYpos[0];
 }
 
 void RenderEngine::LoadSounds()

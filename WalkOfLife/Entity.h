@@ -199,7 +199,7 @@ public:
 		else
 		{
 			
-			if (slamDirection < 0 && currIntervalPosition.y > -yInterval || slamDirection > 0 && currIntervalPosition.y < yInterval)
+			if (slamDirection < 0 && currIntervalPosition.y > -yInterval/2 || slamDirection > 0 && currIntervalPosition.y < yInterval/2)
 			{
 				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
 			}

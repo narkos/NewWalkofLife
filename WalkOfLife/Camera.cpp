@@ -65,7 +65,7 @@ void Camera::leanCamera(bool state)
 	}
 	else
 	{
-		if (cameraZPos >(-15.0))
+		if (cameraZPos >(-10.0))
 		{
 			if (cameraYPos > playerYPos)
 			{

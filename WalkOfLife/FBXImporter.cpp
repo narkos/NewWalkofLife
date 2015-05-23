@@ -225,17 +225,17 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		fbxFile.read((char*)&KD.x, sizeof(float));
 		fbxFile.read((char*)&KD.y, sizeof(float));
 		fbxFile.read((char*)&KD.z, sizeof(float));
-		KD.w = 0;
+		KD.w = 1.0f;
 
 		fbxFile.read((char*)&KA.x, sizeof(float));
 		fbxFile.read((char*)&KA.y, sizeof(float));
 		fbxFile.read((char*)&KA.z, sizeof(float));
-		KA.w = 0;
+		KA.w = 1.0f;
 
 		fbxFile.read((char*)&KS.x, sizeof(float));
 		fbxFile.read((char*)&KS.y, sizeof(float));
 		fbxFile.read((char*)&KS.z, sizeof(float));
-		KS.w = 0;
+		KS.w = 1.0f;
 
 		fbxFile.read((char*)&specularPowah, sizeof(float));
 		fbxFile.read((char*)&trans, sizeof(float));
@@ -249,6 +249,10 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 1000);
 			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.material.Diffuse = KD;
+			tempP.material.Ambient = KA;
+			tempP.material.Specular = KS;
+			tempP.material.SpecPow = specularPowah;
 			tempP.nrElements = nrOfFaces;
 			tempP.indexT = mesnNumberInt;
 			mesnNumberInt++;
@@ -259,6 +263,10 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.material.Diffuse = KD;
+			tempP.material.Ambient = KA;
+			tempP.material.Specular = KS;
+			tempP.material.SpecPow = specularPowah;
 			tempP.nrElements = nrOfFaces;
 			tempP.indexT = mesnNumberInt;
 			mesnNumberInt++;
@@ -269,6 +277,10 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
+			tempPlayer.material.Diffuse = KD;
+			tempPlayer.material.Ambient = KA;
+			tempPlayer.material.Specular = KS;
+			tempPlayer.material.SpecPow = specularPowah;
 			tempPlayer.nrElements = nrOfFaces;
 			tempPlayer.indexT = mesnNumberInt;
 			mesnNumberInt++;
@@ -276,9 +288,14 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 3){ //backgroundobj
 			GameObject tempO(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, xInterval, yInterval, xSpeed, ySpeed);
+			tempO.material.Diffuse = KD;
+			tempO.material.Ambient = KA;
+			tempO.material.Specular = KS;
+			tempO.material.SpecPow = specularPowah;
 			tempO.xPos = centerX;
 			tempO.nrElements = nrOfFaces;
 			tempO.indexT = mesnNumberInt;
+
 			mesnNumberInt++;
 			backGroundObjects.push_back(tempO);
 		}
@@ -287,8 +304,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempC.material.Diffuse = KD;
+			tempC.material.Ambient = KA;
+			tempC.material.Specular = KS;
+			tempC.material.SpecPow = specularPowah;
 			tempC.nrElements = nrOfFaces;
 			tempC.indexT = mesnNumberInt;
+
 			mesnNumberInt++;
 			staticCollectableObjects.push_back(tempC);
 		}
@@ -297,8 +319,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.material.Diffuse = KD;
+			tempP.material.Ambient = KA;
+			tempP.material.Specular = KS;
+			tempP.material.SpecPow = specularPowah;
 			tempP.nrElements = nrOfFaces;
 			tempP.indexT = mesnNumberInt;
+
 			mesnNumberInt++;
 			staticDeadlyObjects.push_back(tempP);
 		}
@@ -307,6 +334,10 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP.material.Diffuse = KD;
+			tempP.material.Ambient = KA;
+			tempP.material.Specular = KS;
+			tempP.material.SpecPow = specularPowah;
 			tempP.slamDirection = coinValue;
 			tempP.slamTimeOffset = xInterval;
 			tempP.nrElements = nrOfFaces;
@@ -319,8 +350,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
 			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempC.material.Diffuse = KD;
+			tempC.material.Ambient = KA;
+			tempC.material.Specular = KS;
+			tempC.material.SpecPow = specularPowah;
 			tempC.nrElements = nrOfFaces;		
 			tempC.indexT = mesnNumberInt;
+
 			mesnNumberInt++;
 			dynamicCollectableObjects.push_back(tempC);
 		}

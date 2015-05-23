@@ -15,7 +15,7 @@ Physics::~Physics()
 
 void Physics::Gravitation(Collision *theCollision, PlayerObject *theCharacter)
 {
-	if (theCharacter->jumping == true)
+	/*if (theCharacter->jumping == true)
 	{
 		this->upforce = this->upforce * 1.70;
 	}
@@ -23,7 +23,7 @@ void Physics::Gravitation(Collision *theCollision, PlayerObject *theCharacter)
 	if (this->upforce > theCharacter->getJumpHeight())
 	{
 		theCharacter->jumping = false;
-	}
+	}*/
 
 	if (theCollision->isGrounded() && this->upforce <= 0)
 	{
@@ -52,6 +52,6 @@ void Physics::Gravitation(Collision *theCollision, PlayerObject *theCharacter)
 
 void Physics::Jump(Collision *theCollision, PlayerObject *theCharacter)
 {
-	this->upforce = 0.1;
+	this->upforce = theCharacter->getJumpHeight();
 	theCharacter->jumping = true;
 }

@@ -8,7 +8,7 @@ struct VS_OUT
 	
 };
 
-float4 PS_main(VS_OUT input) : SV_Target
+float4 main(VS_OUT input) : SV_Target
 {
 
 	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };

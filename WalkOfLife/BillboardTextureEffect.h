@@ -4,6 +4,8 @@
 #define BILLDBOARDTEXTUREEFFECT_H
 #endif
 
+#include "GameTimer.h"
+
 #include <DirectXMath.h>
 #include <DirectXMathMatrix.inl>
 #include <DirectXMathVector.inl>
@@ -36,6 +38,7 @@ private:
 
 	float timer = 0.0f;
 	float showTime = 1.0f;
+	float totalTime = 0.0f;
 
 	//std::string *texturePaths;
 	vector<std::string> texturePaths;
@@ -48,14 +51,18 @@ private:
 		XMFLOAT2 texCoord;
 	};
 public:
-	BillboardTextureEffect(ID3D11Device *gDev, int nrImages, float showTime, std::string billboardBaseName, std::string fileType){
+	bool playing;
+
+	BillboardTextureEffect(ID3D11Device *gDev, int nrImages, float spriteWidth, float spriteHeight, float showTime, std::string billboardBaseName, std::string fileType){
 		gDevice = gDev;
 		this->nrImages = nrImages;
 		this->showTime = showTime;
 		this->billboardBaseName = billboardBaseName;
 		this->fileType = fileType;
+		playing = false;
 
 		CreateResourceViews();
+		CreateVertexBuffer(spriteWidth, spriteHeight);
 	}
 	BillboardTextureEffect(){}
 	~BillboardTextureEffect(){
@@ -94,13 +101,13 @@ public:
 		temp.pos = XMFLOAT3(0, 0, 0);
 		temp.texCoord = XMFLOAT2(0, 0);
 		vertecies.push_back(temp);
-		temp.pos = XMFLOAT3(0, 1, 0);
+		temp.pos = XMFLOAT3(0, height, 0);
 		temp.texCoord = XMFLOAT2(0, 1);
 		vertecies.push_back(temp);
-		temp.pos = XMFLOAT3(1, 1, 0);
+		temp.pos = XMFLOAT3(width, height, 0);
 		temp.texCoord = XMFLOAT2(1, 1);
 		vertecies.push_back(temp);
-		temp.pos = XMFLOAT3(1, 0, 0);
+		temp.pos = XMFLOAT3(width, 0, 0);
 		temp.texCoord = XMFLOAT2(1, 0);
 		vertecies.push_back(temp);
 
@@ -116,24 +123,33 @@ public:
 		HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &billboardVertexBuffer);
 	}
 
-	void Reset(){
+	
+	void Play(){
 		currIndex = 0;
-		//nån bool
+		playing = true;
+		
 	}
 
 	void PlayBillboard(float time){ //position oxå?
 		if (currIndex >= nrImages)
 			currIndex = 0;
-		if (time > timer){
-			//loopa igenom resourceviewsen med tiden
-			currResourceView = sResourceViews[currIndex];
-			timer = time + showTime;
+			//playing = false;
+		if (playing == true){
+			if (time > timer){
+				//loopa igenom resourceviewsen med tiden
+				currResourceView = sResourceViews[currIndex];
+				timer = time + showTime;
+			}
 		}
 		
 	}
 
-	ID3D11ShaderResourceView* GetCurrRSV(){
-		return currResourceView;
+	ID3D11ShaderResourceView** GetCurrRSV(){
+		return &currResourceView;
+	}
+
+	ID3D11Buffer** GetVertexBuffer(){
+		return &billboardVertexBuffer;
 	}
 
 

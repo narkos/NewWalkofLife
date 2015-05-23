@@ -1,4 +1,9 @@
 #pragma once
+
+#ifndef RENDERENGINE_H
+#define RENDERENGINE_H
+#endif
+
 #include <windows.h>
 #include <DirectXMath.h>
 #include <DirectXMathMatrix.inl>
@@ -97,7 +102,7 @@ public:
 	PlayerObject* theCharacter3;
 	Camera mainCamera;
 	Shadows shadows;
-	BillboardTextureEffect particleEffects; //gör det till en vektor
+	vector <BillboardTextureEffect> particleEffects; //gör det till en vektor
 	Menu mainMenu;
 	CharSwitch CurrChar;
 

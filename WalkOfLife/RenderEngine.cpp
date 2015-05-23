@@ -61,8 +61,8 @@ bool RenderEngine::Init(){
 
 	//Initialize Shaders and triangle data
 	Shaders();
-	BillboardTextureEffect temp(gDevice, 5, 1, "FinaBilder", ".png");
-	particleEffects = temp;
+	BillboardTextureEffect temp(gDevice, 5, 1, 2.0f, 2.0f, "SpriteExplosion", ".png");
+	particleEffects.push_back(temp);
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
@@ -1097,6 +1097,27 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
+
+
+	//PARTIKLEMOJSSSSSSSS!!
+	gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
+	gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+	gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
+
+	for (int i = 0; i < particleEffects.size(); i++){
+		if (particleEffects[i].playing == true){
+			particleEffects[i].PlayBillboard(gTimer.TotalTime());
+
+			gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
+			gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i].GetVertexBuffer(), &vertexSize, &offset);
+
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+			UpdateMatricies(theCharacter->pos, currView, currProjection);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+			gDeviceContext->Draw(4, 0);
+		}
+	}
 
 	//######################################################################################################################################################
 	//###												*NON* SHADOW CASTING OBJECTS GOES HERE BELOW						  							 ###	

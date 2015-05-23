@@ -117,9 +117,7 @@ bool RenderEngine::Init(){
 	//StartMenu.menuInit(gDeviceContext);
 	//mainMenu.menuInit(gDeviceContext);
 	
-	theCharacters.at(0).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
-	theCharacters.at(1).SetRayOrigins(-2.0f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
-
+	
 
 	//SHADOWS
 	Shadows tempShadows(mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gDevice, gDeviceContext);
@@ -137,7 +135,7 @@ bool RenderEngine::Init(){
 
 
 	mainMenu.menuInit(gDeviceContext);
-	theCharacters.at(0).setJumpHeight(0.5f);
+	theCharacters.at(0).setJumpHeight(0.43f);
 	theCharacters.at(0).setRunSpeed(0.1f);
 	theCharacters.at(0).xPos = 4;
 	theCharacters.at(0).yPos = 9;
@@ -145,11 +143,11 @@ bool RenderEngine::Init(){
 	theCharacters.at(1).setJumpHeight(0.6f);
 	theCharacters.at(2).setRunSpeed(0.1f);
 	theCharacters.at(2).setJumpHeight(0.6f);
-	theCharacters.at(0).SetRayOrigins(-0.4f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
+	theCharacters.at(0).SetRayOrigins(-0.4f, -1.0f, 0.3f, 3, 0.3f, 0.3f);
 	theCharacters.at(1).SetRayOrigins(-0.6f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 	theCharacters.at(2).SetRayOrigins(-0.5f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
 
-	theCharacters.at(0).SetRayRanges(0.5f, 0.5f, 1.0f);
+	theCharacters.at(0).SetRayRanges(0.4f, 0.5f, 1.0f);
 	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 1.0f);
 
 	//highscore stuff

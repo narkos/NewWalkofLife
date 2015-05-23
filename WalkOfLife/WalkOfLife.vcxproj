@@ -144,6 +144,7 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BillboardTextureEffect.h" />
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />

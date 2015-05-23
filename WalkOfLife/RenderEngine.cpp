@@ -61,6 +61,8 @@ bool RenderEngine::Init(){
 
 	//Initialize Shaders and triangle data
 	Shaders();
+	BillboardTextureEffect temp(gDevice, 5, 1, "FinaBilder", ".png");
+	particleEffects = temp;
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
@@ -470,6 +472,19 @@ void RenderEngine::Shaders(){
 	//HRESULT hrWireFramePS = CompileShader(L"WireFramePS.hlsl", "main", "ps_5_0", &pPS);
 	//gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gWireFramePixelShader);
 
+	D3D11_INPUT_ELEMENT_DESC inputDescParticle[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	gDevice->CreateInputLayout(inputDescParticle, ARRAYSIZE(inputDescParticle), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gFakeBillboardLayout);
+
+
+	HRESULT hrParVS = CompileShader(L"ParticleVS.hlsl", "main", "vs_5_0", &pVS);
+	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gFakeBillboardVertexShader);
+
+	HRESULT hParPS = CompileShader(L"ParticlePS.hlsl", "main", "ps_5_0", &pPS);
+	gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gFakeBillboardPixelShader);
 
 	// Realese shaders
 	pVS->Release();

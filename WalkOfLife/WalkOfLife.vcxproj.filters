@@ -235,5 +235,11 @@
     <FxCompile Include="simplePS.hlsl">
       <Filter>Resource Files\Default Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
+      <Filter>Resource Files\Default Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>Resource Files\Default Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

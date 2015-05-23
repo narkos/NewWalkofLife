@@ -123,6 +123,9 @@
     <ClCompile Include="Startmeny.cpp">
       <Filter>Header Files\Meny</Filter>
     </ClCompile>
+    <ClCompile Include="Shadows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameTimer.h">
@@ -205,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="Startmeny.h">
       <Filter>Header Files\Meny</Filter>
+    </ClInclude>
+    <ClInclude Include="Shadows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardTextureEffect.h">
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

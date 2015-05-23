@@ -1224,7 +1224,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 {
-	soundBackground.PlayMp3();
+	//soundBackground.PlayMp3();
 	Input theInput;		//Defined in .h file
 	theInput.initInput(this->hInstance, hWindow);
 	int input = 0;
@@ -1327,12 +1327,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 			{
 				theCharacter.jumpMomentumX = -0.1f;
 			}
-			
+
 			if (theCharacter.jumpMomentumX > 0)
 			{
 				theCharacter.jumpMomentumX = 0.1f;
 			}
-	
+
 			theCharacter.dashDisabling = true;
 		}
 
@@ -1385,6 +1385,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (input == 1 && theCollision->leftValid() == true)
 	{
+		if (rightDirection && CurrChar.getCharSate() == 1)
+		{
+			if (rand()%20 == 0)
+			{
+				soundGoingThisWay.PlayMp3();
+				soundGoingThisWay.daCapo();
+			}
+			else if (rand()%20 == 10)
+			{
+				soundOverHere.PlayMp3();
+				soundOverHere.daCapo();
+			}
+		}
 		rightDirection = false;
 		if (theCharacter.jumpMomentumState)
 		{
@@ -1409,6 +1422,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	else if (input == 2 && theCollision->rightValid() == true)
 	{
+		if (!rightDirection && CurrChar.getCharSate() == 1)
+		{
+			if (rand() % 20 == 0)
+			{
+				soundGoingThisWay.PlayMp3();
+				soundGoingThisWay.daCapo();
+			}
+			else if (rand() % 20 == 10)
+			{
+				soundOverHere.PlayMp3();
+				soundOverHere.daCapo();
+			}
+		}
 		rightDirection = true;
 		if (theCharacter.jumpMomentumState)
 		{
@@ -1479,17 +1505,134 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		theCharacter.Dash();
 		theCharacter.dashTimer = gTimer.TotalTime();
+
+		if (CurrChar.getCharSate() == 0)
+		{
+			soundYoungDash.PlayMp3();
+			soundYoungDash.daCapo();
+		}
+		else if (CurrChar.getCharSate() == 1)
+		{
+			soundManDash.PlayMp3();
+			soundManDash.daCapo();
+		}
+		else
+		{
+			if (rand()%2 == 0)
+			{
+				soundOldDash1.PlayMp3();
+				soundOldDash1.daCapo();
+			}
+			else
+			{
+				soundOldDash2.PlayMp3();
+				soundOldDash2.daCapo();
+			}
+		}
 	}
 
+
+	if (CurrChar.getCharSate() == 0)
+	{
+		if (rand()%2000 == 0)
+		{
+			soundGonnaDie.PlayMp3();
+			soundGonnaDie.daCapo();
+		}
+
+		else if (rand()%2000 == 1000)
+		{
+			soundLifeIsA.PlayMp3();
+			soundLifeIsA.daCapo();
+		}
+	}
+
+	if (CurrChar.getCharSate() == 1)
+	{
+		if (rand() % 2000 == 0)
+		{
+			soundIGotThis.PlayMp3();
+			soundIGotThis.daCapo();
+		}
+	}
+
+	if (CurrChar.getCharSate() == 2)
+	{
+		if (rand() % 2000 == 0)
+		{
+			soundHelpMe.PlayMp3();
+			soundHelpMe.daCapo();
+		}
+
+		else if (rand() % 2000 == 1000)
+		{
+			soundWhereAmI.PlayMp3();
+			soundWhereAmI.daCapo();
+		}
+	}
 
 	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
 
 	{
 		thePhysics.Jump(theCollision, &theCharacter);
 		thePhysics.onPlatform = false;
-		soundJump.PlayMp3();
-		soundJump.daCapo();
 		theCharacter.jumpTimer = gTimer.TotalTime();
+		temp = rand() % 3;
+		if (CurrChar.getCharSate() == 0)
+		{
+			rand() % 3 == temp;
+			if (temp == 0 || temp == 3)
+			{
+				soundYoungJump1.PlayMp3();
+				soundYoungJump1.daCapo();
+			}
+			else if (temp == 1 || temp == 4)
+			{
+				soundYoungJump2.PlayMp3();
+				soundYoungJump2.daCapo();
+			}
+			else
+			{
+				soundYoungJump3.PlayMp3();
+				soundYoungJump3.daCapo();
+			}
+		}
+		if (CurrChar.getCharSate() == 1)
+		{
+			if (temp == 0)
+			{
+				soundManJump1.PlayMp3();
+				soundManJump1.daCapo();
+			}
+			else if (temp == 1)
+			{
+				soundManJump2.PlayMp3();
+				soundManJump2.daCapo();
+			}
+			else
+			{
+				soundManJump3.PlayMp3();
+				soundManJump3.daCapo();
+			}
+		}
+		if (CurrChar.getCharSate() == 2)
+		{
+			if (temp == 0)
+			{
+				soundOldJump1.PlayMp3();
+				soundOldJump1.daCapo();
+			}
+			else if (temp == 1)
+			{
+				soundOldJump2.PlayMp3();
+				soundOldJump2.daCapo();
+			}
+			else
+			{
+				soundOldJump3.PlayMp3();
+				soundOldJump3.daCapo();
+			}
+		}
 	}
 
 
@@ -1518,85 +1661,101 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 		}
 	}
-		thePhysics.Gravitation(theCollision, &theCharacter);
-		theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
-		theCharacter.CalculateWorld();
+	thePhysics.Gravitation(theCollision, &theCharacter);
+	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+	theCharacter.CalculateWorld();
 
-		if (rightDirection)
+	if (rightDirection)
+	{
+		theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 0);
+	}
+
+	else
+	{
+		theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
+	}
+
+	for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()).size(); i++)
+	{
+		theBinaryTree->collectables->at(theCharacter.getDivision()).at(i).rotate();
+	}
+
+	for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision() + 1).size(); i++)
+	{
+		theBinaryTree->collectables->at(theCharacter.getDivision() + 1).at(i).rotate();
+	}
+
+	if (theCharacter.getDivision() != 0)
+	{
+		for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision() - 1).size(); i++)
 		{
-			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 0);
+			theBinaryTree->collectables->at(theCharacter.getDivision() - 1).at(i).rotate();
+		}
+	}
+
+
+	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Type = l_Directional;
+	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+	lightProp01.lights[1].Type = l_Point;
+	lightProp01.lights[1].Position = XMFLOAT4(theCharacter.xPos, theCharacter.yPos, 0.0f, 1.0f);
+	lightProp01.lights[1].Color = XMFLOAT4(Colors::WhiteSmoke);
+	lightProp01.lights[1].AttConst = 0.2f;
+	lightProp01.lights[1].AttLinear = 0.3f;
+	lightProp01.lights[1].AttQuadratic = 0.5f;
+	lightProp01.lights[1].Range = 10.0f;
+
+	float moveL = 0.0f;
+
+	if (lightOffsetTest < 1.0f);
+	{
+		lightOffsetTest += moveL;
+		lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
+	}
+
+
+
+	lightProp01.lights[2].Type = l_Point;
+	lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[2].AttConst = 0.3f;
+	lightProp01.lights[2].AttLinear = 0.2f;
+	lightProp01.lights[2].AttQuadratic = 0.5f;
+	lightProp01.lights[2].Range = 15.0f;
+
+	lightProp01.lights[3].Type = l_Point;
+	lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
+	lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[3].AttConst = 0.7f;
+	lightProp01.lights[3].AttLinear = 0.2f;
+	lightProp01.lights[3].AttQuadratic = 0.0f;
+	lightProp01.lights[3].Range = 15.0f;
+
+
+	lightProp01.lights[0].Active = 1;
+	lightProp01.lights[1].Active = 1;
+	lightProp01.lights[2].Active = 1;
+	lightProp01.lights[3].Active = 1;
+	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
+
+	if (theCharacter.yPos < -20)
+	{
+		if (CurrChar.getCharSate() == 0)
+		{
+			soundYoungDie.PlayMp3();
 		}
 
-		else
+		else if (CurrChar.getCharSate() == 1)
 		{
-			theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
+			soundManDie.PlayMp3();
 		}
-
-		for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()).size(); i++)
+		else if (CurrChar.getCharSate() == 2)
 		{
-			theBinaryTree->collectables->at(theCharacter.getDivision()).at(i).rotate();
+			soundOldDie.PlayMp3();
 		}
-
-		for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()+1).size(); i++)
-		{
-			theBinaryTree->collectables->at(theCharacter.getDivision()+1).at(i).rotate();
-		}
-
-		if (theCharacter.getDivision() != 0)
-		{
-			for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision() - 1).size(); i++)
-			{
-				theBinaryTree->collectables->at(theCharacter.getDivision() - 1).at(i).rotate();
-			}
-		}
-		
-
-		lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
-		lightProp01.lights[0].Type = l_Directional;
-		lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
-		lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-
-
-		lightProp01.lights[1].Type = l_Point;
-		lightProp01.lights[1].Position = XMFLOAT4(theCharacter.xPos, theCharacter.yPos, 0.0f, 1.0f);
-		lightProp01.lights[1].Color = XMFLOAT4(Colors::WhiteSmoke);
-		lightProp01.lights[1].AttConst = 0.2f;
-		lightProp01.lights[1].AttLinear = 0.3f;
-		lightProp01.lights[1].AttQuadratic = 0.5f;
-		lightProp01.lights[1].Range = 10.0f;
-
-		float moveL = 0.0f;
-
-		if (lightOffsetTest < 1.0f);
-		{
-			lightOffsetTest += moveL;
-			lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
-		}
-
-
-
-		lightProp01.lights[2].Type = l_Point;
-		lightProp01.lights[2].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		lightProp01.lights[2].AttConst = 0.3f;
-		lightProp01.lights[2].AttLinear = 0.2f;
-		lightProp01.lights[2].AttQuadratic = 0.5f;
-		lightProp01.lights[2].Range = 15.0f;
-
-		lightProp01.lights[3].Type = l_Point;
-		lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
-		lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		lightProp01.lights[3].AttConst = 0.7f;
-		lightProp01.lights[3].AttLinear = 0.2f;
-		lightProp01.lights[3].AttQuadratic = 0.0f;
-		lightProp01.lights[3].Range = 15.0f;
-
-
-		lightProp01.lights[0].Active = 1;
-		lightProp01.lights[1].Active = 1;
-		lightProp01.lights[2].Active = 1;
-		lightProp01.lights[3].Active = 1;
-		lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
-
+	}
 }
 
 void RenderEngine::MenuUpdate(float tt){
@@ -1922,8 +2081,52 @@ void RenderEngine::LoadSounds()
 {
 	soundBackground.InitMp3();
 	soundBackground.LoadMp3("WalkOfLife.mp3");
-	soundJump.InitMp3();
-	soundJump.LoadMp3("boing.wav");
-	
+	soundGoingThisWay.InitMp3();
+	soundGoingThisWay.LoadMp3("GoingThisWay.wav");
+	soundGonnaDie.InitMp3();
+	soundGonnaDie.LoadMp3("GonnaDie.wav");
+	soundHelpMe.InitMp3();
+	soundHelpMe.LoadMp3("HelpMe.wav");
+	soundIGotThis.InitMp3();
+	soundIGotThis.LoadMp3("IGotThis.wav");
+	soundLifeIsA.InitMp3();
+	soundLifeIsA.LoadMp3("LifeIsA.wav");
+	soundManDie.InitMp3();
+	soundManDie.LoadMp3("manDie.wav");
+	soundManJump1.InitMp3();
+	soundManJump1.LoadMp3("manJump1.wav");
+	soundManJump2.InitMp3();
+	soundManJump2.LoadMp3("manJump2.wav");
+	soundManJump3.InitMp3();
+	soundManJump3.LoadMp3("manJump3.wav");
+	soundOldDash1.InitMp3();
+	soundOldDash1.LoadMp3("oldDash.wav");
+	soundOldDash2.InitMp3();
+	soundOldDash2.LoadMp3("oldDash2.wav");
+	soundOldDie.InitMp3();
+	soundOldDie.LoadMp3("oldDie.wav");
+	soundOldJump1.InitMp3();
+	soundOldJump1.LoadMp3("oldJump1.wav");
+	soundOldJump2.InitMp3();
+	soundOldJump2.LoadMp3("oldJump2.wav");
+	soundOldJump3.InitMp3();
+	soundOldJump3.LoadMp3("oldJump3.wav");
+	soundOverHere.InitMp3();
+	soundOverHere.LoadMp3("What'sOverHere.wav");
+	soundWhereAmI.InitMp3();
+	soundWhereAmI.LoadMp3("WhereAmI.wav");
+	soundYoungDash.InitMp3();
+	soundYoungDash.LoadMp3("youngDash.wav");
+	soundYoungDie.InitMp3();
+	soundYoungDie.LoadMp3("youngDie.wav");
+	//soundYoungDie.setVolume(1000);
+	soundYoungJump1.InitMp3();
+	soundYoungJump1.LoadMp3("youngJump1.wav");
+	soundYoungJump2.InitMp3();
+	soundYoungJump2.LoadMp3("youngJump2.wav");
+	soundYoungJump3.InitMp3();
+	soundYoungJump3.LoadMp3("youngJump3.wav");
+	soundManDash.InitMp3();
+	soundManDash.LoadMp3("manDash.wav");
 	
 }

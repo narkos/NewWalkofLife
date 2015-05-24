@@ -42,11 +42,11 @@ void Startmenu::ActivestartMenu(ID3D11DeviceContext* gDeviceContext, float width
 	//Drawing the menu
 	StartspriteBatch4->Begin();
 	//StartspriteBatch4->Draw(blackscreen, DirectX::XMFLOAT2(width / 2, 100));
-	StartspriteBatch4->Draw(Walkoflife, DirectX::XMFLOAT2(width / 4.75, 10));
+	StartspriteBatch4->Draw(Walkoflife, DirectX::XMFLOAT2(width / 4.75f, 10.0f));
 	if (HS == TRUE)
 	{
 		//StartspriteBatch3->Begin();
-		StartspriteBatch4->Draw(HSbox, DirectX::XMFLOAT2(width / 1.4, 150));
+		StartspriteBatch4->Draw(HSbox, DirectX::XMFLOAT2(width / 1.4f, 150.0f));
 
 		//StartspriteBatch3->End();
 	}
@@ -59,9 +59,9 @@ void Startmenu::ActivestartMenu(ID3D11DeviceContext* gDeviceContext, float width
 		//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
 
 		StartspriteBatch1->Begin();
-		StartspriteBatch1->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5, 250));
-		StartspriteBatch1->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 400));
-		StartspriteBatch1->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 550));
+		StartspriteBatch1->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5f, 250.0f));
+		StartspriteBatch1->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5f, 400.0f));
+		StartspriteBatch1->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5f, 550.0f));
 		StartspriteBatch1->End();
 	}
 	else if (currentTab == 2)
@@ -69,9 +69,9 @@ void Startmenu::ActivestartMenu(ID3D11DeviceContext* gDeviceContext, float width
 		//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 		//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
 		StartspriteBatch2->Begin();
-		StartspriteBatch2->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 250));
-		StartspriteBatch2->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5, 400));
-		StartspriteBatch2->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 550));
+		StartspriteBatch2->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5f, 250.0f));
+		StartspriteBatch2->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5f, 400.0f));
+		StartspriteBatch2->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5f, 550.0f));
 
 		StartspriteBatch2->End();
 		
@@ -81,9 +81,9 @@ void Startmenu::ActivestartMenu(ID3D11DeviceContext* gDeviceContext, float width
 		//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 		//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
 		StartspriteBatch3->Begin();
-		StartspriteBatch3->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 250));
-		StartspriteBatch3->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 400));
-		StartspriteBatch3->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5, 550));
+		StartspriteBatch3->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5f, 250.0f));
+		StartspriteBatch3->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5f, 400.0f));
+		StartspriteBatch3->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5f, 550.0f));
 
 		StartspriteBatch3->End();
 	}

@@ -67,6 +67,6 @@ void Counters::takeCoin()
 
 void Counters::addCollectable(XMFLOAT2 temp)
 {
-	this->theAge.years += temp.y;
-	this->coins += temp.x;
+	this->theAge.years += (int)temp.y;
+	this->coins += (int)temp.x;
 }

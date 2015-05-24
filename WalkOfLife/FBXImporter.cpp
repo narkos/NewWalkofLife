@@ -246,9 +246,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		 //adda dem på listorna
 		if (meshType == 0 || meshType < 0){ //static
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 1000);
-			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 1000.0f);
+			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.material.Diffuse = KD;
 			tempP.material.Ambient = KA;
 			tempP.material.Specular = KS;
@@ -260,9 +260,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 1){ //nonstatic
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
-			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
+			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.material.Diffuse = KD;
 			tempP.material.Ambient = KA;
 			tempP.material.Specular = KS;
@@ -274,9 +274,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 2){ //player
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
-			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
+			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
 			tempPlayer.material.Diffuse = KD;
 			tempPlayer.material.Ambient = KA;
 			tempPlayer.material.Specular = KS;
@@ -287,7 +287,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			players.push_back(tempPlayer);
 		}
 		else if (meshType == 3){ //backgroundobj
-			GameObject tempO(meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, xInterval, yInterval, xSpeed, ySpeed);
+			GameObject tempO(meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, xInterval, yInterval, xSpeed, ySpeed);
 			tempO.material.Diffuse = KD;
 			tempO.material.Ambient = KA;
 			tempO.material.Specular = KS;
@@ -301,9 +301,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 4){ //collectable
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
-			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
+			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempC.material.Diffuse = KD;
 			tempC.material.Ambient = KA;
 			tempC.material.Specular = KS;
@@ -316,9 +316,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 5){ //deadly
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
-			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
+			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.material.Diffuse = KD;
 			tempP.material.Ambient = KA;
 			tempP.material.Specular = KS;
@@ -331,16 +331,16 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 6){ //deadlymoving
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
-			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
+			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempP.material.Diffuse = KD;
 			tempP.material.Ambient = KA;
 			tempP.material.Specular = KS;
 			tempP.material.SpecPow = specularPowah;
 			tempP.slamDirection = coinValue;
 			tempP.slamSpeedMultiplier = ySpeed;
-			tempP.slamWaitTime = timeValue;
+			tempP.slamWaitTime = (float)timeValue;
 			tempP.slamTimeOffset = xInterval;
 			tempP.nrElements = nrOfFaces;
 			tempP.indexT = mesnNumberInt;
@@ -349,9 +349,9 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		}
 		else if (meshType == 7){ //collectablemoving
 			BoundingBox bTemp;
-			bTemp.Center = XMFLOAT3(centerX, centerY, 0);
-			bTemp.Extents = XMFLOAT3(extentX, extentY, 10);
-			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0, 0, 0), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
+			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
+			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
 			tempC.material.Diffuse = KD;
 			tempC.material.Ambient = KA;
 			tempC.material.Specular = KS;

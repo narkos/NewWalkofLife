@@ -158,7 +158,7 @@ void OBJ::LoadObject(char* geometryFileName, char* materialFileName){
 		extentY = maxY - centerY;
 		theBoundingBox = new BoundingBox(XMFLOAT3(centerX, centerY, 0), XMFLOAT3(extentX, extentY, 10));
 
-		CreateAABB(vertecies);
+		//CreateAABB(vertecies);
 
 		D3D11_BUFFER_DESC bDesc;
 		ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
@@ -218,31 +218,31 @@ void OBJ::LoadObject(char* geometryFileName, char* materialFileName){
 
 }
 
-
-void OBJ::CreateAABB(std::vector<Vertex> verts){
-	float minX = INFINITY, minY = INFINITY, minZ = INFINITY;
-	float maxX = -INFINITY, maxY = -INFINITY, maxZ = -INFINITY;
-
-	for each (Vertex v in verts)
-	{
-		minX = min(minX, v.vx);
-		minY = min(minY, v.vy);
-		minZ = min(minZ, v.vz);
-
-		maxX = max(maxX, v.vx);
-		maxY = max(maxY, v.vy);
-		maxZ = max(maxZ, v.vz);
-	}
-	float cX = (maxX - minX) / 2;
-	float cY = (maxY - minY) / 2;
-	float cZ = (maxZ - minZ) / 2;
-	XMFLOAT3 center;
-	center.x = cX, center.y = cY, center.z = cZ;
-	XMFLOAT3 extents;
-	extents.x = cX, extents.y = cY, extents.z = cZ;
-	BoundingBox b(center, extents);
-	bBox = b;
-}
+//
+//void OBJ::CreateAABB(std::vector<Vertex> verts){
+//	float minX = INFINITY, minY = INFINITY, minZ = INFINITY;
+//	float maxX = -INFINITY, maxY = -INFINITY, maxZ = -INFINITY;
+//
+//	for each (Vertex v in verts)
+//	{
+//		minX = min(minX, v.vx);
+//		minY = min(minY, v.vy);
+//		minZ = min(minZ, v.vz);
+//
+//		maxX = max(maxX, v.vx);
+//		maxY = max(maxY, v.vy);
+//		maxZ = max(maxZ, v.vz);
+//	}
+//	float cX = (maxX - minX) / 2;
+//	float cY = (maxY - minY) / 2;
+//	float cZ = (maxZ - minZ) / 2;
+//	XMFLOAT3 center;
+//	center.x = cX, center.y = cY, center.z = cZ;
+//	XMFLOAT3 extents;
+//	extents.x = cX, extents.y = cY, extents.z = cZ;
+//	BoundingBox b(center, extents);
+//	bBox = b;
+//}
 
 void OBJ::CleanUp(){
 	vertexBuffer->Release();

@@ -82,7 +82,7 @@ public:
 		//bool slamHasBegun;
 		slamReturning = false;
 		slamHasStopped = false;
-		slamDirection = xSpeed;
+		slamDirection = (int)xSpeed;
 		slamSpeedMultiplier = 1.0f;
 		slamReset = false;
 		slamTimeOffset = 0.0f;
@@ -188,7 +188,7 @@ public:
 
 				if (slamDeltaTime >= slamWaitTime)
 				{
-					slamDirection = slamDirection * -1.0f;
+					slamDirection = slamDirection * -1;
 					slamSpeedMultiplier = 0.1f; //Decrease the speed on Slammer return cycle
 					slamMomentum = 0.0f;
 					slamStartTime = (time + slamTimeOffset);
@@ -219,7 +219,7 @@ public:
 				slamDeltaTime = (time + slamTimeOffset) - slamStopTime;
 				if (slamDeltaTime >= slamWaitTime)
 				{
-					slamDirection = slamDirection * -1.0f;
+					slamDirection = slamDirection * -1;
 					slamSpeedMultiplier = 1.0f; //Set full speed for slam
 					slamMomentum = 0.0f;
 					slamStartTime = (time + slamTimeOffset);

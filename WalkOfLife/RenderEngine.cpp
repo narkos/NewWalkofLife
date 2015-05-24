@@ -22,8 +22,8 @@ LRESULT CALLBACK MainWindowProc(HWND hwindow, UINT msg, WPARAM wParam, LPARAM lP
 RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UINT scrH){
 	this->hInstance = hInstance;
 	applicationName = name;
-	screen_Width = mainCamera.getWindowWidth();
-	screen_Height = mainCamera.getWindowHeight();
+	screen_Width = (UINT)mainCamera.getWindowWidth();
+	screen_Height = (UINT)mainCamera.getWindowHeight();
 	//screen_Width = scrW; //OLD
 	//screen_Height = scrH; //OLD
 	pRenderEngine = this;
@@ -62,11 +62,11 @@ bool RenderEngine::Init(){
 	//Initialize Shaders and triangle data
 	Shaders();
 	//skapa billboards!!
-	BillboardTextureEffect temp(gDevice, 21, 2.0f, 2.0f, 0.05f, "ArrowUp", ".png");
+	BillboardTextureEffect *temp = new BillboardTextureEffect(gDevice, 21, 2.0f, 2.0f, 0.05f, "ArrowUp", ".png");
 	particleEffects.push_back(temp);
-	BillboardTextureEffect temp2(gDevice, 23, 2.0f, 2.0f, 0.05f, "ArrowDown", ".png");
+	BillboardTextureEffect *temp2 = new BillboardTextureEffect(gDevice, 23, 2.0f, 2.0f, 0.05f, "ArrowDown", ".png");
 	particleEffects.push_back(temp2);
-	BillboardTextureEffect temp3(gDevice, 6, 2.0f, 2.0f, 0.2f, "CoinPickUp", ".png");
+	BillboardTextureEffect *temp3 = new BillboardTextureEffect(gDevice, 6, 2.0f, 2.0f, 0.2f, "CoinPickUp", ".png");
 	particleEffects.push_back(temp3);
 	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
 	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
@@ -157,9 +157,9 @@ bool RenderEngine::Init(){
 
 
 	// Set hit ray info
-	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.3f, 3, 0.3f, 0.2f);
-	theCharacters.at(1).SetRayOrigins(-0.5f, -1.0f, 0.5f, 5, 0.3f, 0.3f);
-	theCharacters.at(2).SetRayOrigins(-0.3f, -1.0f, 0.5f, 5, 0.5f, 0.3f);
+	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
+	theCharacters.at(1).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	theCharacters.at(2).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
 
 	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
 	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 0.5f);
@@ -304,7 +304,7 @@ void RenderEngine::fpscounter()
 	if ((gTimer.TotalTime() - time) >= 0.25f)
 	{
 		float fps = (float)framecount * 4; // fps = framecount / 1
-		fpsDisplay = fps;
+		fpsDisplay = (UINT)fps;
 		float mspf = 1000.0f / fps;
 		float timer = gTimer.TotalTime();
 		// Makes a String for the window handler
@@ -976,12 +976,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	//######################################################################################################################################################
 
 
-	float tempDiv = -1;
+	float tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 1; i++)
+	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 	{
 		for (int j = 0; j < theBinaryTree->testPlatforms->at(i).size(); j++)
 		{
@@ -1001,13 +1001,13 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	}
 
 	// Render Collectables
-	tempDiv = -1;
+	tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
 
-	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 1; i++)
+	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 
 	{
 		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
@@ -1029,12 +1029,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 
 	//Render Moving Platforms
-	tempDiv = -1;
+	tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 1; i++)
+	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 	{
 		for (int j = 0; j < theBinaryTree->platformsMoving->at(i).size(); j++)
 		{
@@ -1055,12 +1055,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	//Render Deadly Moving Platforms
 
-	tempDiv = -1;
+	tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 1; i++)
+	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 	{
 		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
 		{
@@ -1079,12 +1079,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		}
 	}
 	
-	tempDiv = -1;
+	tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 1; i++)
+	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 	{
 		for (int j = 0; j < theBinaryTree->deadly->at(i).size(); j++)
 		{
@@ -1177,14 +1177,14 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 
 		for (int i = 0; i < particleEffects.size(); i++){
-			if (particleEffects[i].playing == true){
-				particleEffects[i].PlayBillboard(gTimer.TotalTime());
+			if (particleEffects[i]->playing == true){
+				particleEffects[i]->PlayBillboard(gTimer.TotalTime());
 
-				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
-				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i].GetVertexBuffer(), &vertexSize, &offset);
+				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
+				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
 				//particleEffects[i].SetPosMatrix(theCharacter->pos);
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(particleEffects[i].GetPosMatrix(), currView, currProjection);
+				UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
 				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
 
 				gDeviceContext->Draw(4, 0);
@@ -1242,12 +1242,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		mainCamera.updateCamera();
 	}
 
-	float tempDiv = -1;
+	float tempDiv = -1.0f;
 	if (theCharacter.getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter.getDivision() + tempDiv; i <= theCharacter.getDivision() + 1; i++)
+	for (int i = theCharacter.getDivision() + (int)tempDiv; i <= theCharacter.getDivision() + 1; i++)
 	{
 		
 		for (int j = 0; j < theBinaryTree->platformsMoving->at(i).size(); j++)
@@ -1312,10 +1312,10 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (gTimer.TotalTime() - theCharacter.dashTimer > 0.30f && !theCharacter.dashDisabling)
 	{
-		theCharacter.momentum = 1;
+		theCharacter.momentum = 1.0f;
 		if (theCharacter.jumpMomentumX < 0)
 		{
-			theCharacter.momentum = 1;
+			theCharacter.momentum = 1.0f;
 			if (theCharacter.jumpMomentumX < 0)
 			{
 				theCharacter.jumpMomentumX = -0.1f;
@@ -1331,13 +1331,13 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 		if (gTimer.TotalTime() - theCharacter.dashTimer > 2.00f && !theCharacter.dashAvailable)
 		{
-			theCharacter.jumpMomentumX = -0.1;
+			theCharacter.jumpMomentumX = -0.1f;
 		}
 
-		if (theCharacter.jumpMomentumX > 0)
+		if (theCharacter.jumpMomentumX > 0.0f)
 
 		{
-			theCharacter.jumpMomentumX = 0.1;
+			theCharacter.jumpMomentumX = 0.1f;
 		}
 
 		theCharacter.dashDisabling = true;
@@ -1378,17 +1378,17 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
 	gCounter.addCollectable(tempPickUpValue);
 	if (tempPickUpValue.y <= -0.1f){ //negativ tid
-		particleEffects[1].SetPosMatrix(theCharacter.pos);
-		particleEffects[1].Play();
+		particleEffects[1]->SetPosMatrix(theCharacter.pos);
+		particleEffects[1]->Play();
 	}
 	else if (tempPickUpValue.y > 0.1f){ //positiv tid
-		particleEffects[0].SetPosMatrix(theCharacter.pos);
-		particleEffects[0].Play();
+		particleEffects[0]->SetPosMatrix(theCharacter.pos);
+		particleEffects[0]->Play();
 	}
 
 	if (tempPickUpValue.x > 0.1f){ //coins
-		particleEffects[2].SetPosMatrix(theCharacter.pos);
-		particleEffects[2].Play();
+		particleEffects[2]->SetPosMatrix(theCharacter.pos);
+		particleEffects[2]->Play();
 	}
 
 	if (input == 1 && theCollision->leftValid() == true)
@@ -1409,9 +1409,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		rightDirection = false;
 		if (theCharacter.jumpMomentumState)
 		{
-			if (theCharacter.jumpMomentumX > theCharacter.getSpeed() * -1)
+			if (theCharacter.jumpMomentumX > theCharacter.getSpeed() * -1.0f)
 			{
-				theCharacter.jumpMomentumX -= 0.005;
+				theCharacter.jumpMomentumX -= 0.005f;
 			}
 
 			else
@@ -1448,7 +1448,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		{
 			if (theCharacter.jumpMomentumX < theCharacter.getSpeed())
 			{
-				theCharacter.jumpMomentumX += 0.005;
+				theCharacter.jumpMomentumX += 0.005f;
 			}
 
 			else
@@ -1686,12 +1686,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
 
-	tempDiv = -1;
+	tempDiv = -1.0f;
 	if (theCharacter.getDivision() == 0)
 	{
-		tempDiv = 0;
+		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter.getDivision() + tempDiv; i <= theCharacter.getDivision() + 1; i++)
+	for (int i = theCharacter.getDivision() + (int)tempDiv; i <= theCharacter.getDivision() + 1; i++)
 	{
 
 		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
@@ -1712,12 +1712,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (rightDirection)
 	{
-		theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 0);
+		theCharacter.Rotate(XMVECTOR(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)), 0.0f);
 	}
 
 	else
 	{
-		theCharacter.Rotate(XMVECTOR(XMVectorSet(0, 1, 0, 0)), 3.14);
+		theCharacter.Rotate(XMVECTOR(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)), 3.14f);
 	}
 
 	for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()).size(); i++)
@@ -1755,7 +1755,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	float moveL = 0.0f;
 
-	if (lightOffsetTest < 1.0f);
+	if (lightOffsetTest < 1.0f)
 	{
 		lightOffsetTest += moveL;
 		lightProp01.lights[2].Position = XMFLOAT4(3.0f + lightOffsetTest, -3.0f, 0.0f, 1.0f);
@@ -1996,6 +1996,11 @@ void RenderEngine::StartMenuUpdate(float tt){
 
 void RenderEngine::Release(){
 
+	for (int i = 0; i < particleEffects.size(); i++) {
+		delete particleEffects[i];
+	}
+	particleEffects.clear();
+
 	gDevice->Release();
 	depthStencilBuffer->Release();
 
@@ -2025,7 +2030,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 		theCharacter1 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(10, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
-		theCharacter1->CreateBBOXVertexBuffer(gDevice);
+		//theCharacter1->CreateBBOXVertexBuffer(gDevice);
 		theCharacter1->nrElements = objectTest.GetNrElements();
 		//gameObjects.push_back(*theCharacter);
 	}
@@ -2034,14 +2039,14 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	{
 		if (isStatic == false){
 			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 3, 4.0f, 1.0f, 1.0f);
-			testPlatform.CreateBBOXVertexBuffer(gDevice);
+			//testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 		else{
 			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox, 0, 0, 0, 0);
-			testPlatform.CreateBBOXVertexBuffer(gDevice);
+			//testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			theBinaryTree->AddPlatform(testPlatform);
 		}
@@ -2050,7 +2055,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	{
 		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 		theCharacter2->Scale(0.5f, 0.5f, 0.5f);
-		theCharacter2->CreateBBOXVertexBuffer(gDevice);
+		//theCharacter2->CreateBBOXVertexBuffer(gDevice);
 		theCharacter2->nrElements = objectTest.GetNrElements();
 		
 		/*Collision tempD(theCharacter2);
@@ -2061,7 +2066,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	{
 		theCharacter3 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
-		theCharacter3->CreateBBOXVertexBuffer(gDevice);
+		//theCharacter3->CreateBBOXVertexBuffer(gDevice);
 		theCharacter3->nrElements = objectTest.GetNrElements();
 	/*	Collision tempDC(theCharacter3);
 		theCollision = &tempDC;*/

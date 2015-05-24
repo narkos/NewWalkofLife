@@ -123,7 +123,7 @@ public:
 	PlayerObject* theCharacter3;
 	Camera mainCamera;
 	Shadows shadows;
-	vector <BillboardTextureEffect> particleEffects; //gör det till en vektor
+	vector <BillboardTextureEffect*> particleEffects; //gör det till en vektor
 	Menu mainMenu;
 	CharSwitch CurrChar;
 

@@ -13,8 +13,8 @@ private:
 	ID3D11Device* gDevice = nullptr;
 	ID3D11DeviceContext* gDeviceContext = nullptr;
 
-	float WINDOW_WIDTH;		//The game window width.
-	float WINDOW_HEIGHT;		//The game window height.
+	int WINDOW_WIDTH;		//The game window width.
+	int WINDOW_HEIGHT;		//The game window height.
 
 	XMMATRIX lightViewMatrix;
 	XMMATRIX lightProjectionMatrix;
@@ -36,7 +36,7 @@ private:
 public:
 	Shadows();
 
-	Shadows(float winWidth, float winHeight, ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext);
+	Shadows(int winWidth, int winHeight, ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext);
 
 	void createShadowMap();
 

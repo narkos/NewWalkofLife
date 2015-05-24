@@ -7,7 +7,7 @@ void PlayerObject::Move(bool right)
 	{
 		if (this->momentum < 1)
 		{
-			this->momentum += 0.05;
+			this->momentum += 0.05f;
 		}
 
 		//this->Translate(this->getSpeed() * momentum, 0.0, 0.0);
@@ -20,7 +20,7 @@ void PlayerObject::Move(bool right)
 	{
 		if (this->momentum < 1)
 		{
-			this->momentum += 0.05;
+			this->momentum += 0.05f;
 		}
 
 		//this->Translate(-this->getSpeed() * momentum + currPlatformPos.x, 0.0 + currPlatformPos.y, 0.0);

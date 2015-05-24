@@ -3,7 +3,7 @@
 Shadows::Shadows()
 {}
 
-Shadows::Shadows(float winWidth, float winHeight, ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext)
+Shadows::Shadows(int winWidth, int winHeight, ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext)
 {
 	WINDOW_WIDTH = winWidth;
 	WINDOW_HEIGHT = winHeight;

@@ -41,6 +41,6 @@ public:
 		this->rot = XMMatrixMultiply(this->rot, XMMatrixRotationX(rotationValue));
 		this->rot = XMMatrixMultiply(this->rot, XMMatrixRotationZ(rotationValue));
 		this->world = scale * rot * temp;
-		this->rotationValue += 0.01;
+		this->rotationValue += 0.01f;
 	}
 };

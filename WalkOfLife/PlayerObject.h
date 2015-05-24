@@ -185,7 +185,7 @@ public:
 		if (pObj.GetActive() == true){
 			if (bbox.Intersects(pObj.GetBBOX()) == true) //denna bör vi nog använda, fast använd rays istället
 				return true;
-			else if (bbox.Contains(pObj.GetBBOX()) == true)
+			else if (bbox.Contains(pObj.GetBBOX()) == 2)
 				return true;
 			else return false;
 		}
@@ -196,7 +196,7 @@ public:
 		if (pObj.GetActive() == true){
 			if (bbox.Intersects(pObj.GetBBOX()) == true) //denna bör vi nog använda, fast använd rays istället
 				return true;
-			else if (bbox.Contains(pObj.GetBBOX()) == true)
+			else if (bbox.Contains(pObj.GetBBOX()) == 2)
 				return true;
 			else return false;
 		}
@@ -217,6 +217,7 @@ public:
 				if (rayLength < rayRangeUp)
 					return true;
 			}
+			return false;
 			
 		}
 		else return false;
@@ -227,8 +228,8 @@ public:
 		if (isGrounded == false){ //denna blir kallad flera gånger även om den inte ska det!
 			startPlatformPos = pObj.GetCurrIntervalPos();
 			pObj.playerStartIntervalPosition = startPlatformPos;
-			currPlatformPos = XMFLOAT3(0, 0, 0);
-			lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
+			currPlatformPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
+			lastFrameCurrPlatformPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		}
 		currPlatformPos = SubXMFLOAT3(pObj.GetCurrIntervalPos(), startPlatformPos);
 		return true;
@@ -381,24 +382,24 @@ public:
 	}
 
 	void Translate(float x, float y, float z){
-		pos = XMMatrixTranslation(x, y, 0);
+		pos = XMMatrixTranslation(x, y, 0.0f);
 
-		originLow = XMVectorSet(x, y + lowValue, 0, 1);
-		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0, 1); //markkontroll
-		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0, 1);
+		originLow = XMVectorSet(x, y + lowValue, 0.0f, 1.0f);
+		originLowRight = XMVectorSet(x + extraXValue, y + lowValue, 0.0f, 1.0f); //markkontroll
+		originLowLeft = XMVectorSet(x - extraXValue, y + lowValue, 0.0f, 1.0f);
 
-		originHigh = XMVectorSet(x, y + highValue, 0, 1);
-		originHighRight = XMVectorSet(x + extraXValue, y + highValue, 0, 1);
-		originHighLeft = XMVectorSet(x - extraXValue, y + highValue, 0, 1);
+		originHigh = XMVectorSet(x, y + highValue, 0.0f, 1.0f);
+		originHighRight = XMVectorSet(x + extraXValue, y + highValue, 0.0f, 1.0f);
+		originHighLeft = XMVectorSet(x - extraXValue, y + highValue, 0.0f, 1.0f);
 
 		for (int i = 0; i < originSides.size() - 1; i++){
-			originSides[i] = XMVectorSet(x, y + originsYValues[i], 0, 1);
+			originSides[i] = XMVectorSet(x, y + originsYValues[i], 0.0f, 1.0f);
 		}
 
 
 		BoundingBox tempB;
 		tempB = originalBox;
-		tempB.Transform(tempB, 1.0f, XMVectorSet(0, 0, 0, 1), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0, 1));
+		tempB.Transform(tempB, 1.0f, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(currIntervalPosition.x + xPos, currIntervalPosition.y + yPos, 0.0f, 1.0f));
 		bbox = tempB;
 	}
 

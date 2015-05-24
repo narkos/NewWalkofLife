@@ -130,6 +130,7 @@ public:
 	Startmenu StartMenu;
 
 	//Input theInput;
+	bool Character1 = false;
 	bool Character2 = false;
 	bool Character3 = false;
 

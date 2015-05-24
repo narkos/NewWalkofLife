@@ -697,7 +697,7 @@ int RenderEngine::Run(){
 			{
 				theHighScore.setHSbool(false);
 				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-				if (gCounter.theAge.years > 32 && Character2 == false)
+				if (gCounter.theAge.years > 1000 && Character2 == false)
 				{
 					Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -712,7 +712,7 @@ int RenderEngine::Run(){
 
 				}
 
-				if (gCounter.theAge.years > 65 && Character3 == false)
+				if (gCounter.theAge.years > 10000 && Character3 == false)
 				{
 					Character3 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);

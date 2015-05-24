@@ -706,6 +706,7 @@ int RenderEngine::Run(){
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 					theCharacters.at(1).xPos = theCharacters.at(0).xPos;
 					theCharacters.at(1).yPos = theCharacters.at(0).yPos + 2;
+					theCharacters.at(1).SetDivision(theCharacters.at(0).getDivision());
 					soundIGotThis.PlayMp3();
 					soundIGotThis.daCapo();
 
@@ -720,6 +721,7 @@ int RenderEngine::Run(){
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 					theCharacters.at(2).xPos = theCharacters.at(1).xPos;
 					theCharacters.at(2).yPos = theCharacters.at(1).yPos;
+					theCharacters.at(1).SetDivision(theCharacters.at(1).getDivision());
 					tempInt = rand() % 2;
 					if (tempInt == 0)
 					{
@@ -887,7 +889,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	}
 
-	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+	//spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
 	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
@@ -1043,7 +1045,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		tempDiv = 0;
 	}
-	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 1; i++)
+	for (int i = theCharacter->getDivision() + tempDiv; i <= theCharacter->getDivision() + 2; i++)
 	{
 		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
 		{
@@ -1326,12 +1328,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
@@ -1438,12 +1440,13 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 	if (input == 4)
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 	if (input == 5)
 	{
 		theCharacters.at(0).xPos = theCharacter.xPos;
 		theCharacters.at(0).yPos = theCharacter.yPos;
+		theCharacters.at(0).SetDivision(theCharacter.getDivision());
 		CurrChar.setCharState(0);
 
 	}
@@ -1451,13 +1454,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		theCharacters.at(1).xPos = theCharacter.xPos;
 		theCharacters.at(1).yPos = theCharacter.yPos;
+		theCharacters.at(1).SetDivision( theCharacter.getDivision());
 		CurrChar.setCharState(1);
 
 	}
 	if (input == 7)
 	{
 		theCharacters.at(2).xPos = theCharacter.xPos;
-		theCharacters.at(2).yPos = theCharacter.yPos;
+		theCharacters.at(2).yPos = theCharacter.yPos; 
+		theCharacters.at(2).SetDivision ( theCharacter.getDivision());
 		CurrChar.setCharState(2);
 
 	}
@@ -1608,19 +1613,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		resetValues[0] = resetXpos[0];
 		resetValues[1] = resetYpos[0];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 	if (input == 9)
 	{
 		resetValues[0] = resetXpos[1];
 		resetValues[1] = resetYpos[1];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 	if (input == 10)
 	{
 		resetValues[0] = resetXpos[2];
 		resetValues[1] = resetYpos[2];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 
 	//MOVING PLATFORM POSITION UPDATE
@@ -1629,29 +1634,42 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
+	thePhysics.Gravitation(theCollision, &theCharacter);
+	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+	theCharacter.CalculateWorld();
 
 	tempDiv = -1;
 	if (theCharacter.getDivision() == 0)
 	{
 		tempDiv = 0;
 	}
-	for (int i = theCharacter.getDivision() + tempDiv; i <= theCharacter.getDivision() + 1; i++)
-	{
 
-		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
-		{
-			
-			
-			theBinaryTree->deadlyMoving->at(i)[j].SlamaJamma(gTimer.TotalTime());
-			theBinaryTree->deadlyMoving->at(i)[j].UpdateBBOX();
-			theBinaryTree->deadlyMoving->at(i)[j].CalculateWorld();
-		}
+	for (int o = 0; o < theBinaryTree->deadlyMoving->size(); o++)
+	{			
+			for (int i = 0; i < theBinaryTree->deadlyMoving->at(o).size(); i++)
+			{
+				int poop = 0;
+				if (o == theCharacter.getDivision() || o == theCharacter.getDivision() +1 || o == theCharacter.getDivision() -1 && theCharacter.getDivision() > 0)
+				{
+					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 1);
+					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+				
+				}
+				
+				else
+				{
+					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 0);
+					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+				}
+		
 
+			}
 	}
 
-	thePhysics.Gravitation(theCollision, &theCharacter);
-	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
-	theCharacter.CalculateWorld();
+
+
 
 
 	if (rightDirection)
@@ -2037,7 +2055,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 }
 
-void RenderEngine::reset(PlayerObject* theCharacter)
+void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 {
 	soundYoungDie.daCapo();
 	soundYoungDie.StopMp3();
@@ -2052,13 +2070,30 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	theCharacter->xPos = resetValues[0];
 	theCharacter->yPos = resetValues[1];
 	theCharacter->Translate(0, 0, 0);
-	theCharacter->setDivision(0);
+	if (fullreset)
+	{
+		theCharacter->setDivision(0);
+	}
+	
 	theCharacter->momentum = 0;
 	theCharacter->jumpMomentumX = 0;
 	mainCamera.setCameraXPos(theCharacter->xPos);
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
+
+	/*for (int o = 0; o < theBinaryTree->deadlyMoving->size(); o++)
+	{
+		for (int i = 0; i < theBinaryTree->deadlyMoving->at(o).size(); i++)
+		{
+
+			theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 0);
+			theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+			theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+		}
+	}*/
+
+
 	for (int i = 0; i < 15; i++)
 	{
 		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)

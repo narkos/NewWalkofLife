@@ -25,7 +25,7 @@ private:
 	float playerYPos;
 
 	float rightWall = 6.0f;				//The Right wall's position on the invisible cube in wich the player can move freely.
-	float leftWall = (-5.0f);			//The Left wall's position.
+	float leftWall = (5.0f);			//The Left wall's position.
 	float upperWall = 4.0f;				//The Upper wall's position.
 	float lowerWall = (-3.0f);			//The Lower wall's position.
 

@@ -340,7 +340,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			tempP.material.SpecPow = specularPowah;
 			tempP.slamDirection = coinValue;
 			tempP.slamSpeedMultiplier = ySpeed;
-			tempP.slamWaitTime = timeValue;
+			tempP.slamWaitTime = xSpeed;
 			tempP.slamTimeOffset = xInterval;
 			tempP.nrElements = nrOfFaces;
 			tempP.indexT = mesnNumberInt;

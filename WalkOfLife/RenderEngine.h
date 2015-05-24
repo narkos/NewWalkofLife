@@ -72,7 +72,7 @@ public:
 	virtual void Release();
 	void Fonts();
 	void fpscounter();
-	void reset(PlayerObject* theCharacter);
+	void reset(PlayerObject* theCharacter, bool fullreset);
 	void LoadSounds();
 	void drawScene(int viewPoint, PlayerObject* theCharacter);
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);

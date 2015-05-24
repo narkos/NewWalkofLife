@@ -48,6 +48,12 @@ public:
 	float slamSpeedMultiplier;
 	bool slamReset;
 	float slamTimeOffset;
+	float slamTimeInternal;
+	int slamSlamRuns;
+	int slamResetNums;
+	float slamCurrentDirection;
+	float slamCurrentSpeed;
+	
 
 	Entity(XMFLOAT3 pos, bool isActive, bool isStatic){
 		this->isActive = isActive;
@@ -79,13 +85,15 @@ public:
 		slamStopTime = 0.0f;
 		slamStartTime = 0.0f;
 		slamMomentum = 0.0f;
-		//bool slamHasBegun;
 		slamReturning = false;
 		slamHasStopped = false;
 		slamDirection = xSpeed;
 		slamSpeedMultiplier = 1.0f;
 		slamReset = false;
 		slamTimeOffset = 0.0f;
+		slamSlamRuns = 0;
+		slamResetNums = -1;
+		
 
 	}
 
@@ -145,93 +153,164 @@ public:
 		this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
 	}
 
-
-	void SlamaJamma(float time)
+	void SlamaReseta(float time)
 	{
 
+		this->TranslateExact(0.0f, yPos, 0.0f);
+		slamReset = true;
+	}
+
+	void SlamaJamma(float time, int runTimes)
+	{
+		//tempP.slamDirection = coinValue;
+		//tempP.slamSpeedMultiplier = ySpeed;
+		//tempP.slamWaitTime = xSpeed;
+		//tempP.slamTimeOffset = xInterval;
+
+		if (runTimes == 0)
+		{
+			slamSlamRuns = 0;
+			this->TranslateExact(0.0f, 0.0f, 0.0f);
+			this->currIntervalPosition.y =  0.0f;
+			slamStartTime = 0.0f;
+			slamTimeInternal = 0.0f;
+			slamHasStopped = false;
+			slamMomentum = 0.0f;
+			slamResetNums = -1;
+			slamDeltaTime = 0.0f;
+			slamStopTime = 0.0f;
+			slamStartTime = 0.0f;
+			slamMomentum = 0.0f;
+			slamReturning = false;
+			slamReset = false;
+			slamCurrentDirection = slamDirection;
+			slamCurrentSpeed = slamSpeedMultiplier;
+
+		}
 		
+		else if (runTimes == 1)
+		{
+			if (slamSlamRuns < 1)
+			{
+				slamSlamRuns = runTimes;
+			}
+			if (slamSlamRuns >= 1)
+			{
+				if (slamSlamRuns == 1)
+				{
+					slamStartTime = time;
+					//slamTimeInternal = time;
+				}
+				else if (slamSlamRuns > 1)
+				{
+
+					if (slamReset)
+					{
+						slamStartTime = time;
+						//slamTimeInternal = time + slamTimeOffset;
+						slamReset = false;
+					}
+
+					slamTimeInternal = time - slamStartTime;
+
+					if (!slamHasStopped)
+					{
+						if (slamResetNums < 1)
+						{
+							if (slamTimeInternal > slamTimeOffset)
+							{
+								slamMomentum = (slamTimeInternal)* slamCurrentDirection * slamCurrentSpeed;
+								this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
+							}
+						}
+						else
+						{
+							slamMomentum = (slamTimeInternal)* slamCurrentDirection * slamCurrentSpeed;
+							this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
+						}
+
+					}
+
+					if (!slamReturning)
+					{
+
+						if (slamCurrentDirection < 0 && currIntervalPosition.y > -yInterval || slamCurrentDirection > 0 && currIntervalPosition.y < yInterval)
+						{
+							this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
+							//this->yPos = currIntervalPosition.y;
+						}
+						else
+						{
+							if (!slamHasStopped)
+							{
+								slamStopTime = (slamTimeInternal);
+								slamMomentum = 0.0f;
+								slamHasStopped = true;
+							}
+
+							slamDeltaTime = (slamTimeInternal)-(slamStopTime);
+
+							if (slamDeltaTime >= slamWaitTime)
+							{
+								slamCurrentDirection = slamCurrentDirection * -1.0f;
+								slamCurrentSpeed = 0.1f; //Decrease the speed on Slammer return cycle
+								slamMomentum = 0.0f;
+								slamStartTime = time;
+								slamReturning = true;
+								slamHasStopped = false;
+								slamDeltaTime = 0.0f;
+								slamReset = true;
+								slamResetNums++;
+							}
+
+						}
+					}
+					else
+					{
+
+						if (slamCurrentDirection < 0 && currIntervalPosition.y > 0 || slamCurrentDirection > 0 && currIntervalPosition.y < 0)
+						{
+							this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
+							//this->yPos = currIntervalPosition.y;
+						}
+						else
+						{
+							if (!slamHasStopped)
+							{
+								slamStopTime = (slamTimeInternal);
+								slamMomentum = 0.0f;
+								slamHasStopped = true;
+							}
+
+							slamDeltaTime = (slamTimeInternal)-slamStopTime;
+							if (slamDeltaTime >= slamWaitTime)
+							{
+								slamCurrentDirection = slamCurrentDirection * -1.0f;
+								slamCurrentSpeed = 1.0f; //Set full speed for slam
+								slamMomentum = 0.0f;
+								slamStartTime = time;
+								slamReturning = false;
+								slamHasStopped = false;
+								slamDeltaTime = 0.0f;
+								slamReset = true;
+								slamResetNums++;
+							}
+
+						}
+					}
+				}
+				slamSlamRuns++;
+			}
+
+		}
+	
 		//Slam Direction is set by the Coin Value in the custom format Exporter.
 		//Slam Object type is 6
 		// slamSpeedMultiplier is set by ySpeed
 		// slamWaitTime by timeValue
 		// slamTimeOffset by xInterval
-
-		if (slamReset)
-		{
-			slamStartTime = time + slamTimeOffset;
-			slamReset = false;
-		}
-		if (!slamHasStopped)
-		{
-			
-			slamMomentum = ((time+slamTimeOffset) - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
-			this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
-		}
-
-		if (!slamReturning)
-		{
 		
-			if (slamDirection < 0 && currIntervalPosition.y > -yInterval || slamDirection > 0 && currIntervalPosition.y < yInterval)
-			{
-				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
-			}
-			else
-			{
-				if (!slamHasStopped)
-				{
-					slamStopTime = (time + slamTimeOffset);
-					slamMomentum = 0.0f;
-					slamHasStopped = true;
-				}
-
-				slamDeltaTime = (time + slamTimeOffset) - slamStopTime;
-
-				if (slamDeltaTime >= slamWaitTime)
-				{
-					slamDirection = slamDirection * -1.0f;
-					slamSpeedMultiplier = 0.1f; //Decrease the speed on Slammer return cycle
-					slamMomentum = 0.0f;
-					slamStartTime = (time + slamTimeOffset);
-					slamReturning = true;
-					slamHasStopped = false;
-					slamDeltaTime = 0.0f;
-					slamReset = true;
-				}
-			
-			}
-		}
-		else
-		{
-			
-			if (slamDirection < 0 && currIntervalPosition.y > 0 || slamDirection > 0 && currIntervalPosition.y < 0)
-			{
-				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
-			}
-			else
-			{
-				if (!slamHasStopped)
-				{
-					slamStopTime = (time + slamTimeOffset);
-					slamMomentum = 0.0f;
-					slamHasStopped = true;
-				}
-
-				slamDeltaTime = (time + slamTimeOffset) - slamStopTime;
-				if (slamDeltaTime >= slamWaitTime)
-				{
-					slamDirection = slamDirection * -1.0f;
-					slamSpeedMultiplier = 1.0f; //Set full speed for slam
-					slamMomentum = 0.0f;
-					slamStartTime = (time + slamTimeOffset);
-					slamReturning = false;
-					slamHasStopped = false;
-					slamDeltaTime = 0.0f;
-					slamReset = true;
-				}
 		
-			}
-		}
-				
 	}
 
 	XMFLOAT3 GetCurrIntervalPos(){

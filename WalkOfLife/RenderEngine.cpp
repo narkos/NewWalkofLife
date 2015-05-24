@@ -2049,8 +2049,8 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	Character2 = false;
 	Character3 = false;
 	CurrChar.setCharState(0);
-	theCharacter->xPos = resetValues[0];
-	theCharacter->yPos = resetValues[1];
+	theCharacter->xPos = 4;
+	theCharacter->yPos = 6;
 	theCharacter->Translate(0, 0, 0);
 	theCharacter->setDivision(0);
 	theCharacter->momentum = 0;
@@ -2059,7 +2059,7 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
 		{

@@ -1655,7 +1655,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (theCharacter.yPos < -20)
 	{
-		if (CurrChar.getCharSate() == 0)
+		if (CurrChar.getCharSate() == 0) 
 		{
 			soundYoungDie.PlayMp3();
 		}

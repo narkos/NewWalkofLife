@@ -28,12 +28,13 @@ static const float2 gsTex[4] =
 	float2(1.0f, 1.0f),
 	float2(1.0f, 0.0f)*/
 };
+
 struct BBVS_OUT
 {
 	float3 wCenter : POSITION;
-	
-	float2 wSize : SIZE;
-	
+
+	float2 wSize : TEXCOORD;
+
 };
 
 struct BBGS_OUT
@@ -61,19 +62,19 @@ void main(point BBVS_OUT bbgs_in[1]/* : SV_POSITION*/, inout TriangleStream< BBG
 
 
 
-		for (int i = 0; i < 4; i++)
-		{
-			poutput.posH = mul(viewPos + float4(
-												g_positions[i].x * halfWidth,
-												g_positions[i].y * halfHeight, 0.0f, 0.0f), 
-												Projection);
+	for (int i = 0; i < 4; i++)
+	{
+		poutput.posH = mul(viewPos + float4(
+											g_positions[i].x * halfWidth,
+											g_positions[i].y * halfHeight, 0.0f, 0.0f), 
+											Projection);
 
-			poutput.posW = viewPos + float4(	g_positions[i].x * halfWidth,
-												g_positions[i].y * halfHeight, 0.0f, 0.0f);
-			poutput.tex = gsTex[i];
-			bbgs_out.Append(poutput);
-		}
-		bbgs_out.RestartStrip();
+		poutput.posW = viewPos + float4(	g_positions[i].x * halfWidth,
+											g_positions[i].y * halfHeight, 0.0f, 0.0f);
+		poutput.tex = gsTex[i];
+		bbgs_out.Append(poutput);
+	}
+	bbgs_out.RestartStrip();
 
 
 	

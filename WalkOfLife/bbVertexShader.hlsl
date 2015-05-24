@@ -14,7 +14,7 @@ struct BBVS_IN
 {
 	float3 Pos : POSITION;
 	
-	float2 Size : SIZE;
+	float2 Size : TEXCOORD;
 	
 };
 
@@ -23,7 +23,7 @@ struct BBVS_OUT
 {
 	float3 wCenter : POSITION;
 	
-	float2 wSize : SIZE;
+	float2 wSize : TEXCOORD;
 	
 };
 

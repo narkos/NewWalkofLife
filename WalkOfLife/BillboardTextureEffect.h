@@ -45,7 +45,7 @@ private:
 	std::string billboardBaseName;
 	std::string fileType;
 
-
+	XMMATRIX posMatrix;
 	struct Vertex{
 		XMFLOAT3 pos;
 		//XMFLOAT2 texCoord;
@@ -53,6 +53,14 @@ private:
 	};
 public:
 	bool playing;
+	
+	XMMATRIX GetPosMatrix(){
+		return posMatrix;
+	}
+
+	void SetPosMatrix(XMMATRIX m){
+		this->posMatrix = m;
+	}
 
 	BillboardTextureEffect(ID3D11Device *gDev, int nrImages, float spriteWidth, float spriteHeight, float showTime, std::string billboardBaseName, std::string fileType){
 		gDevice = gDev;
@@ -90,33 +98,15 @@ public:
 			const wchar_t* thePath = completePath.c_str();
 			HRESULT texCheck = CreateDDSTextureFromFile(gDevice, thePath, nullptr, &sResourceViews[i]);
 			if (texCheck == E_FAIL){
-				CreateWICTextureFromFile(gDevice, thePath, nullptr, &sResourceViews[i]);
+				texCheck = CreateWICTextureFromFile(gDevice, thePath, nullptr, &sResourceViews[i]);
 			}
 		}
 	}
 
 	void CreateVertexBuffer(float width, float height){
-		//vector<Vertex> vertecies;
-
-		/*Vertex temp;
-		temp.pos = XMFLOAT3(0, 0, 0);
-		temp.texCoord = XMFLOAT2(0, 0);
-		vertecies.push_back(temp);
-
-		temp.pos = XMFLOAT3(0, height, 0);
-		temp.texCoord = XMFLOAT2(0, 1);
-		vertecies.push_back(temp);
-
-		temp.pos = XMFLOAT3(width, height, 0);
-		temp.texCoord = XMFLOAT2(1, 1);
-		vertecies.push_back(temp);
-
-		temp.pos = XMFLOAT3(width, 0, 0);
-		temp.texCoord = XMFLOAT2(1, 0);
-		vertecies.push_back(temp);*/
 
 		Vertex tempV;
-		tempV.pos = XMFLOAT3(0, 0, 0);
+		tempV.pos = XMFLOAT3(0.0f, 0.0f, -0.5f);
 		tempV.size = XMFLOAT2(width, height);
 
 		D3D11_BUFFER_DESC bDesc;
@@ -139,12 +129,15 @@ public:
 	}
 
 	void PlayBillboard(float time){ //position oxå?
-		if (currIndex >= nrImages)
+	
+		if (currIndex >= nrImages - 1){
 			currIndex = 0;
-			//playing = false;
+			playing = false;
+		}
 		if (playing == true){
 			if (time > timer){
 				//loopa igenom resourceviewsen med tiden
+				currIndex++;
 				currResourceView = sResourceViews[currIndex];
 				timer = time + showTime;
 			}
@@ -153,7 +146,7 @@ public:
 	}
 
 	ID3D11ShaderResourceView** GetCurrRSV(){
-		return &currResourceView;
+		return &sResourceViews[currIndex];
 	}
 
 	ID3D11Buffer** GetVertexBuffer(){

@@ -61,8 +61,12 @@ bool RenderEngine::Init(){
 
 	//Initialize Shaders and triangle data
 	Shaders();
-	BillboardTextureEffect temp(gDevice, 5, 1, 400.0f, 400.0f, "SpriteExplosion", ".png");
+	//skapa billboards!!
+	BillboardTextureEffect temp(gDevice, 5, 2.0f, 2.0f, 0.05f, "SpriteExplosion", ".png");
 	particleEffects.push_back(temp);
+	BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
+	//temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
+	particleEffects.push_back(temp2);
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
@@ -491,14 +495,7 @@ void RenderEngine::Shaders(){
 
 	//HRESULT hrWireFramePS = CompileShader(L"WireFramePS.hlsl", "main", "ps_5_0", &pPS);
 	//gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gWireFramePixelShader);
-
-	D3D11_INPUT_ELEMENT_DESC inputDescParticle[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	gDevice->CreateInputLayout(inputDescParticle, ARRAYSIZE(inputDescParticle), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gFakeBillboardLayout);
-
+	
 
 	HRESULT hrParVS = CompileShader(L"bbVertexShader.hlsl", "main", "vs_5_0", &pVS);
 	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gFakeBillboardVertexShader);
@@ -508,6 +505,14 @@ void RenderEngine::Shaders(){
 
 	HRESULT hParPS = CompileShader(L"bbPixelShader.hlsl", "main", "ps_5_0", &pPS);
 	gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gFakeBillboardPixelShader);
+
+	D3D11_INPUT_ELEMENT_DESC inputDescParticle[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	gDevice->CreateInputLayout(inputDescParticle, ARRAYSIZE(inputDescParticle), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gFakeBillboardLayout);
+
 
 	// Realese shaders
 	pVS->Release();
@@ -1126,28 +1131,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
 
 
-	//PARTIKLEMOJSSSSSSSS!!
-	//gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
-	gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
-	gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
-	gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
 
-
-	for (int i = 0; i < particleEffects.size(); i++){
-		//if (particleEffects[i].playing == true){
-			particleEffects[i].PlayBillboard(gTimer.TotalTime());
-
-			gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
-			gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i].GetVertexBuffer(), &vertexSize, &offset);
-
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(theCharacter->pos, currView, currProjection);
-			gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
-
-			gDeviceContext->Draw(4, 0);
-		//}
-	}
 
 	//######################################################################################################################################################
 	//###												*NON* SHADOW CASTING OBJECTS GOES HERE BELOW						  							 ###	
@@ -1155,7 +1139,31 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	if (viewPoint == 2)		//If object only should be rendered from cameras POV, and therefore not to the shadow map to cast shadows.
 	{
+		//PARTIKLEMOJSSSSSSSS!!
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
+		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
 
+
+		for (int i = 0; i < particleEffects.size(); i++){
+			if (particleEffects[i].playing == true){
+				particleEffects[i].PlayBillboard(gTimer.TotalTime());
+
+				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
+				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i].GetVertexBuffer(), &vertexSize, &offset);
+				//particleEffects[i].SetPosMatrix(theCharacter->pos);
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				UpdateMatricies(particleEffects[i].GetPosMatrix(), currView, currProjection);
+				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(4, 0);
+			}
+		}
+		gDeviceContext->VSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->GSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(nullptr, nullptr, 0);
 	}
 }
 
@@ -1439,6 +1447,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		CurrChar.setCharState(2);
 
 	}
+	//if (input == 11){
+	//	particleEffects[0].Play();
+	//}
 
 	if (dash && theCharacter.dashAvailable)
 	{

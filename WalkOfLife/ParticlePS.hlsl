@@ -17,5 +17,5 @@ float4 main(VS_OUT input) : SV_Target
 	Texdiffuse = saturate(Texdiffuse);
 	
 
-	return Texdiffuse;
+	return float4(1.0f, 1.0f, 1.0f, 1.0f);
 };

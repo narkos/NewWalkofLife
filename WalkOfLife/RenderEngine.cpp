@@ -61,8 +61,16 @@ bool RenderEngine::Init(){
 
 	//Initialize Shaders and triangle data
 	Shaders();
-	BillboardTextureEffect temp(gDevice, 5, 1, 400.0f, 400.0f, "SpriteExplosion", ".png");
+	//skapa billboards!!
+	BillboardTextureEffect temp(gDevice, 21, 2.0f, 2.0f, 0.05f, "ArrowUp", ".png");
 	particleEffects.push_back(temp);
+	BillboardTextureEffect temp2(gDevice, 23, 2.0f, 2.0f, 0.05f, "ArrowDown", ".png");
+	particleEffects.push_back(temp2);
+	BillboardTextureEffect temp3(gDevice, 6, 2.0f, 2.0f, 0.2f, "CoinPickUp", ".png");
+	particleEffects.push_back(temp3);
+	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
+	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
+	//particleEffects.push_back(temp2);
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
@@ -447,6 +455,7 @@ void RenderEngine::Shaders(){
 
 	//create vertex shader
 	ID3DBlob* pVS = nullptr;
+	ID3DBlob* pGS = nullptr;
 	ID3DBlob* errorMessage = nullptr;
 	ShaderTest = CompileShader(L"defaultVS.hlsl", "VS_main", "vs_5_0", &pVS);
 	ShaderTest = gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gVertexShader);
@@ -488,6 +497,16 @@ void RenderEngine::Shaders(){
 
 	//HRESULT hrWireFramePS = CompileShader(L"WireFramePS.hlsl", "main", "ps_5_0", &pPS);
 	//gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gWireFramePixelShader);
+	
+
+	HRESULT hrParVS = CompileShader(L"bbVertexShader.hlsl", "main", "vs_5_0", &pVS);
+	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gFakeBillboardVertexShader);
+
+	HRESULT hrParGS = CompileShader(L"bbGeometryShader.hlsl", "main", "gs_5_0", &pGS);
+	gDevice->CreateGeometryShader(pGS->GetBufferPointer(), pGS->GetBufferSize(), nullptr, &gFakeBillboardGeometryShader);
+
+	HRESULT hParPS = CompileShader(L"bbPixelShader.hlsl", "main", "ps_5_0", &pPS);
+	gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gFakeBillboardPixelShader);
 
 	D3D11_INPUT_ELEMENT_DESC inputDescParticle[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -497,15 +516,10 @@ void RenderEngine::Shaders(){
 	gDevice->CreateInputLayout(inputDescParticle, ARRAYSIZE(inputDescParticle), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gFakeBillboardLayout);
 
 
-	HRESULT hrParVS = CompileShader(L"ParticleVS.hlsl", "main", "vs_5_0", &pVS);
-	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gFakeBillboardVertexShader);
-
-	HRESULT hParPS = CompileShader(L"ParticlePS.hlsl", "main", "ps_5_0", &pPS);
-	gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gFakeBillboardPixelShader);
-
 	// Realese shaders
 	pVS->Release();
 	pPS->Release();
+	pGS->Release();
 }
 
 
@@ -703,6 +717,8 @@ int RenderEngine::Run(){
 					//CurrChar.switchCharState(theCharacter1->xPos);
 					haschanged = true;
 					CurrChar.setCharState(1);
+					/*particleEffects[1].SetPosMatrix(theCharacter.pos);
+					particleEffects[1].Play();*/
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 					theCharacters.at(1).xPos = theCharacters.at(0).xPos;
 					theCharacters.at(1).yPos = theCharacters.at(0).yPos + 2;
@@ -923,6 +939,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
@@ -1143,26 +1160,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
 
 
-	//PARTIKLEMOJSSSSSSSS!!
-	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
-	gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
-	gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
 
-	for (int i = 0; i < particleEffects.size(); i++){
-		//if (particleEffects[i].playing == true){
-			particleEffects[i].PlayBillboard(gTimer.TotalTime());
-
-			gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
-			gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i].GetVertexBuffer(), &vertexSize, &offset);
-
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-			UpdateMatricies(theCharacter->pos, currView, currProjection);
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-			gDeviceContext->Draw(4, 0);
-		//}
-	}
 
 	//######################################################################################################################################################
 	//###												*NON* SHADOW CASTING OBJECTS GOES HERE BELOW						  							 ###	
@@ -1170,7 +1168,31 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	if (viewPoint == 2)		//If object only should be rendered from cameras POV, and therefore not to the shadow map to cast shadows.
 	{
+		//PARTIKLEMOJSSSSSSSS!!
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
+		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
 
+
+		for (int i = 0; i < particleEffects.size(); i++){
+			if (particleEffects[i].playing == true){
+				particleEffects[i].PlayBillboard(gTimer.TotalTime());
+
+				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i].GetCurrRSV());
+				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i].GetVertexBuffer(), &vertexSize, &offset);
+				//particleEffects[i].SetPosMatrix(theCharacter->pos);
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				UpdateMatricies(particleEffects[i].GetPosMatrix(), currView, currProjection);
+				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(4, 0);
+			}
+		}
+		gDeviceContext->VSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->GSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(nullptr, nullptr, 0);
 	}
 }
 
@@ -1351,8 +1373,23 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	XMFLOAT2 tempPickUpValue;
+	tempPickUpValue.x = 0.0f;
+	tempPickUpValue.y = 0.0f;
 	tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
 	gCounter.addCollectable(tempPickUpValue);
+	if (tempPickUpValue.y <= -0.1f){ //negativ tid
+		particleEffects[1].SetPosMatrix(theCharacter.pos);
+		particleEffects[1].Play();
+	}
+	else if (tempPickUpValue.y > 0.1f){ //positiv tid
+		particleEffects[0].SetPosMatrix(theCharacter.pos);
+		particleEffects[0].Play();
+	}
+
+	if (tempPickUpValue.x > 0.1f){ //coins
+		particleEffects[2].SetPosMatrix(theCharacter.pos);
+		particleEffects[2].Play();
+	}
 
 	if (input == 1 && theCollision->leftValid() == true)
 	{
@@ -1476,6 +1513,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		CurrChar.setCharState(2);
 
 	}
+	//if (input == 11){
+	//	particleEffects[0].Play();
+	//}
 
 	if (dash && theCharacter.dashAvailable)
 	{

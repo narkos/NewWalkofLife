@@ -156,14 +156,14 @@ public:
 		// slamWaitTime by timeValue
 		// slamTimeOffset by xInterval
 
-
+		if (slamReset)
+		{
+			slamStartTime = time + slamTimeOffset;
+			slamReset = false;
+		}
 		if (!slamHasStopped)
 		{
-			if (slamReset)
-			{
-				slamStartTime = time + slamTimeOffset;
-				slamReset = false;
-			}
+			
 			slamMomentum = ((time+slamTimeOffset) - slamStartTime) * ySpeed * slamDirection * slamSpeedMultiplier;
 			this->currIntervalPosition.y = currIntervalPosition.y + slamMomentum;
 		}

@@ -1183,9 +1183,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		soundGonnaDie.PlayMp3();
 		soundGonnaDie.daCapo();
 		start = true;
+		soundBackground.PlayMp3();
+		soundBackground.soundTime = gTimer.TotalTime();
+	}
+	
+	if (gTimer.TotalTime() - soundBackground.soundTime > soundBackground.getDuration()/10000000 - 1)
+	{
+		soundBackground.daCapo();
+		soundBackground.StopMp3();
+		soundBackground.PlayMp3();
+		soundBackground.soundTime = gTimer.TotalTime();
 	}
 
-	//soundBackground.PlayMp3();
+	//soundBackground.daCapo();
 	Input theInput;		//Defined in .h file
 	theInput.initInput(this->hInstance, hWindow);
 	int input = 0;
@@ -1423,6 +1433,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	else
 		theCharacter.momentum = 0;
 
+	if (theCharacter.jumpMomentumState)
+	{
+		theCharacter.momentum = theCharacter.jumpMomentumX;
+	}
+
 	if (input == 3)
 	{
 		//reset();
@@ -1535,6 +1550,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
 
 	{
+		thePhysics.someBool = true;
 		thePhysics.Jump(theCollision, &theCharacter);
 		thePhysics.onPlatform = false;
 		theCharacter.jumpTimer = gTimer.TotalTime();
@@ -2039,6 +2055,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 void RenderEngine::reset(PlayerObject* theCharacter)
 {
+	soundBackground.daCapo();
+	soundBackground.StopMp3();
 	soundYoungDie.daCapo();
 	soundYoungDie.StopMp3();
 	soundManDie.daCapo();
@@ -2078,7 +2096,8 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 void RenderEngine::LoadSounds()
 {
 	soundBackground.InitMp3();
-	soundBackground.LoadMp3("WalkOfLife.mp3");
+	soundBackground.LoadMp3("song.mp3");
+	soundBackground.setVolume(-2000);
 	soundGoingThisWay.InitMp3();
 	soundGoingThisWay.LoadMp3("GoingThisWay.wav");
 	soundGonnaDie.InitMp3();

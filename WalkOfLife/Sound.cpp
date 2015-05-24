@@ -3,6 +3,7 @@
 
 Sound::Sound()
 {
+	this->duration = 0;
 }
 
 
@@ -43,8 +44,19 @@ void Sound::LoadMp3(char filename[])
 		if (SUCCEEDED(g_pGraphBuilder->RenderFile(wFile, NULL)))
 		{
 			g_bReady = 1;
+			if (g_pMediaSeeking)
+			{
+				g_pMediaSeeking->SetTimeFormat(&TIME_FORMAT_MEDIA_TIME);
+				g_pMediaSeeking->GetDuration(&duration); // returns 10,000,000 for a second.
+				duration = duration;
+			}
 		}
 	}
+}
+
+LONGLONG Sound::getDuration()
+{
+	return this->duration;
 }
 
 void Sound::CleanupMp3()

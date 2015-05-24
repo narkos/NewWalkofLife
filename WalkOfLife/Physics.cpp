@@ -30,7 +30,17 @@ void Physics::Gravitation(Collision *theCollision, PlayerObject *theCharacter)
 		this->onPlatform = true;
 		this->downforce = 0.1;
 		theCharacter->jumpMomentumState = false;
-		theCharacter->jumpMomentumX = 0;
+		if (someBool)
+		{
+			theCharacter->momentum = 1;
+			someBool = false;
+			theCharacter->jumpMomentumX = 0;
+		}
+		
+	
+		
+		
+		
 	}
 	if (!theCollision->isGrounded() || this->upforce > 0)
 	{

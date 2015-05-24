@@ -22,6 +22,7 @@ public:
 	void setVolume(long);
 	long getVolume();
 	void daCapo();
+	LONGLONG getDuration();
 
 	IGraphBuilder* g_pGraphBuilder = NULL;
 	IMediaControl* g_pPlaybackControl = NULL;
@@ -29,6 +30,7 @@ public:
 	IMediaSeeking* g_pMediaSeeking = NULL;
 	int			   g_bReady = 0;
 	float soundTime = 0;
+	LONGLONG duration;
 
 	Sound();
 	~Sound();

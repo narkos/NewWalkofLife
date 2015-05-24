@@ -152,6 +152,10 @@ public:
 		
 		//Slam Direction is set by the Coin Value in the custom format Exporter.
 		//Slam Object type is 6
+		// slamSpeedMultiplier is set by ySpeed
+		// slamWaitTime by timeValue
+		// slamTimeOffset by xInterval
+
 
 		if (!slamHasStopped)
 		{

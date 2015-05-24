@@ -229,11 +229,13 @@ public:
 	}
 
 	
-	bool TestDown(Platform& pObj, bool isGrounded){
+	bool TestDown(Platform& pObj, bool isGrounded)
+	{
 		if (pObj.GetActive() == true){
 
-			if (pObj.GetBBOX().Intersects(originLow, down, rayLength) == true){
-				if (rayLength < rayRangeDown){
+			if (pObj.GetBBOX().Intersects(originLow, down, rayLength) == true)
+			{
+				if (rayLength <= rayRangeDown){
 					if (pObj.GetStatic() == false){
 						TestDownMovingPlatform(pObj, isGrounded);
 					}
@@ -241,13 +243,23 @@ public:
 						currPlatformPos = XMFLOAT3(0, 0, 0);
 						lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
 						//startPlatformPos = XMFLOAT3(0, 0, 0);
+					}
+					float rayLDiff = rayRangeDown - rayLength;
+					if (rayLDiff > 0.1f)
+					{
+						this->yPos = yPos + rayLDiff;
+						this->Translate(0.0f, yPos, 0.0f);
+						this->UpdateBBOX();
+						this->CalculateWorld();
+
 					}
 					return true;
-					
+				
 				}		
 			}
-			if (pObj.GetBBOX().Intersects(originLowRight, down, rayLength) == true){
-				if (rayLength < rayRangeDown){
+			if (pObj.GetBBOX().Intersects(originLowRight, down, rayLength) == true)
+			{
+				if (rayLength <= rayRangeDown){
 					if (pObj.GetStatic() == false){
 						TestDownMovingPlatform(pObj, isGrounded);
 					}
@@ -255,14 +267,23 @@ public:
 						currPlatformPos = XMFLOAT3(0, 0, 0);
 						lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
 						//startPlatformPos = XMFLOAT3(0, 0, 0);
+					}
+					float rayLDiff = rayRangeDown - rayLength;
+					if (rayLDiff > 0.1f)
+					{
+						this->yPos = yPos + rayLDiff;
+						this->Translate(0.0f, yPos, 0.0f);
+						this->UpdateBBOX();
+						this->CalculateWorld();
 					}
 					return true;
 
 				}				
 
 			}
-			if (pObj.GetBBOX().Intersects(originLowLeft, down, rayLength) == true){
-				if (rayLength < rayRangeDown){
+			if (pObj.GetBBOX().Intersects(originLowLeft, down, rayLength) == true)
+			{
+				if (rayLength <= rayRangeDown){
 					if (pObj.GetStatic() == false){
 						TestDownMovingPlatform(pObj, isGrounded);
 					}
@@ -270,6 +291,14 @@ public:
 						currPlatformPos = XMFLOAT3(0, 0, 0);
 						lastFrameCurrPlatformPos = XMFLOAT3(0, 0, 0);
 						//startPlatformPos = XMFLOAT3(0, 0, 0);
+					}
+					float rayLDiff = rayRangeDown - rayLength;
+					if (rayLDiff > 0.1f)
+					{
+						this->yPos = yPos + rayLDiff;
+						this->Translate(0.0f, yPos, 0.0f);
+						this->UpdateBBOX();
+						this->CalculateWorld();
 					}
 					return true;
 

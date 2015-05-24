@@ -449,6 +449,7 @@ void RenderEngine::Shaders(){
 
 	//create vertex shader
 	ID3DBlob* pVS = nullptr;
+	ID3DBlob* pGS = nullptr;
 	ID3DBlob* errorMessage = nullptr;
 	ShaderTest = CompileShader(L"defaultVS.hlsl", "VS_main", "vs_5_0", &pVS);
 	ShaderTest = gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gVertexShader);
@@ -493,21 +494,25 @@ void RenderEngine::Shaders(){
 
 	D3D11_INPUT_ELEMENT_DESC inputDescParticle[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	gDevice->CreateInputLayout(inputDescParticle, ARRAYSIZE(inputDescParticle), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gFakeBillboardLayout);
 
 
-	HRESULT hrParVS = CompileShader(L"ParticleVS.hlsl", "main", "vs_5_0", &pVS);
+	HRESULT hrParVS = CompileShader(L"bbVertexShader.hlsl", "main", "vs_5_0", &pVS);
 	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gFakeBillboardVertexShader);
 
-	HRESULT hParPS = CompileShader(L"ParticlePS.hlsl", "main", "ps_5_0", &pPS);
+	HRESULT hrParGS = CompileShader(L"bbGeometryShader.hlsl", "main", "gs_5_0", &pGS);
+	gDevice->CreateGeometryShader(pGS->GetBufferPointer(), pGS->GetBufferSize(), nullptr, &gFakeBillboardGeometryShader);
+
+	HRESULT hParPS = CompileShader(L"bbPixelShader.hlsl", "main", "ps_5_0", &pPS);
 	gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gFakeBillboardPixelShader);
 
 	// Realese shaders
 	pVS->Release();
 	pPS->Release();
+	pGS->Release();
 }
 
 
@@ -900,6 +905,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
@@ -1121,10 +1127,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 
 	//PARTIKLEMOJSSSSSSSS!!
-	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
 	gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+	gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
 	gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
+
 
 	for (int i = 0; i < particleEffects.size(); i++){
 		//if (particleEffects[i].playing == true){
@@ -1135,7 +1143,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 			UpdateMatricies(theCharacter->pos, currView, currProjection);
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+			gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
 
 			gDeviceContext->Draw(4, 0);
 		//}

@@ -241,5 +241,14 @@
     <FxCompile Include="ParticlePS.hlsl">
       <Filter>Resource Files\Default Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="bbGeometryShader.hlsl">
+      <Filter>Resource Files\Default Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="bbPixelShader.hlsl">
+      <Filter>Resource Files\Default Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="bbVertexShader.hlsl">
+      <Filter>Resource Files\Default Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

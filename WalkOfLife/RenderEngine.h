@@ -268,6 +268,7 @@ protected:
 	ID3D11InputLayout* gWireFrameLayout = nullptr;
 
 	ID3D11VertexShader* gFakeBillboardVertexShader = nullptr;
+	ID3D11GeometryShader* gFakeBillboardGeometryShader = nullptr;
 	ID3D11PixelShader* gFakeBillboardPixelShader = nullptr;
 	ID3D11InputLayout* gFakeBillboardLayout = nullptr;
 

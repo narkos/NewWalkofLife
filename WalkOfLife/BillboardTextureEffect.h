@@ -48,7 +48,8 @@ private:
 
 	struct Vertex{
 		XMFLOAT3 pos;
-		XMFLOAT2 texCoord;
+		//XMFLOAT2 texCoord;
+		XMFLOAT2 size;
 	};
 public:
 	bool playing;
@@ -95,31 +96,38 @@ public:
 	}
 
 	void CreateVertexBuffer(float width, float height){
-		vector<Vertex> vertecies;
+		//vector<Vertex> vertecies;
 
-		Vertex temp;
+		/*Vertex temp;
 		temp.pos = XMFLOAT3(0, 0, 0);
 		temp.texCoord = XMFLOAT2(0, 0);
 		vertecies.push_back(temp);
+
 		temp.pos = XMFLOAT3(0, height, 0);
 		temp.texCoord = XMFLOAT2(0, 1);
 		vertecies.push_back(temp);
+
 		temp.pos = XMFLOAT3(width, height, 0);
 		temp.texCoord = XMFLOAT2(1, 1);
 		vertecies.push_back(temp);
+
 		temp.pos = XMFLOAT3(width, 0, 0);
 		temp.texCoord = XMFLOAT2(1, 0);
-		vertecies.push_back(temp);
+		vertecies.push_back(temp);*/
 
+		Vertex tempV;
+		tempV.pos = XMFLOAT3(0, 0, 0);
+		tempV.size = XMFLOAT2(width, height);
 
 		D3D11_BUFFER_DESC bDesc;
 		ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
 		bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bDesc.Usage = D3D11_USAGE_DEFAULT;
-		bDesc.ByteWidth = sizeof(Vertex)*(vertecies.size());
+		//bDesc.ByteWidth = sizeof(Vertex)*(vertecies.size());
+		bDesc.ByteWidth = sizeof(Vertex);
 
 		D3D11_SUBRESOURCE_DATA data;
-		data.pSysMem = vertecies.data();//<--------
+		data.pSysMem = &tempV;//<--------
 		HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &billboardVertexBuffer);
 	}
 

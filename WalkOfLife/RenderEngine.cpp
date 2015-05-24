@@ -118,8 +118,6 @@ bool RenderEngine::Init(){
 	Fonts();
 	//StartMenu.menuInit(gDeviceContext);
 	//mainMenu.menuInit(gDeviceContext);
-	
-	
 
 	//SHADOWS
 	Shadows tempShadows(mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gDevice, gDeviceContext);
@@ -699,7 +697,7 @@ int RenderEngine::Run(){
 			{
 				theHighScore.setHSbool(false);
 				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-				if (gCounter.theAge.years == 100 && haschanged == false)
+				if (gCounter.theAge.years > 32 && Character2 == false)
 				{
 					Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -707,7 +705,32 @@ int RenderEngine::Run(){
 					CurrChar.setCharState(1);
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 					theCharacters.at(1).xPos = theCharacters.at(0).xPos;
-					theCharacters.at(1).yPos = theCharacters.at(0).yPos;
+					theCharacters.at(1).yPos = theCharacters.at(0).yPos + 2;
+					soundIGotThis.PlayMp3();
+					soundIGotThis.daCapo();
+
+				}
+
+				if (gCounter.theAge.years > 65 && Character3 == false)
+				{
+					Character3 = true;
+					//CurrChar.switchCharState(theCharacter1->xPos);
+					haschanged = true;
+					CurrChar.setCharState(2);
+					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
+					theCharacters.at(2).xPos = theCharacters.at(1).xPos;
+					theCharacters.at(2).yPos = theCharacters.at(1).yPos;
+					tempInt = rand() % 2;
+					if (tempInt == 0)
+					{
+						soundHelpMe.PlayMp3();
+						soundHelpMe.daCapo();
+					}
+					else
+					{
+						soundWhereAmI.PlayMp3();
+						soundWhereAmI.daCapo();
+					}
 
 				}
 
@@ -1155,6 +1178,13 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 {
+	if (!start)
+	{
+		soundGonnaDie.PlayMp3();
+		soundGonnaDie.daCapo();
+		start = true;
+	}
+
 	//soundBackground.PlayMp3();
 	Input theInput;		//Defined in .h file
 	theInput.initInput(this->hInstance, hWindow);
@@ -1463,44 +1493,44 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
-	if (CurrChar.getCharSate() == 0)
-	{
-		if (rand()%2000 == 0)
-		{
-			soundGonnaDie.PlayMp3();
-			soundGonnaDie.daCapo();
-		}
+	//if (CurrChar.getCharSate() == 0)
+	//{
+	//	if (rand()%2000 == 0)
+	//	{
+	//		soundGonnaDie.PlayMp3();
+	//		soundGonnaDie.daCapo();
+	//	}
 
-		else if (rand()%2000 == 1000)
-		{
-			soundLifeIsA.PlayMp3();
-			soundLifeIsA.daCapo();
-		}
-	}
+	//	else if (rand()%2000 == 1000)
+	//	{
+	//		soundLifeIsA.PlayMp3();
+	//		soundLifeIsA.daCapo();
+	//	}
+	//}
 
-	if (CurrChar.getCharSate() == 1)
-	{
-		if (rand() % 2000 == 0)
-		{
-			soundIGotThis.PlayMp3();
-			soundIGotThis.daCapo();
-		}
-	}
+	//else if (CurrChar.getCharSate() == 1)
+	//{
+	//	if (rand() % 2000 == 0)
+	//	{
+	//		soundIGotThis.PlayMp3();
+	//		soundIGotThis.daCapo();
+	//	}
+	//}
 
-	if (CurrChar.getCharSate() == 2)
-	{
-		if (rand() % 2000 == 0)
-		{
-			soundHelpMe.PlayMp3();
-			soundHelpMe.daCapo();
-		}
+	//else if (CurrChar.getCharSate() == 2)
+	//{
+	//	if (rand() % 2000 == 0)
+	//	{
+	//		soundHelpMe.PlayMp3();
+	//		soundHelpMe.daCapo();
+	//	}
 
-		else if (rand() % 2000 == 1000)
-		{
-			soundWhereAmI.PlayMp3();
-			soundWhereAmI.daCapo();
-		}
-	}
+	//	else if (rand() % 2000 == 1000)
+	//	{
+	//		soundWhereAmI.PlayMp3();
+	//		soundWhereAmI.daCapo();
+	//	}
+	//}
 
 	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
 
@@ -1508,16 +1538,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		thePhysics.Jump(theCollision, &theCharacter);
 		thePhysics.onPlatform = false;
 		theCharacter.jumpTimer = gTimer.TotalTime();
-		temp = rand() % 3;
+		tempInt = rand() % 3;
 		if (CurrChar.getCharSate() == 0)
 		{
-			rand() % 3 == temp;
-			if (temp == 0 || temp == 3)
+			if (tempInt == 0 || tempInt == 3)
 			{
 				soundYoungJump1.PlayMp3();
 				soundYoungJump1.daCapo();
 			}
-			else if (temp == 1 || temp == 4)
+			else if (tempInt == 1 || tempInt == 4)
 			{
 				soundYoungJump2.PlayMp3();
 				soundYoungJump2.daCapo();
@@ -1530,12 +1559,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 		if (CurrChar.getCharSate() == 1)
 		{
-			if (temp == 0)
+			if (tempInt == 0)
 			{
 				soundManJump1.PlayMp3();
 				soundManJump1.daCapo();
 			}
-			else if (temp == 1)
+			else if (tempInt == 1)
 			{
 				soundManJump2.PlayMp3();
 				soundManJump2.daCapo();
@@ -1548,12 +1577,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 		if (CurrChar.getCharSate() == 2)
 		{
-			if (temp == 0)
+			if (tempInt == 0)
 			{
 				soundOldJump1.PlayMp3();
 				soundOldJump1.daCapo();
 			}
-			else if (temp == 1)
+			else if (tempInt == 1)
 			{
 				soundOldJump2.PlayMp3();
 				soundOldJump2.daCapo();
@@ -2010,6 +2039,13 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 void RenderEngine::reset(PlayerObject* theCharacter)
 {
+	soundYoungDie.daCapo();
+	soundYoungDie.StopMp3();
+	soundManDie.daCapo();
+	soundManDie.StopMp3();
+	soundOldDie.daCapo();
+	soundOldDie.StopMp3();
+	start = false;
 	Character2 = false;
 	Character3 = false;
 	CurrChar.setCharState(0);

@@ -103,7 +103,8 @@ public:
 	Sound soundGonnaDie;
 	Sound soundBackground;
 	Sound soundMenu;
-	int temp;
+	int tempInt;
+	bool start;
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;
 	Collision* theCollision;

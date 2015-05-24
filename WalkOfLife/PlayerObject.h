@@ -84,6 +84,7 @@ public:
 	void UpdateDivision(int);
 	void Dash();
 
+	float dash;
 	float dashTimer;
 	bool dashDisabling;
 	float jumpMomentumX;
@@ -106,6 +107,7 @@ public:
 		this->jumpMomentumState = false;
 		this->jumpMomentumX = 0;
 		this->dashDisabling = true;
+		this->dash = 2.5;
 		/*pos.x = bbox.Center.x;
 		pos.y = bbox.Center.y;
 		pos.z = bbox.Center.z;*/
@@ -154,6 +156,11 @@ public:
 	void setRunSpeed(float inspeed)
 	{
 		this->speed = inspeed;
+	}
+
+	void setDash(float dash)
+	{
+		this->dash = dash;
 	}
 
 	void SetRayOrigins(float low, float middle, float high, int nrSideChecks, float distancePerSideCheck, float widthValue){

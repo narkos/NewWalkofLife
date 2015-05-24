@@ -152,6 +152,10 @@ public:
 		
 		//Slam Direction is set by the Coin Value in the custom format Exporter.
 		//Slam Object type is 6
+		// slamSpeedMultiplier is set by ySpeed
+		// slamWaitTime by timeValue
+		// slamTimeOffset by xInterval
+
 
 		if (!slamHasStopped)
 		{
@@ -199,7 +203,7 @@ public:
 		else
 		{
 			
-			if (slamDirection < 0 && currIntervalPosition.y > -yInterval || slamDirection > 0 && currIntervalPosition.y < yInterval)
+			if (slamDirection < 0 && currIntervalPosition.y > 0 || slamDirection > 0 && currIntervalPosition.y < 0)
 			{
 				this->Translate(currIntervalPosition.x, currIntervalPosition.y, currIntervalPosition.z);
 			}

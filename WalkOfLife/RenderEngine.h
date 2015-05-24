@@ -66,7 +66,7 @@ public:
 	void SetViewport();
 	virtual bool Init();
 	void Update(float dt, PlayerObject& theCharacter);
-	void MenuUpdate(float tt); 
+	void MenuUpdate(float tt);
 	void StartMenuUpdate(float tt);
 	void Render(PlayerObject* theCharacter);
 	virtual void Release();
@@ -144,7 +144,7 @@ public:
 	XMFLOAT4 camPos;
 	//float camxPos;
 	//float camyPos;
-	
+
 	float lightOffsetTest;
 
 	//Material Shit
@@ -167,15 +167,20 @@ public:
 		std::vector<float> verteciesPosY;
 		std::vector<float> verteciesPosZ;
 		std::vector<int> verteciesIndex;
-	
+
 	};
-	
+
 	std::vector<Platform> gamePlatforms;
 	std::vector<GameObject> gameObjects;
 
 	//Tempor?r geometry
 	void Shaders();
 	void TextureFunc();
+	//Debugging variables
+	float resetXpos[3];
+	float resetYpos[3];
+	float resetValues[2];
+
 
 	// Message handler
 	LRESULT MsgProc(HWND hwindow, UINT msg, WPARAM wParam, LPARAM lParam);

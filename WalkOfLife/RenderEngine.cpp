@@ -821,7 +821,7 @@ int tex = 0;
 void RenderEngine::Render(PlayerObject* theCharacter){
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
 
-	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos());	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
+	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos(), lightProp01.lights[0].Direction);	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
 	WVP = shadows.getLightWVP();	//Transpose the matrices (WVP To lights POV) to prepare them for the shader, For Shadow mapping in this case
 	//XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(shadows.getShadowWorld()));
 	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
@@ -1086,8 +1086,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		}
 	}
 	
-	if (viewPoint == 2)
+	//######################################################################################################################################################
+	//###						*NON* SHADOW CASTING OBJECTS GOES IN IF-STATEMENT HERE BELOW	(if (viewPoint == 2))					  				 ###	
+	//######################################################################################################################################################
+	//if (viewPoint == 2)
 	{
+		gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
 		for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
 		{
 			for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
@@ -1119,7 +1123,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		}
 	}
 
-
+	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 
 	// Shouldn't need to set shaders again if we don't change them in the above loops.
 	// Leaving it meanwhile
@@ -1162,15 +1166,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 			gDeviceContext->Draw(4, 0);
 		//}
-	}
-
-	//######################################################################################################################################################
-	//###												*NON* SHADOW CASTING OBJECTS GOES HERE BELOW						  							 ###	
-	//######################################################################################################################################################
-
-	if (viewPoint == 2)		//If object only should be rendered from cameras POV, and therefore not to the shadow map to cast shadows.
-	{
-
 	}
 }
 
@@ -1699,9 +1694,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
-	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 30.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
-	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, 0.0f, 8.0f, 1.0f);
 	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 

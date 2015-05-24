@@ -37,9 +37,9 @@ public:
 	{
 		temp = XMMatrixTranslation(this->bbox.Center.x, this->bbox.Center.y, this->bbox.Center.z);
 		temp2 = XMMatrixInverse(&bajs, temp);
-		this->rot =XMMatrixMultiply(temp2, XMMatrixRotationY(rotationValue));
-		this->rot = XMMatrixMultiply(this->rot, XMMatrixRotationX(rotationValue));
-		this->rot = XMMatrixMultiply(this->rot, XMMatrixRotationZ(rotationValue));
+		this->rot = XMMatrixMultiply(temp2, XMMatrixRotationY(rotationValue));
+		//this->rot = XMMatrixMultiply(this->rot, XMMatrixRotationX(rotationValue));
+		//this->rot = XMMatrixMultiply(this->rot, XMMatrixRotationZ(rotationValue));
 		this->world = scale * rot * temp;
 		this->rotationValue += 0.01;
 	}

@@ -62,11 +62,15 @@ bool RenderEngine::Init(){
 	//Initialize Shaders and triangle data
 	Shaders();
 	//skapa billboards!!
-	BillboardTextureEffect temp(gDevice, 5, 2.0f, 2.0f, 0.05f, "SpriteExplosion", ".png");
+	BillboardTextureEffect temp(gDevice, 21, 2.0f, 2.0f, 0.05f, "ArrowUp", ".png");
 	particleEffects.push_back(temp);
-	BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
-	//temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
+	BillboardTextureEffect temp2(gDevice, 23, 2.0f, 2.0f, 0.05f, "ArrowDown", ".png");
 	particleEffects.push_back(temp2);
+	BillboardTextureEffect temp3(gDevice, 6, 2.0f, 2.0f, 0.2f, "CoinPickUp", ".png");
+	particleEffects.push_back(temp3);
+	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
+	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
+	//particleEffects.push_back(temp2);
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
@@ -715,6 +719,8 @@ int RenderEngine::Run(){
 					//CurrChar.switchCharState(theCharacter1->xPos);
 					haschanged = true;
 					CurrChar.setCharState(1);
+					/*particleEffects[1].SetPosMatrix(theCharacter.pos);
+					particleEffects[1].Play();*/
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 					theCharacters.at(1).xPos = theCharacters.at(0).xPos;
 					theCharacters.at(1).yPos = theCharacters.at(0).yPos;
@@ -1327,8 +1333,23 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	XMFLOAT2 tempPickUpValue;
+	tempPickUpValue.x = 0.0f;
+	tempPickUpValue.y = 0.0f;
 	tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
 	gCounter.addCollectable(tempPickUpValue);
+	if (tempPickUpValue.y <= -0.1f){ //negativ tid
+		particleEffects[1].SetPosMatrix(theCharacter.pos);
+		particleEffects[1].Play();
+	}
+	else if (tempPickUpValue.y > 0.1f){ //positiv tid
+		particleEffects[0].SetPosMatrix(theCharacter.pos);
+		particleEffects[0].Play();
+	}
+
+	if (tempPickUpValue.x > 0.1f){ //coins
+		particleEffects[2].SetPosMatrix(theCharacter.pos);
+		particleEffects[2].Play();
+	}
 
 	if (input == 1 && theCollision->leftValid() == true)
 	{

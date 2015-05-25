@@ -2026,9 +2026,9 @@ void RenderEngine::Release(){
 
 	delete[] RSWArray;
 	matConstBuff->Release();
-	delete theCharacter1;
+	/*delete theCharacter1;
 	delete theCharacter2;
-	delete theCharacter3;
+	delete theCharacter3;*/
 	delete theBinaryTree;
 	theCharacters.clear();
 

@@ -45,62 +45,65 @@ int Input::detectInput(HWND hWindow)
 	//DIMouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseCurrentState);
 	DIKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
 
-	if (keyboardState[DIK_ESCAPE] & 0x80)						//Shuts the window when the ESCAPE key is pressed
-	{
-		PostMessage(hWindow, WM_DESTROY, 0, 0);
-	}
+	//if (keyboardState[DIK_ESCAPE] & 0x80)						//Shuts the window when the ESCAPE key is pressed
+	//{
+	//	PostMessage(hWindow, WM_DESTROY, 0, 0);
+	//}
 
 	if (keyboardState[DIK_LEFT] || keyboardState[DIK_A])		//Moves left when the A key or the LEFT arrow is pressed
 	{
 		return 1;
 		
 	}
-	if (keyboardState[DIK_RIGHT] || keyboardState[DIK_D])		//Moves right when the D key or the RIGHT arrow is pressed
+	else if (keyboardState[DIK_RIGHT] || keyboardState[DIK_D])		//Moves right when the D key or the RIGHT arrow is pressed
 	{
 		return 2;
 	}
 
-	if (keyboardState[DIK_G])		
+	else if (keyboardState[DIK_G])
 	{
 		return 3;
 	}
 
-	if (keyboardState[DIK_R])
+	else if (keyboardState[DIK_R])
 	{
 		return 4;
 	}
-	if (keyboardState[DIK_1])
+	else if (keyboardState[DIK_1])
 	{
 		return 5;
 	}
-	if (keyboardState[DIK_2])
+	else if (keyboardState[DIK_2])
 	{
 		return 6;
 	}
-	if (keyboardState[DIK_3])
+	else if (keyboardState[DIK_3])
 	{
 		return 7;
 	}
-	if (keyboardState[DIK_8])
+	else if (keyboardState[DIK_8])
 	{
 		return 8;
 	}
-	if (keyboardState[DIK_9])
+	else if (keyboardState[DIK_9])
 	{
 		return 9;
 	}
-	if (keyboardState[DIK_0])
+	else if (keyboardState[DIK_0])
 	{
 		return 10;
 	}
 
-	if (keyboardState[DIK_C])
+	else if (keyboardState[DIK_C])
 	{
 		return 11;
 	}
 	
-
-	return 0;
+	else
+	{
+		return 0;
+	}
+	
 	//if (keyboardState[DIK_UP] || keyboardState[DIK_W])			//Moves forward when the W key or the UP arrow is pressed
 	//{
 	//	moveFB = speed;
@@ -187,6 +190,11 @@ int Input::detectRenderState(HWND)
 	if (keyboardState[DIK_F4])
 	{
 		return 3;
+	}
+
+	else
+	{
+		return -1;
 	}
 
 	//return 1000000;

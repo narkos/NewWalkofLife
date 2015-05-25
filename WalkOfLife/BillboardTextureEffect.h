@@ -74,8 +74,14 @@ public:
 	}
 	BillboardTextureEffect(){}
 	~BillboardTextureEffect(){
+		for (int i = 0; i < nrImages; i++)
+		{
+			sResourceViews[i]->Release();
+		}
 		delete[] sResourceViews; //delete är jag inte säker på
 		billboardVertexBuffer->Release();
+		gDevice->Release();
+		texturePaths.clear();
 	}
 
 	void CreateResourceViews(){

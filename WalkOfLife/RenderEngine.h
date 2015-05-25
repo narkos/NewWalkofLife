@@ -120,6 +120,7 @@ public:
 	PlayerObject* theCharacter1;
 	PlayerObject* theCharacter2;
 	PlayerObject* theCharacter3;
+	int texes = 0;
 	Camera mainCamera;
 	Shadows shadows;
 	vector <BillboardTextureEffect*> particleEffects; //gör det till en vektor
@@ -150,25 +151,24 @@ public:
 	//Material Shit
 	ID3D11Buffer* matConstBuff;
 	MaterialProperties matProperties;
-
 	//Import Functions
 	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic);// , bool isStatic, XMMATRIX startPosMatrix);
 	//Struct for objLoader
-	struct GameObjects{
-		int gameObjectIndex;
-		ID3D11Buffer* gVertexBuffer;
-		//ID3D11Buffer* gIndexBuffer;
-		UINT nrElements = 0;
-		BoundingBox bbox;
+	//struct GameObjects{
+	//	int gameObjectIndex;
+	//	ID3D11Buffer* gVertexBuffer;
+	//	//ID3D11Buffer* gIndexBuffer;
+	//	UINT nrElements = 0;
+	//	BoundingBox bbox;
 
-		char* ObjName;
-		std::vector<XMFLOAT3> verteciesPos;
-		std::vector<float> verteciesPosX;
-		std::vector<float> verteciesPosY;
-		std::vector<float> verteciesPosZ;
-		std::vector<int> verteciesIndex;
+	//	char* ObjName;
+	//	std::vector<XMFLOAT3> verteciesPos;
+	//	std::vector<float> verteciesPosX;
+	//	std::vector<float> verteciesPosY;
+	//	std::vector<float> verteciesPosZ;
+	//	std::vector<int> verteciesIndex;
 
-	};
+	//};
 
 	//Tempor?r geometry
 	void Shaders();
@@ -241,16 +241,7 @@ protected:
 	ID3D11SamplerState* sampState1 = nullptr;
 
 	ID3D11ShaderResourceView* gTextureView = nullptr;
-	ID3D11ShaderResourceView* ddsTex1 = nullptr;
-	ID3D11ShaderResourceView* ddsTex2 = nullptr;
-	ID3D11ShaderResourceView* ddsTex3 = nullptr;
-	ID3D11ShaderResourceView* ddsTex4 = nullptr;
-	ID3D11ShaderResourceView* ddsTex5 = nullptr;
-	ID3D11ShaderResourceView* ddsTex6 = nullptr;
-	ID3D11ShaderResourceView* ddsTex7 = nullptr;
-	ID3D11ShaderResourceView* ddsTex8 = nullptr;
-	ID3D11ShaderResourceView* ddsTex9 = nullptr;
-	ID3D11ShaderResourceView* ddsTex10 = nullptr;
+	
 	ID3D11ShaderResourceView** RSWArray = nullptr;
 
 	ID3D11InputLayout* gVertexLayout = nullptr;
@@ -268,7 +259,6 @@ protected:
 	ID3D11GeometryShader* gFakeBillboardGeometryShader = nullptr;
 	ID3D11PixelShader* gFakeBillboardPixelShader = nullptr;
 	ID3D11InputLayout* gFakeBillboardLayout = nullptr;
-
 	vector<int> intArrayTex;
 	////
 	//std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
@@ -295,6 +285,7 @@ protected:
 	float scrolltime;
 	int iz = 1;
 	int izz = 1;
+	int shadowTemp = 0;
 
 	UINT32 vertexSize = sizeof(float)* 8;
 	UINT32 offset = 0;

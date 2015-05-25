@@ -69,6 +69,7 @@ bool RenderEngine::Init(){
 	particleEffects.push_back(temp2);
 	BillboardTextureEffect *temp3 = new BillboardTextureEffect(gDevice, 8, 2.0f, 2.0f, 0.05f, "getCoinSprite_", ".png");
 	particleEffects.push_back(temp3);
+
 	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
 	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
 	//particleEffects.push_back(temp2);
@@ -354,6 +355,7 @@ void RenderEngine::TextureFunc(){
 	HRESULT texCheck;
 	vector<string> texNames = theCustomImporter.GettexNameArray();
 	RSWArray = new ID3D11ShaderResourceView*[texNames.size()];
+	texes = texNames.size();
 	std::wstring fest = L"Textures/";
 	for (int texIt = 0; texIt < texNames.size(); texIt++){
 
@@ -1230,7 +1232,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	jump = theInput.detectJump(hWindow);
 	dash = theInput.detectDash(hWindow);
 
-	shadowBufferData.shadowTesting = theInput.detectRenderState(hWindow);
+	shadowTemp = theInput.detectRenderState(hWindow);
+
+	if (shadowTemp != -1)
+	{
+		shadowBufferData.shadowTesting = shadowTemp;
+	}
 	gDeviceContext->PSSetConstantBuffers(3, 1, &shadowBuffer);
 	gDeviceContext->UpdateSubresource(shadowBuffer, 0, NULL, &shadowBufferData, 0, 0);
 
@@ -1999,6 +2006,25 @@ void RenderEngine::StartMenuUpdate(float tt){
 
 void RenderEngine::Release(){
 
+	for (int i = 0; i < texes-11; i++)
+	{
+		RSWArray[i]->Release();
+	}
+		
+	
+	Meter->Release();
+	Meter2->Release();
+	Meter3->Release();
+	Meter4->Release();
+	Meter5->Release();
+	Meter6->Release();
+	Meter7->Release();
+	Meter8->Release();
+	Meter9->Release();
+	Meter10->Release();
+	Meter11->Release();
+
+	delete[] RSWArray;
 	matConstBuff->Release();
 	delete theCharacter1;
 	delete theCharacter2;

@@ -57,7 +57,11 @@ public:
 		bool isFine;
 		isFine = LoadHighScore();
 	}
-	~HighScore(){}
+	~HighScore(){
+		highScoreList.clear();
+		coinList.clear();
+		timeList.clear();
+	}
 
 
 	

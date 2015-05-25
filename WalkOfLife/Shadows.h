@@ -35,6 +35,10 @@ private:
 	ID3D11DepthStencilView* sDepthStencilView = nullptr;		//NEW
 public:
 	Shadows();
+	
+	~Shadows();
+		
+	
 
 	Shadows(int winWidth, int winHeight, ID3D11Device* gDevice, ID3D11DeviceContext* gDeviceContext);
 

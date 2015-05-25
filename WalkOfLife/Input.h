@@ -8,6 +8,11 @@
 class Input
 {
 public:
+	~Input(){
+		DIKeyboard->Release();
+		DIMouse->Release();
+		DirectInput->Release();
+	}
 	IDirectInputDevice8* DIKeyboard;
 	IDirectInputDevice8* DIMouse;
 	DIMOUSESTATE mouseLastState;

@@ -97,7 +97,48 @@ private:
 
 public:
 	FBXImporter(){}
-	~FBXImporter(){}
+	~FBXImporter(){
+		for (int i = 0; i < this->dynamicCollectableObjects.size(); i++)
+		{
+			delete &dynamicCollectableObjects.at(i);
+		}
+		dynamicCollectableObjects.clear();
+		for (int i = 0; i < this->backGroundObjects.size(); i++)
+		{
+			delete &backGroundObjects.at(i);
+		}
+		backGroundObjects.clear();
+		for (int i = 0; i < this->dynamicDeadlyObjects.size(); i++)
+		{
+			delete &dynamicDeadlyObjects.at(i);
+		}
+		dynamicDeadlyObjects.clear();
+		for (int i = 0; i < this->dynamicPlatforms.size(); i++)
+		{
+			delete &dynamicPlatforms.at(i);
+		}
+		dynamicPlatforms.clear();
+		for (int i = 0; i < this->players.size(); i++)
+		{
+			delete &players.at(i);
+		}
+		players.clear();
+		for (int i = 0; i < this->staticCollectableObjects.size(); i++)
+		{
+			delete &staticCollectableObjects.at(i);
+		}
+		staticCollectableObjects.clear();
+		for (int i = 0; i < this->staticDeadlyObjects.size(); i++)
+		{
+			delete &staticDeadlyObjects.at(i);
+		}
+		staticDeadlyObjects.clear();
+		for (int i = 0; i < this->staticPlatforms.size(); i++)
+		{
+			delete &staticPlatforms.at(i);
+		}
+		staticPlatforms.clear();
+	}
 
 	vector<string> texNameArray;
 	vector<string> testTexNameArray;

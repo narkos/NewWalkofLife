@@ -24,7 +24,6 @@
 
 //#include "GameObject.h"
 #include "BinaryTree.h"
-#include "Quadtree.h"
 #include "Camera.h"
 #include "Physics.h"
 #include "Input.h"
@@ -170,9 +169,6 @@ public:
 		std::vector<int> verteciesIndex;
 
 	};
-
-	std::vector<Platform> gamePlatforms;
-	std::vector<GameObject> gameObjects;
 
 	//Tempor?r geometry
 	void Shaders();

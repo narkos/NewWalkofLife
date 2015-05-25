@@ -19,6 +19,13 @@ BinaryTree::BinaryTree(int divisions, int pixelsPerDivision)
 
 BinaryTree::~BinaryTree()
 {
+	this->testPlatforms->clear();
+	this->renderObjects->clear();
+	this->collectables->clear();
+	this->deadly->clear();
+	this->collectableMoving->clear();
+	this->platformsMoving->clear();
+	this->deadlyMoving->clear();
 }
 
 void BinaryTree::AddPlatform(Platform thePlatform)

@@ -19,7 +19,7 @@ void Menu::CreateTextures(ID3D11Device* gDevice)
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/rePlay_1.dds", nullptr, &Replay);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/rePlay_2.dds", nullptr, &Replay2);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/black.dds", nullptr, &blackscreen);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/gameover.dds", nullptr, &GO_over);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/gameover2.dds", nullptr, &GO_over);
 	/////
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
@@ -68,14 +68,14 @@ void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float he
 		{
 			GOSpriteBatch->Begin();
 			GOSpriteBatch->Draw(blackscreen, DirectX::XMFLOAT2(0, 0));
-			GOSpriteBatch->Draw(deathscreen, DirectX::XMFLOAT2(width / 4, 100));
+			GOSpriteBatch->Draw(deathscreen, DirectX::XMFLOAT2(width / 6.5, 20));
 			GOSpriteBatch->End();
 		}
 		if (Win == false)
 		{
 			GOSpriteBatch->Begin();
 			GOSpriteBatch->Draw(blackscreen, DirectX::XMFLOAT2(0, 0));
-			GOSpriteBatch->Draw(GO_over, DirectX::XMFLOAT2(width / 3.9, 100));
+			GOSpriteBatch->Draw(GO_over, DirectX::XMFLOAT2(width / 6.5, 20));
 			GOSpriteBatch->End();
 		}
 

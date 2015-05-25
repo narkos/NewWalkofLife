@@ -1953,7 +1953,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
-	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, 0.0f, 8.0f, 1.0f);
 	lightProp01.lights[0].Color = XMFLOAT4(Colors::Beige);
 
 

@@ -1,7 +1,7 @@
 //PIXEL SHADER
 #include "LightComputations.fx"
 Texture2D txDiffuse : register(t0);
-//Texture2D ObjNormMap: register(t1); //-----------------> normap
+Texture2D ObjNormMap: register(t2); //-----------------> normap
 Texture2D depthMapTexture : register(t1);	//The Shadow Map, it contains the scene depth buffer rendered from the light's perspective.
 //sampler Sampler : register(s0);
 SamplerState sampAni : register(s0);
@@ -18,38 +18,42 @@ struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
 	float2 Tex		: TEXCOORD;
-	float4 Nor		: NORMAL;
+	float3 Nor		: NORMAL;
 	float4 wPos		: POSITION;
-	//float4 tangent : TANGENT;
+	float3 tangent : TANGENT;
 
 	//Shadow Calculations
 	float4 lightViewPos : TEXCOORD1;
 };
 
-//cbuffer cbPerObject : register(b1)
-//{
-//	float4x4 WVP;
-//	float4x4 World;
-//	bool hasNormMap;
-//};
+cbuffer cbPerObject : register(b4)
+{
+	//float4x4 WVP;
+	//float4x4 World;
+	bool hasNormMap;
+};
 
 float4 PS_main(VS_OUT input) : SV_Target
 {
 
-	
+	//NOT WORKING NORMAL MAP
+	//float3 biTangent;
 	//if (hasNormMap == true)
 	//{
+	//	
 	//	float4 normalMap = ObjNormMap.Sample(sampAni, input.Tex);
 	//	//Change normal map range from [0, 1] to [-1, 1]
 	//	normalMap = (2.0f*normalMap) - 1.0f;
 	//	//
-	//	float3 biTangent = cross(input.normal, input.tangent);
+	//	input.tangent = normalize(input.tangent - dot(input.tangent, input.Nor.yxz)*input.Nor.yxz);
+	//	biTangent = cross(input.Nor.xyz, input.tangent.xyz);
 	//	biTangent = normalize(biTangent);
 
-	//	float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
-	//	input.normal = mul(normalMap, texSpace);
-	//	normalize(input.normal);
+	//	float3x3 texSpace = float3x3(input.tangent.xyz, biTangent, input.Nor.xyz);
+	//	input.Nor = mul(normalMap, texSpace);
+	//	normalize(input.Nor);
 	//}
+	//float4 Direction = float4(0.0f, -1.0f, 0.0f, 1.0f);
 
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 	//SHADOW TESTING 4 DUMMIES
@@ -66,7 +70,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 		if (shadowTest == 0)
 			shadowz = 1;
 
-		LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor), input.lightViewPos, depthMapTexture, sampAni, shadowz);
+		LightingResult lightCalcs = ComputeLighting(input.wPos, normalize((float4)(input.Nor,1.0)), input.lightViewPos, depthMapTexture, sampAni, shadowz);
 
 		float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -77,13 +81,23 @@ float4 PS_main(VS_OUT input) : SV_Target
 		}
 
 		float4 emissive = Material.Emissive;
-		float4 ambient = GlobalAmbient*Material.Ambient;
-		float4 diffuse = lightCalcs.Diffuse* Material.Diffuse;
-		float4 specular = lightCalcs.Specular*Material.Specular;
+			float4 ambient = GlobalAmbient*Material.Ambient;
+			float4 diffuse = lightCalcs.Diffuse* Material.Diffuse;
+			float4 specular = lightCalcs.Specular*Material.Specular;
 
-		float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
+			float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
 
-		return finalColor;
+			//ANTONS
+			//float dots = dot(Direction, input.Nor);
+			//float3 lightToPixelVec =  Light.Position - input.wPos;
+			//float3 finalColor = Texdiffuse * ambient;
+			//finalColor += saturate(dot(dots, input.Nor) * diffuse);
+		//
+	//	float3 Normal = tex2D(normalSampler, texCoord);
+		
+		//return tex2D(normalSampler, texCoord) * dot;
+		//
+			return float4(finalColor);
 	}
 
 	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----
@@ -103,7 +117,7 @@ float4 PS_main(VS_OUT input) : SV_Target
 		float lightDepthValue = input.lightViewPos.z / input.lightViewPos.w;	//Calculate the depth of the light.
 		lightDepthValue = lightDepthValue - bias;	//Subtract the bias from the lightDepthValue.
 
-		return depthValue;
+		return float4(input.Nor,1.0f);
 	}
 
 	if (shadowTest == 3)

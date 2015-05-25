@@ -91,6 +91,7 @@ public:
 	float jumpTimer = 0;
 	float momentum;
 	bool jumping;
+	bool HasNormMap;
 	bool deaccelerate = false;
 	int bajs = 0;
 	float dashAvailable = true;

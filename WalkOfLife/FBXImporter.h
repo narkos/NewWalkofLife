@@ -60,6 +60,7 @@ private:
 		XMFLOAT3 vertPos;
 		XMFLOAT2 vertUV;
 		XMFLOAT3 vertNor;
+		XMFLOAT3 vertTangent;
 		
 		//XMFLOAT3 vertTangent;
 	};

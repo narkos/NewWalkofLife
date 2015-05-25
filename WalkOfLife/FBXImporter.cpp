@@ -108,6 +108,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			fbxFile.read((char*)&temp3.x, sizeof(float));
 			fbxFile.read((char*)&temp3.y, sizeof(float));
 			fbxFile.read((char*)&temp3.z, sizeof(float));
+			//temp3.z = temp3.z*-1;
 			
 			verNor.push_back(temp3);
 		}
@@ -127,6 +128,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			fbxFile.read((char*)&temp3.x, sizeof(float));
 			fbxFile.read((char*)&temp3.y, sizeof(float));
 			fbxFile.read((char*)&temp3.z, sizeof(float));
+			//temp3.z = temp3.z*-1;
 			verTangent.push_back(temp3);
 		}
 
@@ -171,19 +173,19 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			tempVertex.vertPos = verPos[faces[y].indexPos[2]-1];
 			tempVertex.vertUV = verUV[faces[y].indexUV[2]-1];
 			tempVertex.vertNor = verNor[faces[y].indexNor[2] - 1];
-			//tempVertex.vertTangent = verTangent[0];
+			tempVertex.vertTangent = verTangent[faces[y].indexNor[0] - 1];;
 			vertecies.push_back(tempVertex); //vertex 1 i triangeln
 
 			tempVertex.vertPos = verPos[faces[y].indexPos[1]-1];			
 			tempVertex.vertUV = verUV[faces[y].indexUV[1]-1];
 			tempVertex.vertNor = verNor[faces[y].indexNor[1] - 1];
-			//tempVertex.vertTangent = verTangent[0];
+			tempVertex.vertTangent = verTangent[faces[y].indexNor[1] - 1];
 			vertecies.push_back(tempVertex); //vertex 2 i triangeln
 
 			tempVertex.vertPos = verPos[faces[y].indexPos[0]-1];
 			tempVertex.vertUV = verUV[faces[y].indexUV[0]-1];
 			tempVertex.vertNor = verNor[faces[y].indexNor[0] - 1];
-			//tempVertex.vertTangent = verTangent[0];
+			tempVertex.vertTangent = verTangent[faces[y].indexNor[2] - 1];
 			vertecies.push_back(tempVertex); //vertex 3 i triangeln
 		}
 
@@ -196,6 +198,8 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		D3D11_SUBRESOURCE_DATA data;
 		data.pSysMem = vertecies.data();//<--------
 		HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &meshVertexBuffer);
+
+		
 		
 		//delete verPos;
 		//delete verNor;

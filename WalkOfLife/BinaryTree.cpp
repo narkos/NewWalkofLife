@@ -6,13 +6,13 @@ BinaryTree::BinaryTree(int divisions, int pixelsPerDivision)
 	this->divisions = divisions;
 	this->pixelsPerdivision = pixelsPerDivision;
 	
-	this->testPlatforms = new std::vector<std::vector<Platform>>(20);
-	this->renderObjects = new std::vector<std::vector<GameObject>>(20);
-	this->collectables = new std::vector<std::vector<CollectableObject>>(20);
-	this->deadly = new std::vector<std::vector<Platform>>(20);
-	this->collectableMoving = new std::vector<std::vector<CollectableObject>>(20);
-	this->platformsMoving = new std::vector<std::vector<Platform>>(20);
-	this->deadlyMoving = new std::vector<std::vector<Platform>>(20);
+	this->testPlatforms = new std::vector<std::vector<Platform>>(22);
+	this->renderObjects = new std::vector<std::vector<GameObject>>(22);
+	this->collectables = new std::vector<std::vector<CollectableObject>>(22);
+	this->deadly = new std::vector<std::vector<Platform>>(22);
+	this->collectableMoving = new std::vector<std::vector<CollectableObject>>(22);
+	this->platformsMoving = new std::vector<std::vector<Platform>>(22);
+	this->deadlyMoving = new std::vector<std::vector<Platform>>(22);
 
 }
 

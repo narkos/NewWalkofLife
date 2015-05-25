@@ -141,11 +141,14 @@ bool RenderEngine::Init(){
 	
 	theCharacters.at(0).setRunSpeed(0.08f);
 	theCharacters.at(0).setJumpHeight(0.66f);
-	theCharacters.at(1).setRunSpeed(0.15f);
+	theCharacters.at(0).setDash(2.0f);
+	theCharacters.at(1).setRunSpeed(0.13f);
 	theCharacters.at(1).setJumpHeight(0.68f);
+	theCharacters.at(0).setDash(2.7f);
 	theCharacters.at(2).setRunSpeed(0.05f);
 	theCharacters.at(2).setJumpHeight(0.75f);
 	
+
 
 
 	// Set hit ray info

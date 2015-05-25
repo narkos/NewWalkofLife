@@ -1484,11 +1484,17 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
 	{
 		reset(&theCharacter, true);
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
 	}
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
 	{
 		reset(&theCharacter, true);
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
 	}
 	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
@@ -1519,7 +1525,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (input == 1 && theCollision->leftValid() == true)
 	{
-		if (rightDirection && CurrChar.getCharSate() == 1)
+		if (rightDirection && CurrChar.getCharSate() == 8)
 		{
 			if (rand()%20 == 0)
 			{
@@ -1567,7 +1573,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	else if (input == 2 && theCollision->rightValid() == true)
 	{
-		if (!rightDirection && CurrChar.getCharSate() == 1)
+		if (!rightDirection && CurrChar.getCharSate() == 8)
 		{
 			if (rand() % 20 == 0)
 			{
@@ -1711,12 +1717,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 			soundYoungDash.PlayMp3();
 			soundYoungDash.daCapo();
 		}
-		else if (CurrChar.getCharSate() == 1)
+		else if (CurrChar.getCharSate() == 8)
 		{
 			soundManDash.PlayMp3();
 			soundManDash.daCapo();
 		}
-		else
+		else if(CurrChar.getCharSate() == 16)
 		{
 			if (rand()%2 == 0)
 			{
@@ -2006,14 +2012,18 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 			soundYoungDie.PlayMp3();
 		}
 
-		else if (CurrChar.getCharSate() == 1)
+		else if (CurrChar.getCharSate() == 8)
 		{
 			soundManDie.PlayMp3();
 		}
-		else if (CurrChar.getCharSate() == 2)
+		else if (CurrChar.getCharSate() == 16)
 		{
 			soundOldDie.PlayMp3();
 		}
+
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
 	}
 }
 

@@ -1009,10 +1009,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
 				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-				theBinaryTree->collectables->at(i)[j].material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				
 				//theBinaryTree->collectables->at(i)[j].material;
 				theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-				matProperties.Material = theBinaryTree->collectables->at(i)[j].material;
+				matProperties.Material = MatPresets::BlinnBase;
+				matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
@@ -1709,7 +1710,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
 	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
-	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[0].Color = XMFLOAT4(Colors::Beige);
 
 
 	lightProp01.lights[1].Type = l_Point;
@@ -1739,18 +1740,55 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		lightProp01.lights[2].Range = 15.0f;
 
 	lightProp01.lights[3].Type = l_Point;
-	lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
-	lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
+	lightProp01.lights[3].Color = XMFLOAT4(Colors::Red);
 	lightProp01.lights[3].AttConst = 0.7f;
 	lightProp01.lights[3].AttLinear = 0.2f;
 	lightProp01.lights[3].AttQuadratic = 0.0f;
 	lightProp01.lights[3].Range = 15.0f;
 
 
+	lightProp01.lights[4].Type = l_Point;
+	lightProp01.lights[4].Position = XMFLOAT4(20.0f, 15.0f, 0.0f, 1.0f);
+	lightProp01.lights[4].Color = XMFLOAT4(Colors::Blue);
+	lightProp01.lights[4].AttConst = 0.7f;
+	lightProp01.lights[4].AttLinear = 0.2f;
+	lightProp01.lights[4].AttQuadratic = 0.0f;
+	lightProp01.lights[4].Range = 15.0f;
+
+
+	lightProp01.lights[5].Type = l_Point;
+	lightProp01.lights[5].Position = XMFLOAT4(25.0f, 15.0f, 0.0f, 1.0f);
+	lightProp01.lights[5].Color = XMFLOAT4(Colors::Blue);
+	lightProp01.lights[5].AttConst = 0.7f;
+	lightProp01.lights[5].AttLinear = 0.2f;
+	lightProp01.lights[5].AttQuadratic = 0.0f;
+	lightProp01.lights[5].Range = 15.0f;
+
+	lightProp01.lights[6].Type = l_Point;
+	lightProp01.lights[6].Position = XMFLOAT4(25.0f, 10.0f, 0.0f, 1.0f);
+	lightProp01.lights[6].Color = XMFLOAT4(Colors::Red);
+	lightProp01.lights[6].AttConst = 0.7f;
+	lightProp01.lights[6].AttLinear = 0.2f;
+	lightProp01.lights[6].AttQuadratic = 0.0f;
+	lightProp01.lights[6].Range = 15.0f;
+
+	lightProp01.lights[7].Type = l_Point;
+	lightProp01.lights[7].Position = XMFLOAT4(15.0f, 5.0f, 0.0f, 1.0f);
+	lightProp01.lights[7].Color = XMFLOAT4(Colors::Red);
+	lightProp01.lights[7].AttConst = 0.7f;
+	lightProp01.lights[7].AttLinear = 0.2f;
+	lightProp01.lights[7].AttQuadratic = 0.0f;
+	lightProp01.lights[7].Range = 15.0f;
+
 	lightProp01.lights[0].Active = 1;
 	lightProp01.lights[1].Active = 1;
 	lightProp01.lights[2].Active = 1;
 	lightProp01.lights[3].Active = 1;
+	lightProp01.lights[4].Active = 1;
+	lightProp01.lights[5].Active = 1;
+	lightProp01.lights[6].Active = 1;
+	lightProp01.lights[7].Active = 1;
 	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
 
 	if (theCharacter.yPos < -20)

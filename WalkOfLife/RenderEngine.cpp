@@ -67,7 +67,7 @@ bool RenderEngine::Init(){
 	particleEffects.push_back(temp);
 	BillboardTextureEffect *temp2 = new BillboardTextureEffect(gDevice, 23, 2.0f, 2.0f, 0.05f, "ArrowDown", ".png");
 	particleEffects.push_back(temp2);
-	BillboardTextureEffect *temp3 = new BillboardTextureEffect(gDevice, 6, 2.0f, 2.0f, 0.2f, "CoinPickUp", ".png");
+	BillboardTextureEffect *temp3 = new BillboardTextureEffect(gDevice, 8, 2.0f, 2.0f, 0.05f, "getCoinSprite_", ".png");
 	particleEffects.push_back(temp3);
 	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
 	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
@@ -1592,7 +1592,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		thePhysics.DisableUpForce();
 	}
 
-	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
+	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3f) //om grounded och man har klickat in jump
 
 	{
 		thePhysics.someBool = true;

@@ -1,9 +1,42 @@
+////PIXEL SHADER
+//#include "LightComputations.fx"
+//Texture2D txDiffuse : register(t0);
+////sampler Sampler : register(s0);
+//SamplerState sampAni : register(s0);
+//
+//struct VS_OUT
+//{
+//	float4 Pos		: SV_POSITION;
+//	float2 Tex		: TEXCOORD;
+//	float4 Nor		: NORMAL;
+//	float4 wPos		: POSITION;
+//};
+//
+//float4 PS_main(VS_OUT input) : SV_Target
+//{
+//
+//
+//	//LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
+//
+//
+//		float4	Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
+//
+//	
+//		//return	float4(1.0,0,0,1);
+//
+//		return Texdiffuse;
+//};
+
 //PIXEL SHADER
-#include "LightComputations.fx"
+#include "LightComputations2.fx"
 Texture2D txDiffuse : register(t0);
 //sampler Sampler : register(s0);
-SamplerState sampAni : register(s0);
+SamplerState sampAni : register(s0)
+{
+	Filter = ANISOTROPIC;
+	MaxAnisotropy = 4;
 
+};
 struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
@@ -14,16 +47,53 @@ struct VS_OUT
 
 float4 PS_main(VS_OUT input) : SV_Target
 {
+	LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
 
+	float4 Texdiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+		if (Material.UseTexture == 1)
+		{
+			Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
+		}
 
-	//LightingResult lightCalcs = ComputeLighting(input.wPos, normalize(input.Nor));
+	float4 emissive = Material.Emissive;
+		float4 ambient = GlobalAmbient*Material.Ambient;
+		float4 diffuse = lightCalcs.Diffuse* Material.Diffuse;
+		float4 specular = lightCalcs.Specular*Material.Specular;
 
+		float4 finalColor = (emissive + ambient + diffuse + specular) * Texdiffuse;
 
-		float4	Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
-
-	
-		//return	float4(1.0,0,0,1);
-
-		return Texdiffuse;
+		return  finalColor;
 };
 
+
+//Texture2D txDiffuse : register(t0);
+//
+//SamplerState sampAni
+//{
+//	Filter = ANISOTROPIC;
+//	MaxAnisotropy = 4;
+//	AdressU = WRAP;
+//	AdressV = WRAP;
+//};
+//
+//
+//
+//
+//struct VS_OUT
+//{
+//	float3 Pos		: POSITION;
+//	float2 Tex		: TEXCOORD;
+//	float4 tunormal : NORMAL;
+//	float4 wPos		: SV_POSITION;
+//};
+//
+//float4 PS_main(VS_OUT input) : SV_Target
+//
+//{
+//
+//	float4 Texdiffuse = txDiffuse.Sample(sampAni, input.Tex);
+//
+//	return Texdiffuse;
+//	//return float4(1.0f,0.0f,0.0f,0.0f);
+//
+//};

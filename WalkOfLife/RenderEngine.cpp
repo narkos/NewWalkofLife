@@ -17,6 +17,16 @@ LRESULT CALLBACK MainWindowProc(HWND hwindow, UINT msg, WPARAM wParam, LPARAM lP
 	return pRenderEngine->MsgProc(hwindow, msg, wParam, lParam);
 }
 
+struct cbPerObject
+{
+	XMMATRIX  WVP;
+	XMMATRIX World;
+	XMVECTOR wCamPos;
+	BOOL hasNormMap;
+
+};
+cbPerObject cbPerObj;
+
 // CONSTRUCTOR
 
 RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UINT scrH){
@@ -81,6 +91,20 @@ bool RenderEngine::Init(){
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	intArrayTex = theCustomImporter.GetindexArray();
+	statez = CurrChar.getCharSate();
+
+	//D3D11_BUFFER_DESC bDesc;
+	//ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
+	//bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//bDesc.Usage = D3D11_USAGE_DEFAULT;
+	//bDesc.ByteWidth = sizeof(VertexData)*(vertecies.size());
+
+	//D3D11_SUBRESOURCE_DATA data;
+	//data.pSysMem = vertecies.data();//<--------
+	//HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &Tempidlebuffer);
+
+	//Tempidlebuffer = theCharacters.at(0).GetVertexBuffer();
+	//--
 	//theCharacters = &theCustomImporter.GetPlayers()[0];
 	//theCharacter2 = theCustomImporter.GetPlayers[1];
 	//theCharacter3 = theCustomImporter.GetPlayers[2];
@@ -129,6 +153,38 @@ bool RenderEngine::Init(){
 	//StartMenu.menuInit(gDeviceContext);
 	//mainMenu.menuInit(gDeviceContext);
 
+	theCharacters.at(0).xPos = 4;
+	theCharacters.at(0).yPos = 9;
+
+	theCharacters.at(0).setRunSpeed(0.08f);
+	theCharacters.at(0).setJumpHeight(0.66f);
+	theCharacters.at(8).setRunSpeed(0.15f);
+	theCharacters.at(8).setJumpHeight(0.68f);
+	theCharacters.at(16).setRunSpeed(0.05f);
+	theCharacters.at(16).setJumpHeight(0.75f);
+
+	// Set hit ray info
+	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
+	theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
+
+	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
+	theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
+	theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
+
+
+	//Baby World Start Pos
+	//resetXpos[0] = 4.0f;
+	//resetYpos[0] = 9.0f;
+
+	//resetXpos[1] = 200.0f;
+	//resetYpos[1] = 20.0f;
+
+	//resetXpos[2] = 364.0f;
+	//resetYpos[2] = 20.0f;
+	
+	
+
 	//SHADOWS
 	Shadows tempShadows((int)mainCamera.getWindowWidth(), (int)mainCamera.getWindowHeight(), gDevice, gDeviceContext);
 	shadows = tempShadows;
@@ -146,37 +202,40 @@ bool RenderEngine::Init(){
 
 	mainMenu.menuInit(gDeviceContext);
 
-	theCharacters.at(0).xPos = 4;
-	theCharacters.at(0).yPos = 9;
-	
-	theCharacters.at(0).setRunSpeed(0.08f);
-	theCharacters.at(0).setJumpHeight(0.66f);
-	theCharacters.at(1).setRunSpeed(0.15f);
-	theCharacters.at(1).setJumpHeight(0.68f);
-	theCharacters.at(2).setRunSpeed(0.05f);
-	theCharacters.at(2).setJumpHeight(0.75f);
-	
+	//theCharacters.at(0).xPos = 4;
+	//theCharacters.at(0).yPos = 9;
+	//
+	//theCharacters.at(0).setRunSpeed(0.08f);
+	//theCharacters.at(0).setJumpHeight(0.66f);
+	//theCharacters.at(0).setDash(2.0f);
+	//theCharacters.at(8).setRunSpeed(0.13f);
+	//theCharacters.at(8).setJumpHeight(0.68f);
+	//theCharacters.at(0).setDash(2.7f);
+	//theCharacters.at(16).setRunSpeed(0.05f);
+	//theCharacters.at(16).setJumpHeight(0.75f);
+	//
 
 
-	// Set hit ray info
-	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	theCharacters.at(1).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	theCharacters.at(2).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
 
-	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 0.5f);
-	theCharacters.at(2).SetRayRanges(0.48f, 0.5f, 0.4f);
+	//// Set hit ray info
+	//theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
+	//theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	//theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
+
+	//theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
+	//theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
+	//theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
 
 
 	//Baby World Start Pos
-	resetXpos[0] = 4.0f;
+	/*resetXpos[0] = 4.0f;
 	resetYpos[0] = 9.0f;
 
 	resetXpos[1] = 200.0f;
 	resetYpos[1] = 20.0f;
 
 	resetXpos[2] = 364.0f;
-	resetYpos[2] = 20.0f;
+	resetYpos[2] = 20.0f;*/
 
 
 	
@@ -225,6 +284,19 @@ bool RenderEngine::Init(){
 	mbuffDesc.CPUAccessFlags = 0;
 	mbuffDesc.MiscFlags = 0;
 	hr = gDevice->CreateBuffer(&mbuffDesc, NULL, &matConstBuff);
+
+
+	////Normalmap buffer
+	//D3D11_BUFFER_DESC cbbd;
+	//ZeroMemory(&cbbd, sizeof(D3D11_BUFFER_DESC));
+
+	//cbbd.Usage = D3D11_USAGE_DEFAULT;
+	//cbbd.ByteWidth = sizeof(cbPerObject);
+	//cbbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//cbbd.CPUAccessFlags = 0;
+	//cbbd.MiscFlags = 0;
+
+	//gDevice->CreateBuffer(&cbbd, NULL, &cbPerObjectBuffer);
 
 
 
@@ -355,8 +427,8 @@ void RenderEngine::TextureFunc(){
 	HRESULT texCheck;
 	vector<string> texNames = theCustomImporter.GettexNameArray();
 	RSWArray = new ID3D11ShaderResourceView*[texNames.size()];
-	texes = texNames.size();
-	std::wstring fest = L"Textures/";
+
+	std::wstring fest = L"Textures/ObjectTextures/";
 	for (int texIt = 0; texIt < texNames.size(); texIt++){
 
 		std::wstring fest2 = fest + string2wString(texNames[texIt]);;
@@ -369,6 +441,7 @@ void RenderEngine::TextureFunc(){
 
 
 
+	//DirectX::CreateWICTextureFromFile(gDevice, L"Textures/normalmap.dds", nullptr, &normalMap);
 	
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
@@ -464,17 +537,16 @@ void RenderEngine::Shaders(){
 	ShaderTest = gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gVertexShader);
 
 	//create input layout (verified using vertex shader)
+	//D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
+	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	//};
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
-	//D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	//};
 	ShaderTest = gDevice->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gVertexLayout);
 	
 	//create pixel shader
@@ -714,17 +786,22 @@ int RenderEngine::Run(){
 			{
 				theHighScore.setHSbool(false);
 				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
+
 				if (gCounter.theAge.years > 32 && Character2 == false)
+
 				{
 					Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
 					haschanged = true;
-					CurrChar.setCharState(1);
+					CurrChar.setCharState(8);
 					/*particleEffects[1].SetPosMatrix(theCharacter.pos);
 					particleEffects[1].Play();*/
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-					theCharacters.at(1).xPos = theCharacters.at(0).xPos;
-					theCharacters.at(1).yPos = theCharacters.at(0).yPos + 2;
+
+					theCharacters.at(8).xPos = theCharacters.at(0).xPos;
+					theCharacters.at(8).yPos = theCharacters.at(0).yPos + 2;
+					//theCharacters.at(8).SetDivision(theCharacters.at(0).getDivision());
+
 					soundIGotThis.PlayMp3();
 					soundIGotThis.daCapo();
 
@@ -735,10 +812,13 @@ int RenderEngine::Run(){
 					Character3 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
 					haschanged = true;
-					CurrChar.setCharState(2);
+					CurrChar.setCharState(16);
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-					theCharacters.at(2).xPos = theCharacters.at(1).xPos;
-					theCharacters.at(2).yPos = theCharacters.at(1).yPos;
+
+					theCharacters.at(16).xPos = theCharacters.at(8).xPos;
+					theCharacters.at(16).yPos = theCharacters.at(8).yPos;
+					//theCharacters.at(16).SetDivision(theCharacters.at(8).getDivision());
+
 					tempInt = rand() % 2;
 					if (tempInt == 0)
 					{
@@ -753,6 +833,7 @@ int RenderEngine::Run(){
 
 				}
 
+
 				if (mainMenu.getPause() == FALSE)
 				{
 
@@ -760,22 +841,31 @@ int RenderEngine::Run(){
 					{
 						fpscounter();
 
+						
+					//	switchAnimation(theCharacters.at(CurrChar.getCharSate()), CurrChar.getCharSate());
+						
+
 
 						if (CurrChar.getCharSate() == 0)
 						{
+							
 							Update(0.0f, theCharacters.at(0));
+							//switchAnimation(&theCharacters.at(0), 0);
 							Render(&theCharacters.at(0));
 						}
-						else if (CurrChar.getCharSate() == 1)
+						else if (CurrChar.getCharSate() == 8)
 						{
 							//theCollision
-							Update(0.0f, theCharacters.at(1));
-							Render(&theCharacters.at(1));
+							//theCharacters.at(1).setVertexBuffer(theCharacters.at(2).GetVertexBuffer());
+							Update(0.0f, theCharacters.at(8));
+							//switchAnimation(&theCharacters.at(1), 1);
+							Render(&theCharacters.at(8));
 						}
-						else if (CurrChar.getCharSate() == 2)
+						else if (CurrChar.getCharSate() == 16)
 						{
-							Update(0.0f, theCharacters.at(2));
-							Render(&theCharacters.at(2));
+							Update(0.0f, theCharacters.at(16));
+							//switchAnimation(&theCharacters.at(2), 2);
+							Render(&theCharacters.at(16));
 						}
 						time3 = gTimer.TotalTime();
 					}
@@ -788,8 +878,27 @@ int RenderEngine::Run(){
 					if (gTimer.TotalTime() >= scrolltime+1.0f)*/
 				//	if (theHighScore.getHSbool() == FALSE)
 					{
-						MenuUpdate(0.0f);
-						mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
+						if (CurrChar.getCharSate() == 0)
+						{
+							
+							
+							MenuUpdate(0.0f, theCharacters.at(0));
+
+							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+						}
+						else if (CurrChar.getCharSate() == 8)
+						{
+							//theCollision
+							MenuUpdate(0.0f, theCharacters.at(8));
+							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+						}
+						else if (CurrChar.getCharSate() == 16)
+						{
+							MenuUpdate(0.0f, theCharacters.at(8));
+							
+							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+						}
+			
 
 					}
 
@@ -858,7 +967,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	//Set the vertex and pixel shaders that will be used to render
 
 	//RENDER THE SHADOW MAP
-	//drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+	drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -876,9 +985,10 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	if (mainMenu.getPause() == TRUE)
 	{
-		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool());
+		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 	}
 	// Draw Text
+	
 	spriteBatch->Begin();
 
 	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
@@ -911,7 +1021,9 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
+	//gSwapChain->Present(0, 0); //växla back/front buffer
 	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+	
 	///////////////////////////////////////////
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -938,7 +1050,9 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetConstantBuffers(2, 1, &lightConstBuff);
 	gDeviceContext->PSSetConstantBuffers(1, 1, &matConstBuff);
 	// END LIGHT BUFFER UPDATE
-
+	// normalmap buffer
+	//gDeviceContext->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
+	//gDeviceContext->PSSetConstantBuffers(4, 1, &cbPerObjectBuffer);
 	//XMMATRIX WVP;		//Defined in .h file
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -960,6 +1074,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	XMMATRIX currProjection;
 	XMMATRIX currView;
 
+
 	if (viewPoint == 1)
 	{
 		currProjection = shadows.getLightProjection();
@@ -973,13 +1088,13 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 
-	matProperties.Material = MatPresets::Lambert;
+	matProperties.Material = MatPresets::BlinnBase;
+	matProperties.Material.UseTexture = 1;
 	//TEST CUSTOM FORMAT
 
 	//######################################################################################################################################################
 	//###													SHADOW CASTING OBJECTS GOES HERE BELOW							  							 ###	
 	//######################################################################################################################################################
-
 
 	float tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
@@ -1023,6 +1138,14 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
+
+				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+				
+				//theBinaryTree->collectables->at(i)[j].material;
+				//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+				//matProperties.Material = MatPresets::BlinnBase;
+				//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
@@ -1065,6 +1188,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		tempDiv = 0.0f;
 	}
+
 	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 	{
 		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
@@ -1128,7 +1252,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			//theBinaryTree->renderObjects->at(i)[j].material
 			//theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
 
-			matProperties.Material = theBinaryTree->renderObjects->at(i)[j].material;
+			matProperties.Material = MatPresets::BlinnBase;
+			matProperties.Material.UseTexture = 1;
 
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
@@ -1159,8 +1284,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	
 	tex = intArrayTex[theCharacter->indexT];
 	gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-	matProperties.Material = theCharacter->material;
-	//matProperties.Material.UseTexture = 1;
+	matProperties.Material = MatPresets::BlinnBase;
+	matProperties.Material.UseTexture = 1;
 	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
@@ -1232,26 +1357,17 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	jump = theInput.detectJump(hWindow);
 	dash = theInput.detectDash(hWindow);
 
-	shadowTemp = theInput.detectRenderState(hWindow);
 
-	if (shadowTemp != -1)
-	{
-		shadowBufferData.shadowTesting = shadowTemp;
-	}
+	shadowBufferData.shadowTesting = theInput.detectRenderState(hWindow);
+
 	gDeviceContext->PSSetConstantBuffers(3, 1, &shadowBuffer);
 	gDeviceContext->UpdateSubresource(shadowBuffer, 0, NULL, &shadowBufferData, 0, 0);
 
-	if (theInput.detectCameraLean(hWindow))
-	{
-		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
-	}
-	else
-	{
-		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
-		mainCamera.updateCamera();
-	}
+	//Lean Camera
+	mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
 
-	float tempDiv = -1.0f;
+	//Update Moving Platforms
+	float tempDiv = -1;
 	if (theCharacter.getDivision() == 0)
 	{
 		tempDiv = 0.0f;
@@ -1352,7 +1468,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		theCharacter.dashDisabling = true;
 	}
 
-	if (gTimer.TotalTime() - theCharacter.dashTimer > 4.00f && !theCharacter.dashAvailable)
+	if (gTimer.TotalTime() - theCharacter.dashTimer > 2.00f && !theCharacter.dashAvailable)
 	{
 		theCharacter.dashAvailable = true;
 	}
@@ -1367,12 +1483,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
@@ -1386,13 +1502,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	tempPickUpValue.y = 0.0f;
 	tempPickUpValue = theCollision->TestCollision(theBinaryTree->collectables->at(theCharacter.getDivision()), &theCharacter);
 	gCounter.addCollectable(tempPickUpValue);
+
 	if (tempPickUpValue.y <= -0.1f){ //negativ tid
-		particleEffects[1]->SetPosMatrix(theCharacter.pos);
-		particleEffects[1]->Play();
-	}
-	else if (tempPickUpValue.y > 0.1f){ //positiv tid
 		particleEffects[0]->SetPosMatrix(theCharacter.pos);
 		particleEffects[0]->Play();
+	}
+	else if (tempPickUpValue.y > 0.1f){ //positiv tid
+		particleEffects[1]->SetPosMatrix(theCharacter.pos);
+		particleEffects[1]->Play();
 	}
 
 	if (tempPickUpValue.x > 0.1f){ //coins
@@ -1415,6 +1532,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				soundOverHere.daCapo();
 			}
 		}
+
 		rightDirection = false;
 		if (theCharacter.jumpMomentumState)
 		{
@@ -1431,9 +1549,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 		else
 		{
-			theCharacter.Move(false); //left
-
+			
+			//statez = CurrChar.getCharSate();
+			this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 0);
+			theCharacter.Move(false); //right
+			
 		}
+		if (jump) //om grounded och man har klickat in jump
+
+		{
+			if (jump&&theCharacter.dashDisabling == true)
+				this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 2);
+		}
+		
 
 	}
 
@@ -1452,12 +1580,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				soundOverHere.daCapo();
 			}
 		}
+
 		rightDirection = true;
 		if (theCharacter.jumpMomentumState)
 		{
 			if (theCharacter.jumpMomentumX < theCharacter.getSpeed())
 			{
 				theCharacter.jumpMomentumX += 0.005f;
+
 			}
 
 			else
@@ -1468,16 +1598,34 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 		else
 		{
-
+			//statez = CurrChar.getCharSate();
+			this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 0);
 			theCharacter.Move(true); //right
+			
+			
+		}
+		if (theCharacter.jumpMomentumState) //om grounded och man har klickat in jump
 
+		{
+			if (jump&&theCharacter.dashDisabling == true)
+				this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 2);
 		}
 
 
 	}
 
 	else
+	{
 		theCharacter.momentum = 0;
+		if (!theCharacter.jumpMomentumState && !jump)
+		{
+			
+			//theCharacter.setVertexBuffer(theCharacters.at(CurrChar.getCharSate()).GetVertexBuffer());
+			
+			this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 3);
+		}
+	}
+		
 
 	if (theCharacter.jumpMomentumState)
 	{
@@ -1499,28 +1647,54 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 	if (input == 4)
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 	if (input == 5)
 	{
 		theCharacters.at(0).xPos = theCharacter.xPos;
 		theCharacters.at(0).yPos = theCharacter.yPos;
+		theCharacters.at(0).SetDivision(theCharacter.getDivision());
+
 		CurrChar.setCharState(0);
+		statez = CurrChar.getCharSate();
+		return;
 
 	}
 	if (input == 6)
 	{
-		theCharacters.at(1).xPos = theCharacter.xPos;
-		theCharacters.at(1).yPos = theCharacter.yPos;
-		CurrChar.setCharState(1);
+		theCharacters.at(8).xPos = theCharacter.xPos;
+		theCharacters.at(8).yPos = theCharacter.yPos;
+		theCharacters.at(8).SetDivision( theCharacter.getDivision());
+		CurrChar.setCharState(8);
+		statez = CurrChar.getCharSate();
+		return;
 
 	}
 	if (input == 7)
 	{
-		theCharacters.at(2).xPos = theCharacter.xPos;
-		theCharacters.at(2).yPos = theCharacter.yPos;
-		CurrChar.setCharState(2);
+		theCharacters.at(16).xPos = theCharacter.xPos;
+		theCharacters.at(16).yPos = theCharacter.yPos;
+		theCharacters.at(16).SetDivision ( theCharacter.getDivision());
+		CurrChar.setCharState(16);
+		statez = CurrChar.getCharSate();
+		return;
 
+	}
+	if (input == 8)
+	{
+		
+		
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
+	}
+	if (input == 9)
+	{
+
+		mainMenu.setwin(true);
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
 	}
 	//if (input == 11){
 	//	particleEffects[0].Play();
@@ -1528,6 +1702,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (dash && theCharacter.dashAvailable)
 	{
+		this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 1);
 		theCharacter.Dash();
 		theCharacter.dashTimer = gTimer.TotalTime();
 
@@ -1554,47 +1729,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				soundOldDash2.daCapo();
 			}
 		}
+
 	}
-
-
-	//if (CurrChar.getCharSate() == 0)
-	//{
-	//	if (rand()%2000 == 0)
-	//	{
-	//		soundGonnaDie.PlayMp3();
-	//		soundGonnaDie.daCapo();
-	//	}
-
-	//	else if (rand()%2000 == 1000)
-	//	{
-	//		soundLifeIsA.PlayMp3();
-	//		soundLifeIsA.daCapo();
-	//	}
-	//}
-
-	//else if (CurrChar.getCharSate() == 1)
-	//{
-	//	if (rand() % 2000 == 0)
-	//	{
-	//		soundIGotThis.PlayMp3();
-	//		soundIGotThis.daCapo();
-	//	}
-	//}
-
-	//else if (CurrChar.getCharSate() == 2)
-	//{
-	//	if (rand() % 2000 == 0)
-	//	{
-	//		soundHelpMe.PlayMp3();
-	//		soundHelpMe.daCapo();
-	//	}
-
-	//	else if (rand() % 2000 == 1000)
-	//	{
-	//		soundWhereAmI.PlayMp3();
-	//		soundWhereAmI.daCapo();
-	//	}
-	//}
+	
 	if (theCollision->upValid() == false){
 		thePhysics.DisableUpForce();
 	}
@@ -1606,6 +1743,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		thePhysics.Jump(theCollision, &theCharacter);
 		thePhysics.onPlatform = false;
 		theCharacter.jumpTimer = gTimer.TotalTime();
+
 		tempInt = rand() % 3;
 		if (CurrChar.getCharSate() == 0)
 		{
@@ -1625,7 +1763,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				soundYoungJump3.daCapo();
 			}
 		}
-		if (CurrChar.getCharSate() == 1)
+		if (CurrChar.getCharSate() == 8)
 		{
 			if (tempInt == 0)
 			{
@@ -1643,7 +1781,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				soundManJump3.daCapo();
 			}
 		}
-		if (CurrChar.getCharSate() == 2)
+		if (CurrChar.getCharSate() == 16)
 		{
 			if (tempInt == 0)
 			{
@@ -1661,6 +1799,20 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				soundOldJump3.daCapo();
 			}
 		}
+	//	if (!dash&&!theCharacter.momentum > 1.1f)
+	//	this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 2);
+		
+	}
+
+	if (jump&&theCharacter.dashDisabling == true)
+	{
+		this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 2);
+	}
+	if (theCharacter.jumpMomentumState == true)
+	{
+		if (dash)
+			this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 1);
+
 	}
 
 
@@ -1674,19 +1826,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		resetValues[0] = resetXpos[0];
 		resetValues[1] = resetYpos[0];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 	if (input == 9)
 	{
 		resetValues[0] = resetXpos[1];
 		resetValues[1] = resetYpos[1];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 	if (input == 10)
 	{
 		resetValues[0] = resetXpos[2];
 		resetValues[1] = resetYpos[2];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 
 	//MOVING PLATFORM POSITION UPDATE
@@ -1695,29 +1847,42 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
+	thePhysics.Gravitation(theCollision, &theCharacter);
+	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+	theCharacter.CalculateWorld();
 
 	tempDiv = -1.0f;
 	if (theCharacter.getDivision() == 0)
 	{
 		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter.getDivision() + (int)tempDiv; i <= theCharacter.getDivision() + 1; i++)
-	{
 
-		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
-		{
-			
-			
-			theBinaryTree->deadlyMoving->at(i)[j].SlamaJamma(gTimer.TotalTime());
-			theBinaryTree->deadlyMoving->at(i)[j].UpdateBBOX();
-			theBinaryTree->deadlyMoving->at(i)[j].CalculateWorld();
-		}
+	for (int o = 0; o < theBinaryTree->deadlyMoving->size(); o++)
+	{			
+			for (int i = 0; i < theBinaryTree->deadlyMoving->at(o).size(); i++)
+			{
+				int poop = 0;
+				if (o == theCharacter.getDivision() || o == theCharacter.getDivision() +1 || o == theCharacter.getDivision() -1 && theCharacter.getDivision() > 0)
+				{
+					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 1);
+					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+				
+				}
+				
+				else
+				{
+					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 0);
+					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+				}
+		
 
+			}
 	}
 
-	thePhysics.Gravitation(theCollision, &theCharacter);
-	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
-	theCharacter.CalculateWorld();
+
+
 
 
 	if (rightDirection)
@@ -1749,10 +1914,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
-	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 30.0f, 0.0f, 1.0f);
+
+	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
-	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, 0.0f, 8.0f, 1.0f);
-	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Color = XMFLOAT4(Colors::Beige);
 
 
 	lightProp01.lights[1].Type = l_Point;
@@ -1782,19 +1948,56 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		lightProp01.lights[2].Range = 15.0f;
 
 	lightProp01.lights[3].Type = l_Point;
-	lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
-	lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
+	lightProp01.lights[3].Color = XMFLOAT4(Colors::Red);
 	lightProp01.lights[3].AttConst = 0.7f;
 	lightProp01.lights[3].AttLinear = 0.2f;
 	lightProp01.lights[3].AttQuadratic = 0.0f;
 	lightProp01.lights[3].Range = 15.0f;
 
 
+	lightProp01.lights[4].Type = l_Point;
+	lightProp01.lights[4].Position = XMFLOAT4(20.0f, 15.0f, 0.0f, 1.0f);
+	lightProp01.lights[4].Color = XMFLOAT4(Colors::Blue);
+	lightProp01.lights[4].AttConst = 0.7f;
+	lightProp01.lights[4].AttLinear = 0.2f;
+	lightProp01.lights[4].AttQuadratic = 0.0f;
+	lightProp01.lights[4].Range = 15.0f;
+
+
+	lightProp01.lights[5].Type = l_Point;
+	lightProp01.lights[5].Position = XMFLOAT4(25.0f, 15.0f, 0.0f, 1.0f);
+	lightProp01.lights[5].Color = XMFLOAT4(Colors::Blue);
+	lightProp01.lights[5].AttConst = 0.7f;
+	lightProp01.lights[5].AttLinear = 0.2f;
+	lightProp01.lights[5].AttQuadratic = 0.0f;
+	lightProp01.lights[5].Range = 15.0f;
+
+	lightProp01.lights[6].Type = l_Point;
+	lightProp01.lights[6].Position = XMFLOAT4(25.0f, 10.0f, 0.0f, 1.0f);
+	lightProp01.lights[6].Color = XMFLOAT4(Colors::Red);
+	lightProp01.lights[6].AttConst = 0.7f;
+	lightProp01.lights[6].AttLinear = 0.2f;
+	lightProp01.lights[6].AttQuadratic = 0.0f;
+	lightProp01.lights[6].Range = 15.0f;
+
+	lightProp01.lights[7].Type = l_Point;
+	lightProp01.lights[7].Position = XMFLOAT4(15.0f, 5.0f, 0.0f, 1.0f);
+	lightProp01.lights[7].Color = XMFLOAT4(Colors::Red);
+	lightProp01.lights[7].AttConst = 0.7f;
+	lightProp01.lights[7].AttLinear = 0.2f;
+	lightProp01.lights[7].AttQuadratic = 0.0f;
+	lightProp01.lights[7].Range = 15.0f;
+
 	lightProp01.lights[0].Active = 1;
 	lightProp01.lights[1].Active = 1;
-	lightProp01.lights[2].Active = 1;
-	lightProp01.lights[3].Active = 1;
-	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
+	lightProp01.lights[2].Active = 0;
+	lightProp01.lights[3].Active = 0;
+	lightProp01.lights[4].Active = 0;
+	lightProp01.lights[5].Active = 0;
+	lightProp01.lights[6].Active = 0;
+	lightProp01.lights[7].Active = 0;
+	lightProp01.GlobalAmbient = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	if (theCharacter.yPos < -20)
 	{
@@ -1814,7 +2017,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 }
 
-void RenderEngine::MenuUpdate(float tt){
+void RenderEngine::MenuUpdate(float tt, PlayerObject& theCharacter){
 	Menu Menuinput;
 	Menuinput.menuInit(this->hInstance, hWindow);
 	int input2 = 0;
@@ -1845,45 +2048,66 @@ void RenderEngine::MenuUpdate(float tt){
 
 			menuTime = gTimer.TotalTime();
 		}
-
+		
 		if (input2 == 3)
 		{
 			if (gTimer.TotalTime() >= menuTime + 0.55f) // Om det gått 0.14 sec sen ditt senaste knapptryck
 			{
-				//run wichever tab i currently selected --------------------------------------- button functions
-				if (mainMenu.getCurrentTab() == 1)
+				if (mainMenu.getgameover() == true)
 				{
-					//gTimer.setPausedTime(pauseTime);
-					//gTimer.setCurrTime(pauseTime);
-					gTimer.Start(pauseTime);
-					mainMenu.setPause(FALSE);
-					theHighScore.setHSbool(FALSE);
+					mainMenu.setgameover(false);
 					menuTime = gTimer.TotalTime();
 				}
-				else if (mainMenu.getCurrentTab() == 2)
+				else if (mainMenu.getgameover() == false)
 				{
-					// open highscores
-					if (theHighScore.getHSbool() == FALSE)
+					//run wichever tab i currently selected --------------------------------------- button functions
+					if (mainMenu.getCurrentTab() == 1)
 					{
-						theHighScore.setHSbool(TRUE);
-					}
-					else if (theHighScore.getHSbool() == TRUE)
-					{
-						theHighScore.setHSbool(FALSE);
+						//gTimer.setPausedTime(pauseTime);
+						//gTimer.setCurrTime(pauseTime);
+						if (mainMenu.getreplay() == false)
+						{
 
+
+							gTimer.Start(pauseTime);
+							mainMenu.setPause(FALSE);
+							theHighScore.setHSbool(FALSE);
+							menuTime = gTimer.TotalTime();
+						}
+						else if (mainMenu.getreplay() == true)
+						{
+
+							reset(&theCharacter, true);
+							mainMenu.setreplay(false);
+							mainMenu.setPause(false);
+							menuTime = gTimer.TotalTime();
+
+						}
 					}
-					menuTime = gTimer.TotalTime();
-				}
-				else if (mainMenu.getCurrentTab() == 3)
-				{
-					PostMessage(hWindow, WM_QUIT, 0, 0);
+					else if (mainMenu.getCurrentTab() == 2)
+					{
+						// open highscores
+						if (theHighScore.getHSbool() == FALSE)
+						{
+							theHighScore.setHSbool(TRUE);
+						}
+						else if (theHighScore.getHSbool() == TRUE)
+						{
+							theHighScore.setHSbool(FALSE);
+
+						}
+						menuTime = gTimer.TotalTime();
+					}
+					else if (mainMenu.getCurrentTab() == 3)
+					{
+						PostMessage(hWindow, WM_QUIT, 0, 0);
+					}
 				}
 			}
 
-
 		}
-
 		mainMenu.setCurrentTab(iz);
+		
 
 
 		if (input2 == 4)
@@ -1898,6 +2122,12 @@ void RenderEngine::MenuUpdate(float tt){
 			menuTime = 0;
 
 			//float gTimer.TotalTime() = pauseTime;
+
+		}
+		if (input2 == 5)
+		{
+			
+			//mainMenu.setreplay(true);
 
 		}
 	}
@@ -2045,6 +2275,7 @@ void RenderEngine::Release(){
 	gVertexShader->Release();
 	gPixelShader->Release();
 	gDeviceContext->Release();
+//	cbPerObjectBuffer->Release();
 
 	//Kill Lights
 	//delete testLight;
@@ -2134,7 +2365,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 }
 
-void RenderEngine::reset(PlayerObject* theCharacter)
+void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 {
 	soundBackground.daCapo();
 	soundBackground.StopMp3();
@@ -2147,17 +2378,22 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	start = false;
 	Character2 = false;
 	Character3 = false;
-	CurrChar.setCharState(0);
+	CurrChar.setCharState(CurrChar.getCharSate());
 	theCharacter->xPos = 4;
 	theCharacter->yPos = 6;
 	theCharacter->Translate(0, 0, 0);
-	theCharacter->setDivision(0);
+	if (fullreset)
+	{
+		theCharacter->setDivision(0);
+	}
+	
 	theCharacter->momentum = 0;
 	theCharacter->jumpMomentumX = 0;
 	mainCamera.setCameraXPos(theCharacter->xPos);
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
+
 	for (int i = 0; i < 20; i++)
 	{
 		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
@@ -2226,5 +2462,89 @@ void RenderEngine::LoadSounds()
 	soundYoungJump3.LoadMp3("youngJump3.wav");
 	soundManDash.InitMp3();
 	soundManDash.LoadMp3("manDash.wav");
+	
+}
+
+void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int switcher)
+{
+	static float time = 0.0f;
+	//float tajm = gTimer.TotalTime();
+	//if (loop == 1 && tajm + 0.2f > gTimer.TotalTime())
+	//{
+	//	theCharacter->setVertexBuffer(theCharacters.at(curr + 1).GetVertexBuffer());
+
+	//	tajm = gTimer.TotalTime();
+	//	loop= 2;
+	//	OutputDebugStringA("Enter loop 1");
+	//}
+	//if (loop == 2 && tajm + 0.2f > gTimer.TotalTime())
+	//{
+	//	theCharacter->setVertexBuffer(theCharacters.at(curr + 2).GetVertexBuffer());
+	//	tajm = gTimer.TotalTime();
+	//	loop = 1;
+	//	OutputDebugStringA("Enter loop 2");
+	//}
+	if (switcher == 0)
+	{
+		if ((gTimer.TotalTime() - time) >= 0.12f)
+		{
+			theCharacter->setVertexBuffer(theCharacters.at(statez + 1).GetVertexBuffer());
+			if (statez < CurrChar.getCharSate()+4)
+				statez = statez + 1;
+			if (statez == CurrChar.getCharSate() + 4)
+				statez = curr;
+
+			time += 0.12f;
+		}
+	}
+
+	if (switcher == 1)
+	{
+		if ((gTimer.TotalTime() - time) >= 0.10f)
+		{
+			theCharacter->setVertexBuffer(theCharacters.at(curr + 5).GetVertexBuffer());
+			
+
+			time += 0.15f;
+		}
+		//theCharacter->setVertexBuffer(theCharacters.at(curr).GetVertexBuffer());
+	}
+	if (switcher == 2)
+	{
+		if ((gTimer.TotalTime() - time) >= 0.10f)
+		{
+			theCharacter->setVertexBuffer(theCharacters.at(curr + 6).GetVertexBuffer());
+
+
+			time += 0.15f;
+			//theCharacter->setVertexBuffer(theCharacters.at(curr).GetVertexBuffer());
+		}
+		
+	}
+	if (switcher == 3)
+	{
+		if ((gTimer.TotalTime() - time) >= 0.10f)
+		{
+			theCharacter->setVertexBuffer(theCharacters.at(curr+7).GetVertexBuffer());
+
+
+			time += 0.15f;
+		}
+		//theCharacter->setVertexBuffer(theCharacters.at(curr).GetVertexBuffer());
+	}
+	
+	//if (loop == 3 && tajm + 0.4f > gTimer.TotalTime())
+	//{
+	//	theCharacters.at(curr).setVertexBuffer(theCharacters.at(curr + 3).GetVertexBuffer());
+	//	tajm = gTimer.TotalTime();
+	//	loop = loop + 1;
+	//}
+	//if (loop == 4 && gTimer.TotalTime() >= tajm + 0.5f)
+	//{
+	//	theCharacters.at(curr).setVertexBuffer(theCharacters.at(curr + 4).GetVertexBuffer());
+	//	tajm = gTimer.TotalTime();
+	//	loop = loop + 1;
+	//}
+	//
 	
 }

@@ -33,14 +33,18 @@ public:
 	void menuInit(ID3D11DeviceContext* gDeviceContext);
 	void scrollUp();
 	void scrollDown();
+	void setreplay(bool play);
+	bool getreplay();
+	void setgameover(bool set);
+	bool getgameover();
 	void Meterfunc(ID3D11DeviceContext* gDeviceContext, float width, int year);
 	void CreateTextures(ID3D11Device* gDevice);
 	std::unique_ptr<DirectX::SpriteBatch> MenuspriteBatch;
 	std::unique_ptr<DirectX::SpriteBatch> MenuspriteBatch2;
 	std::unique_ptr<DirectX::SpriteBatch> MenuspriteBatch3;
 	std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
-	
-	void ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* SwapChain, bool HS);
+	std::unique_ptr<DirectX::SpriteBatch> GOSpriteBatch;
+	void ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* SwapChain, bool HS, bool reply);
 
 	/// Inputs
 	IDirectInputDevice8* DIKeyboard;
@@ -68,11 +72,21 @@ public:
 	
 	void setPause(bool set);
 	bool getPause();
+	void setwin(bool set);
+	
+	bool getwin();
+	
+	void gameover(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS, bool reply);
+	
 private:
 	int t;
 	int currentTab = 1;
 	int chosenTab;
 	bool pause = false;
+	bool rePlay = false;
+	bool g_over;
+	int backtogame = 0;
+	bool Win = false;
 	ID3D11ShaderResourceView* RutTex1 = nullptr;
 	ID3D11ShaderResourceView* RutTex12 = nullptr;
 	ID3D11ShaderResourceView* RutTex2 = nullptr;
@@ -81,6 +95,8 @@ private:
 	ID3D11ShaderResourceView* RutTex32 = nullptr;
 	ID3D11ShaderResourceView* RutTex4 = nullptr;
 	ID3D11ShaderResourceView* RutTex42 = nullptr;
+	ID3D11ShaderResourceView* Replay = nullptr;
+	ID3D11ShaderResourceView* Replay2 = nullptr;
 	
 	ID3D11ShaderResourceView* Meter = nullptr;
 	ID3D11ShaderResourceView* Meter1 = nullptr;
@@ -96,6 +112,9 @@ private:
 	ID3D11ShaderResourceView* Meter11 = nullptr;
 
 	ID3D11ShaderResourceView* HSbox = nullptr;
+	ID3D11ShaderResourceView* GO_over = nullptr;
+	ID3D11ShaderResourceView* blackscreen = nullptr;
+	ID3D11ShaderResourceView* deathscreen = nullptr;
 	
 
 };

@@ -238,5 +238,8 @@
     <FxCompile Include="bbVertexShader.hlsl">
       <Filter>Resource Files\Default Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="LightComputations2.fx">
+      <Filter>Resource Files\Light Computation</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

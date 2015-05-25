@@ -85,13 +85,13 @@ public:
 	void Dash();
 
 	float dash;
-	float dashTimer;
+	float dashTimer = 0;
 	bool dashDisabling;
 	float jumpMomentumX;
 	bool jumpMomentumState;
 	float jumpTimer = 0;
-	float momentum;
-	bool jumping;
+	float momentum = 0;
+	bool jumping = false;
 	bool deaccelerate = false;
 	int bajs = 0;
 	float dashAvailable = true;

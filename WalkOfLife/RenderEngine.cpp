@@ -202,26 +202,26 @@ bool RenderEngine::Init(){
 
 	mainMenu.menuInit(gDeviceContext);
 
-	theCharacters.at(0).xPos = 4;
-	theCharacters.at(0).yPos = 9;
-	
-	theCharacters.at(0).setRunSpeed(0.08f);
-	theCharacters.at(0).setJumpHeight(0.66f);
-	theCharacters.at(1).setRunSpeed(0.15f);
-	theCharacters.at(1).setJumpHeight(0.68f);
-	theCharacters.at(2).setRunSpeed(0.05f);
-	theCharacters.at(2).setJumpHeight(0.75f);
-	
+	//theCharacters.at(0).xPos = 4;
+	//theCharacters.at(0).yPos = 9;
+	//
+	//theCharacters.at(0).setRunSpeed(0.08f);
+	//theCharacters.at(0).setJumpHeight(0.66f);
+	//theCharacters.at(1).setRunSpeed(0.15f);
+	//theCharacters.at(1).setJumpHeight(0.68f);
+	//theCharacters.at(2).setRunSpeed(0.05f);
+	//theCharacters.at(2).setJumpHeight(0.75f);
+	//
 
 
-	// Set hit ray info
-	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	theCharacters.at(1).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	theCharacters.at(2).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
+	//// Set hit ray info
+	//theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
+	//theCharacters.at(1).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	//theCharacters.at(2).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
 
-	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 0.5f);
-	theCharacters.at(2).SetRayRanges(0.48f, 0.5f, 0.4f);
+	//theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
+	//theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 0.5f);
+	//theCharacters.at(2).SetRayRanges(0.48f, 0.5f, 0.4f);
 
 
 	//Baby World Start Pos
@@ -823,13 +823,51 @@ int RenderEngine::Run(){
 
 				}
 
+				if (mainMenu.getPause() == TRUE)
+				{
 
+					/*	scrolltime = gTimer.TotalTime();
+					if (gTimer.TotalTime() >= scrolltime+1.0f)*/
+					//	if (theHighScore.getHSbool() == FALSE)
+					{
+						if (CurrChar.getCharSate() == 0)
+						{
+
+
+							MenuUpdate(0.0f, theCharacters.at(0));
+
+							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+						}
+						else if (CurrChar.getCharSate() == 8)
+						{
+							//theCollision
+							MenuUpdate(0.0f, theCharacters.at(8));
+							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+						}
+						else if (CurrChar.getCharSate() == 16)
+						{
+							MenuUpdate(0.0f, theCharacters.at(16));
+
+							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+						}
+
+
+					}
+
+					if (theHighScore.getHSbool() == TRUE)
+					{
+						theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
+					}
+
+
+				}
 				if (mainMenu.getPause() == FALSE)
 				{
 
 					if ((gTimer.TotalTime() - time3) >= 0.012f)
 					{
 						fpscounter();
+						
 
 						
 					//	switchAnimation(theCharacters.at(CurrChar.getCharSate()), CurrChar.getCharSate());
@@ -841,6 +879,8 @@ int RenderEngine::Run(){
 							
 							Update(0.0f, theCharacters.at(0));
 							//switchAnimation(&theCharacters.at(0), 0);
+							mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+							//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 							Render(&theCharacters.at(0));
 						}
 						else if (CurrChar.getCharSate() == 8)
@@ -861,44 +901,7 @@ int RenderEngine::Run(){
 					}
 
 				}
-				if (mainMenu.getPause() == TRUE)
-				{
-
-					/*	scrolltime = gTimer.TotalTime();
-					if (gTimer.TotalTime() >= scrolltime+1.0f)*/
-				//	if (theHighScore.getHSbool() == FALSE)
-					{
-						if (CurrChar.getCharSate() == 0)
-						{
-							
-							
-							MenuUpdate(0.0f, theCharacters.at(0));
-
-							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
-						}
-						else if (CurrChar.getCharSate() == 8)
-						{
-							//theCollision
-							MenuUpdate(0.0f, theCharacters.at(8));
-							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
-						}
-						else if (CurrChar.getCharSate() == 16)
-						{
-							MenuUpdate(0.0f, theCharacters.at(8));
-							
-							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
-						}
-			
-
-					}
-
-					if (theHighScore.getHSbool() == TRUE)
-					{
-						theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
-					}
-
-
-				}
+				
 
 			}
 		}
@@ -961,7 +964,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
-
+	
 	//static float rot = 0.00f;
 	UINT32 vertexSize = sizeof(float)* 8;
 	UINT32 offset = 0;
@@ -973,49 +976,22 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
 
-	if (mainMenu.getPause() == TRUE)
+//	if (mainMenu.getPause() == TRUE)
 	{
-		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+//		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 	}
 	// Draw Text
-	spriteBatch->Begin();
-
-	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
-	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
-	std::wstring xPos = std::to_wstring(theCharacter->xPos);
-	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	//std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring coins = std::to_wstring(theCharacter->getDivision());
-	std::wstring dass = std::to_wstring(fpsDisplay);
-	std::wstring name(L"FPS: ");
-	std::wstring year(L"\nYear: ");
-	std::wstring month(L"\nMonth: ");
-	std::wstring XXX(L"\nxPos: ");
-	std::wstring YYY(L"\nyPos: ");
-	std::wstring coin(L"\nCoins: ");
-	std::wstring nrOfDeaths(L"\nDeaths: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos + coin + coins;
-
-	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 
 	
-	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
 
-	if (gCounter.theAge.years == 100){
-
-		AMAZING_SUPER_UTE_DASS = Gameover.c_str();
-
-	}
-
-	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
-
-	spriteBatch->End();
-	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+	
 	///////////////////////////////////////////
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 
+	
+	
 
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);
@@ -1052,6 +1028,39 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
 
 	drawScene(2, theCharacter);	// 1 = From lights POV. 2 = From mainCameras POV.
+	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+	spriteBatch->Begin();
+
+	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
+	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
+	std::wstring xPos = std::to_wstring(theCharacter->xPos);
+	std::wstring yPos = std::to_wstring(theCharacter->yPos);
+	//std::wstring coins = std::to_wstring(gCounter.getCoin());
+	std::wstring coins = std::to_wstring(theCharacter->getDivision());
+	std::wstring dass = std::to_wstring(fpsDisplay);
+	std::wstring name(L"FPS: ");
+	std::wstring year(L"\nYear: ");
+	std::wstring month(L"\nMonth: ");
+	std::wstring XXX(L"\nxPos: ");
+	std::wstring YYY(L"\nyPos: ");
+	std::wstring coin(L"\nCoins: ");
+	std::wstring nrOfDeaths(L"\nDeaths: ");
+	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos + coin + coins;
+
+	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
+
+
+	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
+
+	if (gCounter.theAge.years == 100){
+
+		AMAZING_SUPER_UTE_DASS = Gameover.c_str();
+
+	}
+
+	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+
+	spriteBatch->End();
 
 	gSwapChain->Present(0, 0); //växla back/front buffer
 }
@@ -1061,7 +1070,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	XMMATRIX currProjection;
 	XMMATRIX currView;
 
-
+	//
 	if (viewPoint == 1)
 	{
 		currProjection = shadows.getLightProjection();
@@ -1321,7 +1330,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		soundBackground.PlayMp3();
 		soundBackground.soundTime = gTimer.TotalTime();
 	}
-
+	
 	//soundBackground.daCapo();
 	Input theInput;		//Defined in .h file
 	theInput.initInput(this->hInstance, hWindow);

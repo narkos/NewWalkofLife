@@ -20,6 +20,7 @@ LRESULT CALLBACK MainWindowProc(HWND hwindow, UINT msg, WPARAM wParam, LPARAM lP
 // CONSTRUCTOR
 
 RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UINT scrH){
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	this->hInstance = hInstance;
 	applicationName = name;
 	screen_Width = (UINT)mainCamera.getWindowWidth();
@@ -801,6 +802,8 @@ int RenderEngine::Run(){
 			}
 		}
 	}
+
+	this->Release();
 	return static_cast<int>(msg.wParam);
 }
 
@@ -853,7 +856,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	//Set the vertex and pixel shaders that will be used to render
 
 	//RENDER THE SHADOW MAP
-	drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+	//drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -1995,6 +1998,13 @@ void RenderEngine::StartMenuUpdate(float tt){
 
 void RenderEngine::Release(){
 
+	matConstBuff->Release();
+	delete theCharacter1;
+	delete theCharacter2;
+	delete theCharacter3;
+	delete theBinaryTree;
+	theCharacters.clear();
+
 	for (int i = 0; i < particleEffects.size(); i++) {
 		delete particleEffects[i];
 	}
@@ -2003,7 +2013,7 @@ void RenderEngine::Release(){
 	gDevice->Release();
 	depthStencilBuffer->Release();
 
-	gVertexBuffer->Release();
+	//gVertexBuffer->Release();
 	gVertexLayout->Release();
 	gVertexShader->Release();
 	gPixelShader->Release();

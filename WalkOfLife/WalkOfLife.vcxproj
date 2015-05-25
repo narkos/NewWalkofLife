@@ -135,7 +135,6 @@
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
-    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="RenderEngine.cpp" />
     <ClCompile Include="Counters.cpp" />
     <ClCompile Include="Shadows.cpp" />
@@ -167,7 +166,6 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="RenderEngine.h" />
     <ClInclude Include="Shadows.h" />
     <ClInclude Include="Sound.h" />

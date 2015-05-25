@@ -174,14 +174,14 @@ bool RenderEngine::Init(){
 
 
 	//Baby World Start Pos
-	//resetXpos[0] = 4.0f;
-	//resetYpos[0] = 9.0f;
+	resetXpos[0] = 4.0f;
+	resetYpos[0] = 9.0f;
 
-	//resetXpos[1] = 200.0f;
-	//resetYpos[1] = 20.0f;
+	resetXpos[1] = 200.0f;
+	resetYpos[1] = 20.0f;
 
-	//resetXpos[2] = 364.0f;
-	//resetYpos[2] = 20.0f;
+	resetXpos[2] = 364.0f;
+	resetYpos[2] = 20.0f;
 	
 	
 
@@ -1136,21 +1136,21 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			{
 				tex = intArrayTex[theBinaryTree->collectables->at(i)[j].indexT];
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
+gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
 
-				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-				
-				//theBinaryTree->collectables->at(i)[j].material;
-				//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-				//matProperties.Material = MatPresets::BlinnBase;
-				//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
-				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
 
-				gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
+//theBinaryTree->collectables->at(i)[j].material;
+//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+//matProperties.Material = MatPresets::BlinnBase;
+//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
+gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 			}
 		}
 	}
@@ -1177,7 +1177,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 				gDeviceContext->Draw(theBinaryTree->platformsMoving->at(i)[j].nrElements * 3, 0);
-			}			
+			}
 		}
 	}
 
@@ -1207,7 +1207,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			}
 		}
 	}
-	
+
 	tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
@@ -1231,41 +1231,45 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			}
 		}
 	}
-	
+
 	//######################################################################################################################################################
 	//###						*NON* SHADOW CASTING OBJECTS GOES IN IF-STATEMENT HERE BELOW	(if (viewPoint == 2))					  				 ###	
 	//######################################################################################################################################################
-	gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
-	for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
-	{
-		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
+	if (viewPoint == 2)
 		{
-			tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
-			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
+			gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
+			for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
+			{
+				for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
+				{
+					tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
+					gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+					gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
 
-			theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
-			/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-			theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-			//theBinaryTree->renderObjects->at(i)[j].material.Emissive = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-			//theBinaryTree->renderObjects->at(i)[j].material
-			//theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
+					theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
+					/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+					theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+					//theBinaryTree->renderObjects->at(i)[j].material.Emissive = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+					//theBinaryTree->renderObjects->at(i)[j].material
+					//theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
 
-			matProperties.Material = MatPresets::BlinnBase;
-			matProperties.Material.UseTexture = 1;
+					matProperties.Material = MatPresets::BlinnBase;
+					matProperties.Material.UseTexture = 1;
 
-			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+					gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-			UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
+					UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
 
 
 
-			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+					gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-			gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
+					gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
+				}
+			}
 		}
-	}
+	
 
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 
@@ -1828,19 +1832,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	//TEMPORARY RESET FUNCTIONS
-	if (input == 8)
+	if (input == 12)
 	{
 		resetValues[0] = resetXpos[0];
 		resetValues[1] = resetYpos[0];
 		reset(&theCharacter, false);
 	}
-	if (input == 9)
+	if (input == 13)
 	{
 		resetValues[0] = resetXpos[1];
 		resetValues[1] = resetYpos[1];
 		reset(&theCharacter, false);
 	}
-	if (input == 10)
+	if (input == 14)
 	{
 		resetValues[0] = resetXpos[2];
 		resetValues[1] = resetYpos[2];
@@ -2389,8 +2393,17 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 	Character2 = false;
 	Character3 = false;
 	CurrChar.setCharState(CurrChar.getCharSate());
-	theCharacter->xPos = 4;
-	theCharacter->yPos = 6;
+	if (fullreset)
+	{
+		theCharacter->xPos = 4;
+		theCharacter->yPos = 6;
+	}
+	
+	else
+	{
+		theCharacter->xPos = resetValues[0];
+		theCharacter->yPos = resetValues[1];
+	}
 	theCharacter->Translate(0, 0, 0);
 	if (fullreset)
 	{

@@ -85,21 +85,35 @@ int Input::detectInput(HWND hWindow)
 	{
 		return 7;
 	}
-	if (keyboardState[DIK_M]&& 0x80)
+	else if (keyboardState[DIK_M]&& 0x80)
 	{
 		return 8;
 	}
-	if (keyboardState[DIK_N]&& 0x80)
+	else if (keyboardState[DIK_N]&& 0x80)
 	{
 		return 9;
 	}
 	
-
 	else if (keyboardState[DIK_C]&& 0x80)
 	{
 		return 11;
 	}
-	
+
+	else if (keyboardState[DIK_8] && 0x80)
+	{
+		return 12;
+	}
+	else if (keyboardState[DIK_9] && 0x80)
+	{
+		return 13;
+	}
+	else if (keyboardState[DIK_0] && 0x80)
+	{
+		return 14;
+	}
+
+
+
 	else
 	{
 		return 0;

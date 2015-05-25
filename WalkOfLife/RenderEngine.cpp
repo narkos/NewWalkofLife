@@ -960,7 +960,8 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	//Set the vertex and pixel shaders that will be used to render
 
 	//RENDER THE SHADOW MAP
-	//drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+	
+	drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -976,10 +977,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
 
-//	if (mainMenu.getPause() == TRUE)
-	{
-//		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
-	}
+	
 	// Draw Text
 
 	
@@ -1061,7 +1059,14 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
-
+	if (mainMenu.getPause() == TRUE)
+	{
+		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+	}
+	gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
+	//gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
+	//gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
+	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
 	gSwapChain->Present(0, 0); //växla back/front buffer
 }
 
@@ -1676,17 +1681,18 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		
 		
-		mainMenu.setPause(true);
-		mainMenu.setreplay(true);
-		mainMenu.setgameover(true);
+		mainMenu.gameover(false);
+		
+		
 	}
 	if (input == 9)
 	{
-
-		mainMenu.setwin(true);
-		mainMenu.setPause(true);
-		mainMenu.setreplay(true);
-		mainMenu.setgameover(true);
+		mainMenu.gameover(true);
+		//mainMenu.setgameover(true);
+		//mainMenu.setwin(true);
+		//mainMenu.setPause(true);
+		//mainMenu.setreplay(true);
+		
 	}
 	//if (input == 11){
 	//	particleEffects[0].Play();
@@ -1857,18 +1863,18 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	//TEMPORARY RESET FUNCTIONS
-	if (input == 8)
-	{
-		resetValues[0] = resetXpos[0];
-		resetValues[1] = resetYpos[0];
-		reset(&theCharacter);
-	}
-	if (input == 9)
-	{
-		resetValues[0] = resetXpos[1];
-		resetValues[1] = resetYpos[1];
-		reset(&theCharacter);
-	}
+	//if (input == 8)
+	//{
+	//	resetValues[0] = resetXpos[0];
+	//	resetValues[1] = resetYpos[0];
+	//	reset(&theCharacter);
+	//}
+	//if (input == 9)
+	//{
+	//	resetValues[0] = resetXpos[1];
+	//	resetValues[1] = resetYpos[1];
+	//	reset(&theCharacter);
+	//}
 	if (input == 10)
 	{
 		resetValues[0] = resetXpos[2];

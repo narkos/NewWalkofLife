@@ -76,7 +76,7 @@ public:
 	
 	bool getwin();
 	
-	void gameover(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS, bool reply);
+	void gameover(bool winz);
 	
 private:
 	int t;

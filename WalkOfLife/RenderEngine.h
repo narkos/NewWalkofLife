@@ -300,7 +300,7 @@ protected:
 	int izz = 1;
 	int shadowTemp = 0;
 
-	UINT32 vertexSize = sizeof(float)* 11;
+	UINT32 vertexSize = sizeof(float)* 8;
 	UINT32 offset = 0;
 
 	//World perObjCBData;

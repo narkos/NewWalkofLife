@@ -202,40 +202,40 @@ bool RenderEngine::Init(){
 
 	mainMenu.menuInit(gDeviceContext);
 
-	theCharacters.at(0).xPos = 4;
-	theCharacters.at(0).yPos = 9;
-	
-	theCharacters.at(0).setRunSpeed(0.08f);
-	theCharacters.at(0).setJumpHeight(0.66f);
-	theCharacters.at(0).setDash(2.0f);
-	theCharacters.at(8).setRunSpeed(0.13f);
-	theCharacters.at(8).setJumpHeight(0.68f);
-	theCharacters.at(0).setDash(2.7f);
-	theCharacters.at(16).setRunSpeed(0.05f);
-	theCharacters.at(16).setJumpHeight(0.75f);
-	
+	//theCharacters.at(0).xPos = 4;
+	//theCharacters.at(0).yPos = 9;
+	//
+	//theCharacters.at(0).setRunSpeed(0.08f);
+	//theCharacters.at(0).setJumpHeight(0.66f);
+	//theCharacters.at(0).setDash(2.0f);
+	//theCharacters.at(8).setRunSpeed(0.13f);
+	//theCharacters.at(8).setJumpHeight(0.68f);
+	//theCharacters.at(0).setDash(2.7f);
+	//theCharacters.at(16).setRunSpeed(0.05f);
+	//theCharacters.at(16).setJumpHeight(0.75f);
+	//
 
 
 
-	// Set hit ray info
-	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
+	//// Set hit ray info
+	//theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
+	//theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	//theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
 
-	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
-	theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
+	//theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
+	//theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
+	//theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
 
 
 	//Baby World Start Pos
-	resetXpos[0] = 4.0f;
+	/*resetXpos[0] = 4.0f;
 	resetYpos[0] = 9.0f;
 
 	resetXpos[1] = 200.0f;
 	resetYpos[1] = 20.0f;
 
 	resetXpos[2] = 364.0f;
-	resetYpos[2] = 20.0f;
+	resetYpos[2] = 20.0f;*/
 
 
 	
@@ -800,7 +800,7 @@ int RenderEngine::Run(){
 
 					theCharacters.at(8).xPos = theCharacters.at(0).xPos;
 					theCharacters.at(8).yPos = theCharacters.at(0).yPos + 2;
-					theCharacters.at(8).SetDivision(theCharacters.at(0).getDivision());
+					//theCharacters.at(8).SetDivision(theCharacters.at(0).getDivision());
 
 					soundIGotThis.PlayMp3();
 					soundIGotThis.daCapo();
@@ -817,7 +817,7 @@ int RenderEngine::Run(){
 
 					theCharacters.at(16).xPos = theCharacters.at(8).xPos;
 					theCharacters.at(16).yPos = theCharacters.at(8).yPos;
-					theCharacters.at(16).SetDivision(theCharacters.at(8).getDivision());
+					//theCharacters.at(16).SetDivision(theCharacters.at(8).getDivision());
 
 					tempInt = rand() % 2;
 					if (tempInt == 0)
@@ -967,7 +967,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	//Set the vertex and pixel shaders that will be used to render
 
 	//RENDER THE SHADOW MAP
-	//drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+	drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -1017,7 +1017,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	}
 
-	//spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
 	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
@@ -1085,7 +1085,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 
-	matProperties.Material = MatPresets::Lambert;
+	matProperties.Material = MatPresets::BlinnBase;
+	matProperties.Material.UseTexture = 1;
 	//TEST CUSTOM FORMAT
 
 	//######################################################################################################################################################
@@ -1139,9 +1140,9 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
 				
 				//theBinaryTree->collectables->at(i)[j].material;
-				theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-				matProperties.Material = MatPresets::BlinnBase;
-				matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+				//matProperties.Material = MatPresets::BlinnBase;
+				//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
@@ -1248,7 +1249,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			//theBinaryTree->renderObjects->at(i)[j].material
 			//theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
 
-			matProperties.Material = theBinaryTree->renderObjects->at(i)[j].material;
+			matProperties.Material = MatPresets::BlinnBase;
+			matProperties.Material.UseTexture = 1;
 
 			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
@@ -1279,8 +1281,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	
 	tex = intArrayTex[theCharacter->indexT];
 	gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-	matProperties.Material = theCharacter->material;
-	//matProperties.Material.UseTexture = 1;
+	matProperties.Material = MatPresets::BlinnBase;
+	matProperties.Material.UseTexture = 1;
 	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
 	gDeviceContext->Draw(theCharacter->nrElements * 3, 0);
@@ -2029,12 +2031,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	lightProp01.lights[0].Active = 1;
 	lightProp01.lights[1].Active = 1;
-	lightProp01.lights[2].Active = 1;
+	lightProp01.lights[2].Active = 0;
 	lightProp01.lights[3].Active = 1;
-	lightProp01.lights[4].Active = 1;
-	lightProp01.lights[5].Active = 1;
-	lightProp01.lights[6].Active = 1;
-	lightProp01.lights[7].Active = 1;
+	lightProp01.lights[4].Active = 0;
+	lightProp01.lights[5].Active = 0;
+	lightProp01.lights[6].Active = 0;
+	lightProp01.lights[7].Active = 0;
 	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
 
 	if (theCharacter.yPos < -20)
@@ -2115,7 +2117,7 @@ void RenderEngine::MenuUpdate(float tt, PlayerObject& theCharacter){
 						else if (mainMenu.getreplay() == true)
 						{
 
-							reset(&theCharacter);
+							reset(&theCharacter, true);
 							mainMenu.setreplay(false);
 							mainMenu.setPause(false);
 							menuTime = gTimer.TotalTime();

@@ -192,7 +192,7 @@ int Input::detectRenderState(HWND)
 
 	else
 	{
-		return -1;
+		return 0;
 	}
 
 	//return 1000000;

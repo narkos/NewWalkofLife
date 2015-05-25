@@ -298,7 +298,7 @@ public:
 
 						}
 					}
->>>>>>> origin/JW_LevelHaxBackup
+
 				}
 				slamSlamRuns++;
 			}

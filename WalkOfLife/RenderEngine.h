@@ -77,6 +77,8 @@ public:
 	void LoadSounds();
 	void drawScene(int viewPoint, PlayerObject* theCharacter);
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
+	bool winning = false;
+	float tajmerz = 0;
 
 	//animation
 	void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int switcher);

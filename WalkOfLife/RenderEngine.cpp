@@ -983,10 +983,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
 
-	if (mainMenu.getPause() == TRUE)
-	{
-		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
-	}
+	
 	// Draw Text
 	
 	spriteBatch->Begin();
@@ -1065,7 +1062,10 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
 
 	drawScene(2, theCharacter);	// 1 = From lights POV. 2 = From mainCameras POV.
-
+	if (mainMenu.getPause() == TRUE)
+	{
+		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
+	}
 	gSwapChain->Present(0, 0); //växla back/front buffer
 }
 
@@ -1511,10 +1511,20 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (theCharacter.xPos > 557 && theCharacter.xPos < 565 && theCharacter.yPos > 5 && theCharacter.yPos < 11)
 	{
+		if (!winning)
+		{
+			tajmerz = gTimer.TotalTime();
+			winning = true;
+		}
+		
+		if (tajmerz + 1.0f < gTimer.TotalTime())
+		{
 		mainMenu.setwin(true);
 		mainMenu.setPause(true);
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
+		}
+		
 	}
 	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 

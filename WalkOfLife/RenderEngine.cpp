@@ -348,7 +348,7 @@ void RenderEngine::TextureFunc(){
 	HRESULT texCheck;
 	vector<string> texNames = theCustomImporter.GettexNameArray();
 	RSWArray = new ID3D11ShaderResourceView*[texNames.size()];
-	std::wstring fest = L"Textures/";
+	std::wstring fest = L"Textures/ObjectTextures/";
 	for (int texIt = 0; texIt < texNames.size(); texIt++){
 
 		std::wstring fest2 = fest + string2wString(texNames[texIt]);;
@@ -826,7 +826,7 @@ int tex = 0;
 void RenderEngine::Render(PlayerObject* theCharacter){
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
 
-	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos());	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
+	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos(), lightProp01.lights[0].Direction);	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
 	WVP = shadows.getLightWVP();	//Transpose the matrices (WVP To lights POV) to prepare them for the shader, For Shadow mapping in this case
 	//XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(shadows.getShadowWorld()));
 	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
@@ -1006,6 +1006,13 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
+
+				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+				theBinaryTree->collectables->at(i)[j].material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				//theBinaryTree->collectables->at(i)[j].material;
+				theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+				matProperties.Material = theBinaryTree->collectables->at(i)[j].material;
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
@@ -1205,16 +1212,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	gDeviceContext->PSSetConstantBuffers(3, 1, &shadowBuffer);
 	gDeviceContext->UpdateSubresource(shadowBuffer, 0, NULL, &shadowBufferData, 0, 0);
 
-	if (theInput.detectCameraLean(hWindow))
-	{
-		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
-	}
-	else
-	{
-		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
-		mainCamera.updateCamera();
-	}
 
+	//Lean Camera
+	mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
+
+	//Update Moving Platforms
 	float tempDiv = -1;
 	if (theCharacter.getDivision() == 0)
 	{
@@ -1704,7 +1706,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
-	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 40.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
 	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);

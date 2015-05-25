@@ -67,7 +67,7 @@ void Shadows::createShadowMap()
 //	//gDeviceContext->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
 //}
 
-void Shadows::renderSceneToShadowMap(XMMATRIX worldMatrix, XMFLOAT4 lightPosition, float lookAtX)
+void Shadows::renderSceneToShadowMap(XMMATRIX worldMatrix, XMFLOAT4 lightPosition, float lookAtX, XMFLOAT4 direction)
 {
 	gDeviceContext->OMSetRenderTargets(0, nullptr, sDepthStencilView);		//Bind the render target view and depth stencil buffer to the output render pipeline.
 	gDeviceContext->ClearDepthStencilView(sDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);		//Clear the depth buffer
@@ -75,9 +75,9 @@ void Shadows::renderSceneToShadowMap(XMMATRIX worldMatrix, XMFLOAT4 lightPositio
 	///////////PERSPECTIVE SHADOW PROJECTION
 	//lightProjectionMatrix = XMMatrixPerspectiveFovLH(3.14*0.45, 1200/900, 0.5f, 20.0f);
 	///////////ORTHOGRAPHIC SHADOW PROJECTION
-	lightProjectionMatrix = XMMatrixOrthographicLH(60, 30, 0.5f, 100.0f);	//Check
+	lightProjectionMatrix = XMMatrixOrthographicLH(45, 20, 0.5f, 100.0f);	//Check
 
-	lightLookAt = XMVectorSet(lookAtX, 0.0f, 3.0f, 1.0f);
+	lightLookAt = XMVectorSet(lookAtX, direction.y, direction.z, 1.0f);
 	lightViewUp = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Create the lights view matrix for shadow mapping

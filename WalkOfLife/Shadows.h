@@ -42,7 +42,7 @@ public:
 
 	//void setShadowShaderParameters(XMMATRIX worldMatrix);
 
-	void renderSceneToShadowMap(XMMATRIX worldMatrix, XMFLOAT4 lightPosition, float lookAtX);
+	void renderSceneToShadowMap(XMMATRIX worldMatrix, XMFLOAT4 lightPosition, float lookAtX, XMFLOAT4 direction);
 
 	XMMATRIX getShadowWorld(){
 		return shadowWorld;

@@ -207,21 +207,24 @@ bool RenderEngine::Init(){
 	
 	theCharacters.at(0).setRunSpeed(0.08f);
 	theCharacters.at(0).setJumpHeight(0.66f);
-	theCharacters.at(1).setRunSpeed(0.15f);
-	theCharacters.at(1).setJumpHeight(0.68f);
-	theCharacters.at(2).setRunSpeed(0.05f);
-	theCharacters.at(2).setJumpHeight(0.75f);
+	theCharacters.at(0).setDash(2.0f);
+	theCharacters.at(8).setRunSpeed(0.13f);
+	theCharacters.at(8).setJumpHeight(0.68f);
+	theCharacters.at(0).setDash(2.7f);
+	theCharacters.at(16).setRunSpeed(0.05f);
+	theCharacters.at(16).setJumpHeight(0.75f);
 	
+
 
 
 	// Set hit ray info
 	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	theCharacters.at(1).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	theCharacters.at(2).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
+	theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
 
 	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	theCharacters.at(1).SetRayRanges(0.5f, 0.5f, 0.5f);
-	theCharacters.at(2).SetRayRanges(0.48f, 0.5f, 0.4f);
+	theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
+	theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
 
 
 	//Baby World Start Pos
@@ -785,6 +788,7 @@ int RenderEngine::Run(){
 				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
 
 				if (gCounter.theAge.years > 32 && Character2 == false)
+
 				{
 					Character2 = true;
 					//CurrChar.switchCharState(theCharacter1->xPos);
@@ -793,8 +797,11 @@ int RenderEngine::Run(){
 					/*particleEffects[1].SetPosMatrix(theCharacter.pos);
 					particleEffects[1].Play();*/
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
+
 					theCharacters.at(8).xPos = theCharacters.at(0).xPos;
 					theCharacters.at(8).yPos = theCharacters.at(0).yPos + 2;
+					theCharacters.at(8).SetDivision(theCharacters.at(0).getDivision());
+
 					soundIGotThis.PlayMp3();
 					soundIGotThis.daCapo();
 
@@ -807,8 +814,11 @@ int RenderEngine::Run(){
 					haschanged = true;
 					CurrChar.setCharState(16);
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
+
 					theCharacters.at(16).xPos = theCharacters.at(8).xPos;
 					theCharacters.at(16).yPos = theCharacters.at(8).yPos;
+					theCharacters.at(16).SetDivision(theCharacters.at(8).getDivision());
+
 					tempInt = rand() % 2;
 					if (tempInt == 0)
 					{
@@ -1007,7 +1017,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	}
 
-	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+	//spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
 	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
@@ -1124,6 +1134,14 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
+
+				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+				
+				//theBinaryTree->collectables->at(i)[j].material;
+				theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+				matProperties.Material = MatPresets::BlinnBase;
+				matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
@@ -1166,6 +1184,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		tempDiv = 0.0f;
 	}
+
 	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
 	{
 		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
@@ -1339,19 +1358,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	gDeviceContext->PSSetConstantBuffers(3, 1, &shadowBuffer);
 	gDeviceContext->UpdateSubresource(shadowBuffer, 0, NULL, &shadowBufferData, 0, 0);
 
-	
+	//Lean Camera
+	mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
 
-	if (theInput.detectCameraLean(hWindow))
-	{
-		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
-	}
-	else
-	{
-		mainCamera.leanCamera(theInput.detectCameraLean(hWindow));
-		mainCamera.updateCamera();
-	}
-
-	float tempDiv = -1.0f;
+	//Update Moving Platforms
+	float tempDiv = -1;
 	if (theCharacter.getDivision() == 0)
 	{
 		tempDiv = 0.0f;
@@ -1467,12 +1478,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
@@ -1631,13 +1642,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 	if (input == 4)
 	{
-		reset(&theCharacter);
+		reset(&theCharacter, true);
 	}
 	if (input == 5)
 	{
 		theCharacters.at(0).xPos = theCharacter.xPos;
 		theCharacters.at(0).yPos = theCharacter.yPos;
-		
+		theCharacters.at(0).SetDivision(theCharacter.getDivision());
+
 		CurrChar.setCharState(0);
 		statez = CurrChar.getCharSate();
 		return;
@@ -1647,7 +1659,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		theCharacters.at(8).xPos = theCharacter.xPos;
 		theCharacters.at(8).yPos = theCharacter.yPos;
-		
+		theCharacters.at(8).SetDivision( theCharacter.getDivision());
 		CurrChar.setCharState(8);
 		statez = CurrChar.getCharSate();
 		return;
@@ -1657,7 +1669,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		theCharacters.at(16).xPos = theCharacter.xPos;
 		theCharacters.at(16).yPos = theCharacter.yPos;
-		
+		theCharacters.at(16).SetDivision ( theCharacter.getDivision());
 		CurrChar.setCharState(16);
 		statez = CurrChar.getCharSate();
 		return;
@@ -1852,19 +1864,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		resetValues[0] = resetXpos[0];
 		resetValues[1] = resetYpos[0];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 	if (input == 9)
 	{
 		resetValues[0] = resetXpos[1];
 		resetValues[1] = resetYpos[1];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 	if (input == 10)
 	{
 		resetValues[0] = resetXpos[2];
 		resetValues[1] = resetYpos[2];
-		reset(&theCharacter);
+		reset(&theCharacter, false);
 	}
 
 	//MOVING PLATFORM POSITION UPDATE
@@ -1873,29 +1885,42 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	// DEADLY MOVING PLATFORM ( SLAMMER ) UPDATE
+	thePhysics.Gravitation(theCollision, &theCharacter);
+	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
+	theCharacter.CalculateWorld();
 
 	tempDiv = -1.0f;
 	if (theCharacter.getDivision() == 0)
 	{
 		tempDiv = 0.0f;
 	}
-	for (int i = theCharacter.getDivision() + (int)tempDiv; i <= theCharacter.getDivision() + 1; i++)
-	{
 
-		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
-		{
-			
-			
-			theBinaryTree->deadlyMoving->at(i)[j].SlamaJamma(gTimer.TotalTime());
-			theBinaryTree->deadlyMoving->at(i)[j].UpdateBBOX();
-			theBinaryTree->deadlyMoving->at(i)[j].CalculateWorld();
-		}
+	for (int o = 0; o < theBinaryTree->deadlyMoving->size(); o++)
+	{			
+			for (int i = 0; i < theBinaryTree->deadlyMoving->at(o).size(); i++)
+			{
+				int poop = 0;
+				if (o == theCharacter.getDivision() || o == theCharacter.getDivision() +1 || o == theCharacter.getDivision() -1 && theCharacter.getDivision() > 0)
+				{
+					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 1);
+					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+				
+				}
+				
+				else
+				{
+					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 0);
+					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+				}
+		
 
+			}
 	}
 
-	thePhysics.Gravitation(theCollision, &theCharacter);
-	theCharacter.UpdatePosition(theCollision->rightValid(), theCollision->leftValid());
-	theCharacter.CalculateWorld();
+
+
 
 
 	if (rightDirection)
@@ -1927,10 +1952,11 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
-	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 30.0f, 0.0f, 1.0f);
+
+	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
-	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, 0.0f, 8.0f, 1.0f);
-	lightProp01.lights[0].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 1.0f);
+	lightProp01.lights[0].Color = XMFLOAT4(Colors::Beige);
 
 
 	lightProp01.lights[1].Type = l_Point;
@@ -1960,18 +1986,55 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		lightProp01.lights[2].Range = 15.0f;
 
 	lightProp01.lights[3].Type = l_Point;
-	lightProp01.lights[3].Position = XMFLOAT4(20.0f, -1.0f, 0.0f, 1.0f);
-	lightProp01.lights[3].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
+	lightProp01.lights[3].Color = XMFLOAT4(Colors::Red);
 	lightProp01.lights[3].AttConst = 0.7f;
 	lightProp01.lights[3].AttLinear = 0.2f;
 	lightProp01.lights[3].AttQuadratic = 0.0f;
 	lightProp01.lights[3].Range = 15.0f;
 
 
+	lightProp01.lights[4].Type = l_Point;
+	lightProp01.lights[4].Position = XMFLOAT4(20.0f, 15.0f, 0.0f, 1.0f);
+	lightProp01.lights[4].Color = XMFLOAT4(Colors::Blue);
+	lightProp01.lights[4].AttConst = 0.7f;
+	lightProp01.lights[4].AttLinear = 0.2f;
+	lightProp01.lights[4].AttQuadratic = 0.0f;
+	lightProp01.lights[4].Range = 15.0f;
+
+
+	lightProp01.lights[5].Type = l_Point;
+	lightProp01.lights[5].Position = XMFLOAT4(25.0f, 15.0f, 0.0f, 1.0f);
+	lightProp01.lights[5].Color = XMFLOAT4(Colors::Blue);
+	lightProp01.lights[5].AttConst = 0.7f;
+	lightProp01.lights[5].AttLinear = 0.2f;
+	lightProp01.lights[5].AttQuadratic = 0.0f;
+	lightProp01.lights[5].Range = 15.0f;
+
+	lightProp01.lights[6].Type = l_Point;
+	lightProp01.lights[6].Position = XMFLOAT4(25.0f, 10.0f, 0.0f, 1.0f);
+	lightProp01.lights[6].Color = XMFLOAT4(Colors::Red);
+	lightProp01.lights[6].AttConst = 0.7f;
+	lightProp01.lights[6].AttLinear = 0.2f;
+	lightProp01.lights[6].AttQuadratic = 0.0f;
+	lightProp01.lights[6].Range = 15.0f;
+
+	lightProp01.lights[7].Type = l_Point;
+	lightProp01.lights[7].Position = XMFLOAT4(15.0f, 5.0f, 0.0f, 1.0f);
+	lightProp01.lights[7].Color = XMFLOAT4(Colors::Red);
+	lightProp01.lights[7].AttConst = 0.7f;
+	lightProp01.lights[7].AttLinear = 0.2f;
+	lightProp01.lights[7].AttQuadratic = 0.0f;
+	lightProp01.lights[7].Range = 15.0f;
+
 	lightProp01.lights[0].Active = 1;
 	lightProp01.lights[1].Active = 1;
 	lightProp01.lights[2].Active = 1;
 	lightProp01.lights[3].Active = 1;
+	lightProp01.lights[4].Active = 1;
+	lightProp01.lights[5].Active = 1;
+	lightProp01.lights[6].Active = 1;
+	lightProp01.lights[7].Active = 1;
 	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
 
 	if (theCharacter.yPos < -20)
@@ -2340,7 +2403,7 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 }
 
-void RenderEngine::reset(PlayerObject* theCharacter)
+void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 {
 	soundBackground.daCapo();
 	soundBackground.StopMp3();
@@ -2357,13 +2420,18 @@ void RenderEngine::reset(PlayerObject* theCharacter)
 	theCharacter->xPos = 4;
 	theCharacter->yPos = 6;
 	theCharacter->Translate(0, 0, 0);
-	theCharacter->setDivision(0);
+	if (fullreset)
+	{
+		theCharacter->setDivision(0);
+	}
+	
 	theCharacter->momentum = 0;
 	theCharacter->jumpMomentumX = 0;
 	mainCamera.setCameraXPos(theCharacter->xPos);
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
+
 	for (int i = 0; i < 20; i++)
 	{
 		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)

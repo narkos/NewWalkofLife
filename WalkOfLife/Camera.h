@@ -9,12 +9,12 @@ using namespace DirectX;
 class Camera{
 
 private:
-	float WINDOW_WIDTH =1280;		//The game window width.
+	float WINDOW_WIDTH = 1280;		//The game window width.
 	float WINDOW_HEIGHT = 720;		//The game window height.
 
 	float cameraXPos = 0.0f;
 	float cameraYPos = 0.0f;
-	float cameraZPos = -1.0f;
+	float cameraZPos = -10.0f;
 
 	float cameraXPosOffset = 6.0f;		//How far back in the screen the character will be.
 	float cameraYPosOffset = 1.0f;		//How high the camera will be relative to the character.
@@ -25,9 +25,12 @@ private:
 	float playerYPos;
 
 	float rightWall = 6.0f;				//The Right wall's position on the invisible cube in wich the player can move freely.
-	float leftWall = (-5.0f);			//The Left wall's position.
+	float leftWall = 5.0f;				//The Left wall's position.
 	float upperWall = 4.0f;				//The Upper wall's position.
 	float lowerWall = (-3.0f);			//The Lower wall's position.
+
+	float focusY;
+	float currYFocus = 0.0f;
 
 	// Sets camera pos and angle
 	XMMATRIX CamView;					//The Camera View Matrix

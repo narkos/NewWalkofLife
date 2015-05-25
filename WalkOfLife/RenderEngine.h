@@ -73,7 +73,7 @@ public:
 	virtual void Release();
 	void Fonts();
 	void fpscounter();
-	void reset(PlayerObject* theCharacter);
+	void reset(PlayerObject* theCharacter, bool fullreset);
 	void LoadSounds();
 	void drawScene(int viewPoint, PlayerObject* theCharacter);
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
@@ -138,6 +138,7 @@ public:
 	int statez;
 
 	//Input theInput;
+	bool Character1 = false;
 	bool Character2 = false;
 	bool Character3 = false;
 

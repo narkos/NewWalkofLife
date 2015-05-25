@@ -24,7 +24,7 @@ void Camera::updateCamera()
 		cameraXPos = (playerXPos - playerToCameraX);
 		cameraXPos = cameraXPos - ((rightWall - playerToCameraX) * damping);
 	}
-	
+
 	if (playerToCameraX < leftWall)
 	{
 		cameraXPos = (playerXPos - playerToCameraX);
@@ -44,7 +44,9 @@ void Camera::updateCamera()
 	}
 
 	//Sets and updates the camera's view- and projection matrices based of the calculations.
-	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+	CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f),
+		XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), 0.0f, 1.0f),
+		XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
 	CamProjection = XMMatrixPerspectiveFovLH(3.14f*(0.45f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.5f, 1000.0f);
 
 }
@@ -53,31 +55,60 @@ void Camera::leanCamera(bool state)
 {
 	if (state)
 	{
-		if (cameraZPos < (-3.0))
+		focusY = (cameraYPos + cameraYPosOffset) + currYFocus;
+		if (focusY > (cameraYPos - 10.0f))
 		{
-			if (cameraYPos < (playerYPos + 3.0))
-			{
-				cameraYPos += 0.1f;
-			}
-			cameraZPos += 0.3f;
-			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+			currYFocus -= 0.5f;
+			//cameraZPos += 0.3f;
+			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f),
+				XMVectorSet((cameraXPos + cameraXPosOffset), (focusY), 0.0f, 1.0f),
+				XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
 		}
 	}
 	else
 	{
-		if (cameraZPos >(-10.0))
+		focusY = (cameraYPos + cameraYPosOffset) + currYFocus;
+		if (focusY < (cameraYPos + cameraYPosOffset))
 		{
-			if (cameraYPos > playerYPos)
-			{
-				cameraYPos -= 0.1f;
-			}
-			cameraZPos -= 0.3f;
-			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
-		}
-		//updateCamera();
-	}
+			currYFocus += 1.0;
 
+			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f),
+				XMVectorSet((cameraXPos + cameraXPosOffset), (focusY), 0.0f, 1.0f),
+				XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+		}
+		else
+			updateCamera();
+	}
 }
+//void Camera::leanCamera(bool state)
+//{
+//	if (state)
+//	{
+//		if (cameraZPos < (-3.0))
+//		{
+//			if (cameraYPos < (playerYPos + 3.0))
+//			{
+//				cameraYPos += 0.1f;
+//			}
+//			cameraZPos += 0.3f;
+//			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+//		}
+//	}
+//	else
+//	{
+//		if (cameraZPos >(-10.0))
+//		{
+//			if (cameraYPos > playerYPos)
+//			{
+//				cameraYPos -= 0.1f;
+//			}
+//			cameraZPos -= 0.3f;
+//			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+//		}
+//		//updateCamera();
+//	}
+//
+//}
 
 void Camera::setCharacterXPos(float pos)
 {
@@ -264,3 +295,37 @@ XMMATRIX Camera::getCamView()
 //	cameraYPos = playerYPos + cameraYPosOffset;
 //}
 //	WORLD SPACE FUNCTIONALITY	//
+
+
+
+
+//////////OLD CAMERALEAN
+//void Camera::leanCamera(bool state)
+//{
+//	if (state)
+//	{
+//		if (cameraZPos < (-3.0))
+//		{
+//			if (cameraYPos < (playerYPos + 3.0))
+//			{
+//				cameraYPos += 0.1f;
+//			}
+//			cameraZPos += 0.3f;
+//			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+//		}
+//	}
+//	else
+//	{
+//		if (cameraZPos >(-10.0))
+//		{
+//			if (cameraYPos > playerYPos)
+//			{
+//				cameraYPos -= 0.1f;
+//			}
+//			cameraZPos -= 0.3f;
+//			CamView = XMMatrixLookAtLH(XMVectorSet((cameraXPos + cameraXPosOffset), (cameraYPos + cameraYPosOffset), cameraZPos, 1.0f), XMVectorSet((cameraXPos + cameraXPosOffset), (playerYPos), 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0, 0.0f));
+//		}
+//		//updateCamera();
+//	}
+//
+//}

@@ -7,6 +7,10 @@ Counters::Counters()
 	this->creams = 0;
 }
 
+void Counters::setCoins(int coins)
+{
+	this->coins = coins;
+}
 void Counters::addCoin()
 {
 	this->coins = this->coins + 1;

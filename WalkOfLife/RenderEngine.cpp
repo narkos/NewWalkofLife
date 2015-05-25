@@ -180,7 +180,7 @@ bool RenderEngine::Init(){
 	resetXpos[1] = 200.0f;
 	resetYpos[1] = 20.0f;
 
-	resetXpos[2] = 364.0f;
+	resetXpos[2] = 557.0f;
 	resetYpos[2] = 20.0f;
 	
 	
@@ -996,7 +996,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	std::wstring xPos = std::to_wstring(theCharacter->xPos);
 	std::wstring yPos = std::to_wstring(theCharacter->yPos);
 	//std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring coins = std::to_wstring(theCharacter->getDivision());
+	std::wstring coins = std::to_wstring(gCounter.getCoin());
 	std::wstring dass = std::to_wstring(fpsDisplay);
 	std::wstring name(L"FPS: ");
 	std::wstring year(L"\nYear: ");
@@ -1504,6 +1504,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	if (gCounter.theAge.years > 99)
 	{
 		reset(&theCharacter, true);
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
+	}
+
+	if (theCharacter.xPos > 557 && theCharacter.xPos < 565 && theCharacter.yPos > 5 && theCharacter.yPos < 11)
+	{
+		mainMenu.setwin(true);
 		mainMenu.setPause(true);
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
@@ -2424,6 +2432,7 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 	mainCamera.setCameraYPos(theCharacter->yPos);
 	gCounter.theAge.years = 0;
 	gCounter.theAge.months = 0;
+	gCounter.setCoins(0);
 
 	for (int i = 0; i < 20; i++)
 	{

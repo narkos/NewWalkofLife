@@ -20,6 +20,7 @@ public:
 	void takeCream();
 	void takeCoin();
 	void addCollectable(XMFLOAT2);
+	void setCoins(int);
 
 	struct age
 	{

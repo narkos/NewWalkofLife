@@ -1500,6 +1500,14 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
 	}
+
+	if (gCounter.theAge.years > 99)
+	{
+		reset(&theCharacter, true);
+		mainMenu.setPause(true);
+		mainMenu.setreplay(true);
+		mainMenu.setgameover(true);
+	}
 	////theCollision.TestCollision(theCustomImporter.GetStaticPlatforms()); //vi ska använda dem från customformatet men samtidigt får joel mecka så att culling fungerar med dem!
 
 

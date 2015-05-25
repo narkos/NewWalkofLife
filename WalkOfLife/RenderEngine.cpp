@@ -988,6 +988,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 	}
 	// Draw Text
+	
 	spriteBatch->Begin();
 
 	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
@@ -1020,7 +1021,9 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
+	//gSwapChain->Present(0, 0); //växla back/front buffer
 	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+	
 	///////////////////////////////////////////
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -1501,12 +1504,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	gCounter.addCollectable(tempPickUpValue);
 
 	if (tempPickUpValue.y <= -0.1f){ //negativ tid
-		particleEffects[1]->SetPosMatrix(theCharacter.pos);
-		particleEffects[1]->Play();
-	}
-	else if (tempPickUpValue.y > 0.1f){ //positiv tid
 		particleEffects[0]->SetPosMatrix(theCharacter.pos);
 		particleEffects[0]->Play();
+	}
+	else if (tempPickUpValue.y > 0.1f){ //positiv tid
+		particleEffects[1]->SetPosMatrix(theCharacter.pos);
+		particleEffects[1]->Play();
 	}
 
 	if (tempPickUpValue.x > 0.1f){ //coins
@@ -1728,50 +1731,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 
 	}
-	//if (dash)
-	//{
-//		this->switchAnimation(&theCharacter, CurrChar.getCharSate(), 1);
-//	}
-
-
-	//if (CurrChar.getCharSate() == 0)
-	//{
-	//	if (rand()%2000 == 0)
-	//	{
-	//		soundGonnaDie.PlayMp3();
-	//		soundGonnaDie.daCapo();
-	//	}
-
-	//	else if (rand()%2000 == 1000)
-	//	{
-	//		soundLifeIsA.PlayMp3();
-	//		soundLifeIsA.daCapo();
-	//	}
-	//}
-
-	//else if (CurrChar.getCharSate() == 1)
-	//{
-	//	if (rand() % 2000 == 0)
-	//	{
-	//		soundIGotThis.PlayMp3();
-	//		soundIGotThis.daCapo();
-	//	}
-	//}
-
-	//else if (CurrChar.getCharSate() == 2)
-	//{
-	//	if (rand() % 2000 == 0)
-	//	{
-	//		soundHelpMe.PlayMp3();
-	//		soundHelpMe.daCapo();
-	//	}
-
-	//	else if (rand() % 2000 == 1000)
-	//	{
-	//		soundWhereAmI.PlayMp3();
-	//		soundWhereAmI.daCapo();
-	//	}
-	//}
+	
 	if (theCollision->upValid() == false){
 		thePhysics.DisableUpForce();
 	}
@@ -2032,12 +1992,12 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	lightProp01.lights[0].Active = 1;
 	lightProp01.lights[1].Active = 1;
 	lightProp01.lights[2].Active = 0;
-	lightProp01.lights[3].Active = 1;
+	lightProp01.lights[3].Active = 0;
 	lightProp01.lights[4].Active = 0;
 	lightProp01.lights[5].Active = 0;
 	lightProp01.lights[6].Active = 0;
 	lightProp01.lights[7].Active = 0;
-	lightProp01.GlobalAmbient = XMFLOAT4(Colors::Black);
+	lightProp01.GlobalAmbient = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	if (theCharacter.yPos < -20)
 	{

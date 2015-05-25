@@ -16,6 +16,10 @@ void Menu::CreateTextures(ID3D11Device* gDevice)
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_2.dds", nullptr, &RutTex32);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/matare.dds", nullptr, &RutTex4);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Highscorebox6.dds", nullptr, &HSbox);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/rePlay_1.dds", nullptr, &Replay);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/rePlay_2.dds", nullptr, &Replay2);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/black.dds", nullptr, &blackscreen);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/gameover.dds", nullptr, &GO_over);
 	/////
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
@@ -29,78 +33,157 @@ void Menu::CreateTextures(ID3D11Device* gDevice)
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter8.dds", nullptr, &Meter9);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter9.dds", nullptr, &Meter10);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter10.dds", nullptr, &Meter11);
-	
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/deathscreen.dds", nullptr, &deathscreen);
 
 
 	
 }
 
-void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS)
+void Menu::gameover(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS, bool reply)
 {
 	
+	GOSpriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
+	GOSpriteBatch->Begin();
+	GOSpriteBatch->Draw(blackscreen, DirectX::XMFLOAT2(width / 2, 100));
+	GOSpriteBatch->Draw(GO_over, DirectX::XMFLOAT2(width / 3.5, 100));
+	GOSpriteBatch->End();
+
+	gSwapChain->Present(0, 0);
+
+
+}
+void Menu::ActiveMenu(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS, bool reply)
+{
+
 	MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 	MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
 	MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
-	
-	//Drawing the menu
-	
-	
-	if (currentTab == 1)
-	{
-		//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
-		//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
-		MenuspriteBatch->Begin();
-		
-
-		MenuspriteBatch->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5f, 100.0f));
-		MenuspriteBatch->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5f, 300.0f));
-		MenuspriteBatch->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5f, 500.0f));
-		MenuspriteBatch->End();
-	}
-	else if (currentTab == 2)
-	{
-		//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
-		//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
-		MenuspriteBatch2->Begin();
-		MenuspriteBatch2->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5f, 100.0f));
-		MenuspriteBatch2->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5f, 300.0f));
-		MenuspriteBatch2->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5f, 500.0f));
-		
-		MenuspriteBatch2->End();
-	}
-	else if (currentTab == 3)
-	{
-		//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
-		//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
-		MenuspriteBatch3->Begin();
-		MenuspriteBatch3->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5f, 100.0f));
-		MenuspriteBatch3->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5f, 300.0f));
-		MenuspriteBatch3->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5f, 500.0f));
-
-		MenuspriteBatch3->End();
-	}
-	//MenuspriteBatch->Draw(RutTex3, DirectX::XMFLOAT2(0, 10));
-	//MenuspriteBatch->Draw(RutTex4, DirectX::XMFLOAT2(0, 30));
+	GOSpriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 	//Drawing the menu
 
-	
-	if (HS == TRUE)
-	{
-		MenuspriteBatch3->Begin();
-		MenuspriteBatch3->Draw(HSbox, DirectX::XMFLOAT2(width / 1.4f, 100.0f));
 
-		MenuspriteBatch3->End();
+	if (g_over == true)
+	{		
+		if (Win == true)
+		{
+			GOSpriteBatch->Begin();
+			GOSpriteBatch->Draw(blackscreen, DirectX::XMFLOAT2(0, 0));
+			GOSpriteBatch->Draw(deathscreen, DirectX::XMFLOAT2(width / 4, 100));
+			GOSpriteBatch->End();
+		}
+		if (Win == false)
+		{
+			GOSpriteBatch->Begin();
+			GOSpriteBatch->Draw(blackscreen, DirectX::XMFLOAT2(0, 0));
+			GOSpriteBatch->Draw(GO_over, DirectX::XMFLOAT2(width / 3.9, 100));
+			GOSpriteBatch->End();
+		}
+
 	}
-	gSwapChain->Present(0, 0);
-	
+	else if (g_over == false)
+	{
 
+		if (currentTab == 1)
+		{
+			//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
+			//MenuspriteBatch3.reset(new DirectX::SpriteBatch(gDeviceContext));
+
+			MenuspriteBatch->Begin();
+			if (reply == false)
+			{
+
+				MenuspriteBatch->Draw(RutTex1, DirectX::XMFLOAT2(width / 3.5, 100));
+
+			}
+
+			else if (reply == true)
+			{
+
+				MenuspriteBatch->Draw(Replay, DirectX::XMFLOAT2(width / 3.5, 100));
+
+			}
+			MenuspriteBatch->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 300));
+			MenuspriteBatch->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 500));
+			MenuspriteBatch->End();
+
+		}
+		else if (currentTab == 2)
+		{
+			//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
+			//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
+			//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
+
+			if (reply == false)
+			{
+				MenuspriteBatch2->Begin();
+				MenuspriteBatch2->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 100));
+				MenuspriteBatch2->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5, 300));
+				MenuspriteBatch2->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 500));
+				MenuspriteBatch2->End();
+			}
+
+			if (reply == true)
+			{
+				//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
+				MenuspriteBatch2->Begin();
+				MenuspriteBatch2->Draw(Replay2, DirectX::XMFLOAT2(width / 3.5, 100));
+				MenuspriteBatch2->Draw(RutTex2, DirectX::XMFLOAT2(width / 3.5, 300));
+				MenuspriteBatch2->Draw(RutTex32, DirectX::XMFLOAT2(width / 3.5, 500));
+				MenuspriteBatch2->End();
+			}
+
+		}
+		else if (currentTab == 3)
+		{
+			//MenuspriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
+			//MenuspriteBatch2.reset(new DirectX::SpriteBatch(gDeviceContext));
+			MenuspriteBatch3->Begin();
+			if (reply == false)
+			{
+
+				MenuspriteBatch3->Draw(RutTex12, DirectX::XMFLOAT2(width / 3.5, 100));
+
+			}
+
+			else if (reply == true)
+			{
+
+				MenuspriteBatch3->Draw(Replay2, DirectX::XMFLOAT2(width / 3.5, 100));
+
+			}
+			MenuspriteBatch3->Draw(RutTex22, DirectX::XMFLOAT2(width / 3.5, 300));
+			MenuspriteBatch3->Draw(RutTex3, DirectX::XMFLOAT2(width / 3.5, 500));
+			MenuspriteBatch3->End();
+
+		}
+		//MenuspriteBatch->Draw(RutTex3, DirectX::XMFLOAT2(0, 10));
+		//MenuspriteBatch->Draw(RutTex4, DirectX::XMFLOAT2(0, 30));
+		//Drawing the menu
+
+
+		if (HS == TRUE)
+		{
+			MenuspriteBatch3->Begin();
+			MenuspriteBatch3->Draw(HSbox, DirectX::XMFLOAT2(width / 1.4, 100));
+
+			MenuspriteBatch3->End();
+		}
+		gSwapChain->Present(0, 0);
+
+	
+	}
 }
+
 
 void Menu::menuInit(ID3D11DeviceContext* gDeviceContext)
 {
 	//MeterSpriteBatch.reset(new DirectX::SpriteBatch(gDeviceContext));
 }
 
+void Menu::setreplay(bool play)
+{
+	rePlay = play;
+}
 
 void Menu::Meterfunc(ID3D11DeviceContext* gDeviceContext, float width, int year)
 {
@@ -270,6 +353,12 @@ int Menu::menuInput(HWND hWindow)
 
 		return 4;
 	}
+	if (keyboardState[DIK_K])		//Moves right when the D key or the RIGHT arrow is pressed
+	{
+		//chosenTab = currentTab;
+
+		return 5;
+	}
 	if (chosenTab == 4 || chosenTab == 1)
 		PostMessage(hWindow, WM_DESTROY, 0, 0);
 
@@ -285,4 +374,25 @@ void Menu::setPause(bool set)
 bool Menu::getPause()
 {
 	return pause;
+}
+bool  Menu::getreplay()
+{
+	return rePlay;
+}
+void Menu::setgameover(bool set)
+{
+	g_over = set;
+}
+bool Menu::getgameover()
+{
+	return g_over;
+}
+
+void Menu::setwin(bool set)
+{
+	Win = set;
+}
+bool Menu::getwin()
+{
+	return Win;
 }

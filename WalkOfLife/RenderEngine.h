@@ -61,11 +61,15 @@ public:
 	int Run();
 	float time3;
 	float time4;
-
+	int loop = 1;
 	void SetViewport();
 	virtual bool Init();
 	void Update(float dt, PlayerObject& theCharacter);
+<<<<<<< HEAD
 	void MenuUpdate(float tt);
+=======
+	void MenuUpdate(float tt, PlayerObject& theCharacter);
+>>>>>>> origin/Master_25
 	void StartMenuUpdate(float tt);
 	void Render(PlayerObject* theCharacter);
 	virtual void Release();
@@ -75,6 +79,9 @@ public:
 	void LoadSounds();
 	void drawScene(int viewPoint, PlayerObject* theCharacter);
 	void UpdateMatricies(XMMATRIX &worldM, XMMATRIX &viewM, XMMATRIX &projM);
+
+	//animation
+	void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int switcher);
 
 	std::vector<PlayerObject> theCharacters;
 	Sound soundOldJump1;
@@ -129,6 +136,9 @@ public:
 
 	Startmenu StartMenu;
 
+	//test 
+	int statez;
+
 	//Input theInput;
 	bool Character2 = false;
 	bool Character3 = false;
@@ -150,6 +160,8 @@ public:
 
 	//Material Shit
 	ID3D11Buffer* matConstBuff;
+	ID3D11Buffer* cbPerObjectBuffer = nullptr;
+	ID3D11Buffer* Tempidlebuffer = nullptr;
 	MaterialProperties matProperties;
 	//Import Functions
 	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic);// , bool isStatic, XMMATRIX startPosMatrix);
@@ -243,6 +255,8 @@ protected:
 	ID3D11ShaderResourceView* gTextureView = nullptr;
 	
 	ID3D11ShaderResourceView** RSWArray = nullptr;
+	ID3D11ShaderResourceView* normalMap = nullptr;
+
 
 	ID3D11InputLayout* gVertexLayout = nullptr;
 	ID3D11VertexShader* gVertexShader = nullptr;
@@ -287,7 +301,7 @@ protected:
 	int izz = 1;
 	int shadowTemp = 0;
 
-	UINT32 vertexSize = sizeof(float)* 8;
+	UINT32 vertexSize = sizeof(float)* 11;
 	UINT32 offset = 0;
 
 	//World perObjCBData;

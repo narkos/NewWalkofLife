@@ -81,18 +81,15 @@ int Input::detectInput(HWND hWindow)
 	{
 		return 7;
 	}
-	else if (keyboardState[DIK_8])
+	if (keyboardState[DIK_M])
 	{
 		return 8;
 	}
-	else if (keyboardState[DIK_9])
+	if (keyboardState[DIK_N])
 	{
 		return 9;
 	}
-	else if (keyboardState[DIK_0])
-	{
-		return 10;
-	}
+	
 
 	else if (keyboardState[DIK_C])
 	{

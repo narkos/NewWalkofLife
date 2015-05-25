@@ -1005,7 +1005,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	std::wstring YYY(L"\nyPos: ");
 	std::wstring coin(L"\nCoins: ");
 	std::wstring nrOfDeaths(L"\nDeaths: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos + coin + coins;
+	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + coin + coins;
 
 	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 

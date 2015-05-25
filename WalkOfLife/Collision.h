@@ -21,10 +21,12 @@ public:
 	Collision(PlayerObject *player){
 	//this->player = player;
 		onGround = false;
+		canGoUp = true;
 	}
 
 	Collision(){
 		onGround = false;
+		canGoUp = true;
 	}
 
 

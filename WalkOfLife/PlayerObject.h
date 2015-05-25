@@ -206,21 +206,21 @@ public:
 	bool TestUp(Platform pObj){
 		if (pObj.GetActive() == true){
 			if (pObj.GetBBOX().Intersects(originHigh, up, rayLength) == true){
-				if (rayLength < rayRangeUp)
+				if (abs(rayLength) < rayRangeUp)
 					return true;
 			}
 			if (pObj.GetBBOX().Intersects(originHighRight, up, rayLength) == true){
-				if (rayLength < rayRangeUp)
+				if (abs(rayLength) < rayRangeUp)
 					return true;
 			}
 			if (pObj.GetBBOX().Intersects(originHighLeft, up, rayLength) == true){
-				if (rayLength < rayRangeUp)
+				if (abs(rayLength) < rayRangeUp)
 					return true;
 			}
 			return false;
 			
 		}
-		else return false;
+		return false;
 	}
 
 	bool TestDownMovingPlatform(Platform& pObj, bool isGrounded){

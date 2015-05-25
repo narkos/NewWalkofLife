@@ -1585,6 +1585,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	//		soundWhereAmI.daCapo();
 	//	}
 	//}
+	if (theCollision->upValid() == false){
+		thePhysics.DisableUpForce();
+	}
 
 	if (jump && theCollision->isGrounded() == true && theCharacter.jumpMomentumState == false && gTimer.TotalTime() - theCharacter.jumpTimer > 0.3) //om grounded och man har klickat in jump
 
@@ -1651,9 +1654,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 
 
-	if (theCollision->upValid() == false){
-		thePhysics.DisableUpForce();
-	}
+	
 
 
 

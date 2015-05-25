@@ -188,4 +188,6 @@ int Input::detectRenderState(HWND)
 	{
 		return 3;
 	}
+
+	//return 1000000;
 }

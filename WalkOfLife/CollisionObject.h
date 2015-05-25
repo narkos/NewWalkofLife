@@ -51,39 +51,39 @@ public:
 	BoundingBox GetBBOX(){ return this->bbox; }
 
 
-	ID3D11Buffer *boundingBoxVertexBuffer;
-	void CreateBBOXVertexBuffer(ID3D11Device* gDevice){
-		BoundingBox box = bbox;
-		std::vector<XMFLOAT3> boxVertPoints;
+	//ID3D11Buffer *boundingBoxVertexBuffer;
+	//void CreateBBOXVertexBuffer(ID3D11Device* gDevice){
+	//	BoundingBox box = bbox;
+	//	std::vector<XMFLOAT3> boxVertPoints;
 
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //0,0,0
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //1,0,0
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //1,1,0
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //0,1,0
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //0,0,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //0,0,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //1,0,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //1,1,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //0,1,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //0,0,0
 
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //0,0,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //1,0,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //1,1,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //0,1,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //0,0,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //0,0,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //1,0,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //1,1,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //0,1,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //0,0,1
 
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //1,0,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //1,0,0
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //1,1,0
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //1,1,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //0,1,1
-		boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //0,1,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z + box.Extents.z)); //1,0,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y - box.Extents.y, box.Center.z - box.Extents.z)); //1,0,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //1,1,0
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x + box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //1,1,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z + box.Extents.z)); //0,1,1
+	//	boxVertPoints.push_back(XMFLOAT3(box.Center.x - box.Extents.x, box.Center.y + box.Extents.y, box.Center.z - box.Extents.z)); //0,1,0
 
 
-		D3D11_BUFFER_DESC bDesc;
-		ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
-		bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bDesc.Usage = D3D11_USAGE_DEFAULT;
-		bDesc.ByteWidth = sizeof(XMFLOAT3)* (boxVertPoints.size());
+	//	D3D11_BUFFER_DESC bDesc;
+	//	ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
+	//	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//	bDesc.Usage = D3D11_USAGE_DEFAULT;
+	//	bDesc.ByteWidth = sizeof(XMFLOAT3)* (boxVertPoints.size());
 
-		D3D11_SUBRESOURCE_DATA data;
-		data.pSysMem = boxVertPoints.data();//<--------
-		HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &boundingBoxVertexBuffer);
-	}
+	//	D3D11_SUBRESOURCE_DATA data;
+	//	data.pSysMem = boxVertPoints.data();//<--------
+	//	HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &boundingBoxVertexBuffer);
+	//}
 };

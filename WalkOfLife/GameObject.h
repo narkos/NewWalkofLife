@@ -89,25 +89,25 @@ namespace MatPresets
 {
 	// Material Presets
 	const MatInfo Emerald(
-		XMFLOAT4(0.0215, 0.1745, 0.0215, 1.0),
-		XMFLOAT4(0.07568, 0.61424, 0.07568, 1.0),
-		XMFLOAT4(0.633, 0.727811, 0.633, 1.0),
+		XMFLOAT4(0.0215f, 0.1745f, 0.0215f, 1.0f),
+		XMFLOAT4(0.07568f, 0.61424f, 0.07568f, 1.0f),
+		XMFLOAT4(0.633f, 0.727811f, 0.633f, 1.0f),
 		float(76.8f));
 		
 	const MatInfo Copper(
-		XMFLOAT4(0.19125, 0.0735, 0.0225, 1.0),
-		XMFLOAT4(0.7038, 0.27048, 0.0828, 1.0),
-		XMFLOAT4(0.256777, 0.137622, 0.086014, 1.0),
+		XMFLOAT4(0.19125f, 0.0735f, 0.0225f, 1.0f),
+		XMFLOAT4(0.7038f, 0.27048f, 0.0828f, 1.0f),
+		XMFLOAT4(0.256777f, 0.137622f, 0.086014f, 1.0f),
 		float(0.1f));
 	const MatInfo Lambert(
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0),
-		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0),
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0),
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
+		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
 		float(0.0f));
 
 	const MatInfo BlinnBase(
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0),
-		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0),
-		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0),
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
+		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
+		XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
 		float(0.3f));
 }

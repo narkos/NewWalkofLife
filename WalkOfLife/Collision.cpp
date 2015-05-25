@@ -153,8 +153,8 @@ XMFLOAT2 Collision::TestCollision(vector<CollectableObject> &collectables, Playe
 		if (player->TestIntersect(collectables[i]) == true)
 		{
 			XMFLOAT2 temp;
-			temp.x = collectables[i].GetCoinValue();
-			temp.y = collectables[i].GetTimeValue();
+			temp.x = (float)collectables[i].GetCoinValue();
+			temp.y = (float)collectables[i].GetTimeValue();
 			collectables[i].SetActive(false);
 			return temp;
 		}

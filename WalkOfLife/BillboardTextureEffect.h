@@ -28,12 +28,11 @@ using namespace DirectX;
 
 class BillboardTextureEffect{
 private:
-	ID3D11Device *gDevice;
-	ID3D11Buffer* billboardVertexBuffer;
+	ID3D11Device *gDevice = nullptr;
+	ID3D11Buffer* billboardVertexBuffer = nullptr;
 
 	int nrImages;
-	ID3D11ShaderResourceView **sResourceViews;
-	ID3D11ShaderResourceView *currResourceView;
+	ID3D11ShaderResourceView **sResourceViews = nullptr;
 	int currIndex;
 
 	float timer = 0.0f;
@@ -75,7 +74,8 @@ public:
 	}
 	BillboardTextureEffect(){}
 	~BillboardTextureEffect(){
-		//delete sResourceViews;
+		delete[] sResourceViews; //delete är jag inte säker på
+		billboardVertexBuffer->Release();
 	}
 
 	void CreateResourceViews(){
@@ -138,7 +138,6 @@ public:
 			if (time > timer){
 				//loopa igenom resourceviewsen med tiden
 				currIndex++;
-				currResourceView = sResourceViews[currIndex];
 				timer = time + showTime;
 			}
 		}

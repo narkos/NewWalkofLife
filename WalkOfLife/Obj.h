@@ -151,6 +151,6 @@ public:
 		return indecies;
 	}
 
-	void CreateAABB(std::vector<Vertex>);
+	//void CreateAABB(std::vector<Vertex>);
 
 };

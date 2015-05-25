@@ -71,7 +71,7 @@ float GameTimer::getPauseTime(float pTime){
 
 void GameTimer::setCurrTime(float Time)
 {
-	mPrevTime = Time;
+	mPrevTime = (__int64)Time;
 }
 
 void GameTimer::Start(float ptime)
@@ -80,7 +80,7 @@ void GameTimer::Start(float ptime)
 	QueryPerformanceCounter((LARGE_INTEGER*)&startTime);
 	if (mStopped)
 		mPausedTime += (startTime - mStopTime);
-	mPrevTime = ptime;
+	mPrevTime = (__int64)ptime;
 	mStopTime = 0;
 	mStopped = false;
 

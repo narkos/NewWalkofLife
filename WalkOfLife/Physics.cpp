@@ -3,7 +3,7 @@
 
 Physics::Physics()
 {
-	this->downforce = 0.01;
+	this->downforce = 0.01f;
 	this->upforce = 0;
 	this->onPlatform = false;
 }
@@ -25,16 +25,16 @@ void Physics::Gravitation(Collision *theCollision, PlayerObject *theCharacter)
 		theCharacter->jumping = false;
 	}*/
 
-	if (theCollision->isGrounded() && this->upforce <= 0)
+	if (theCollision->isGrounded() && this->upforce <= 0.0f)
 	{
 		this->onPlatform = true;
-		this->downforce = 0.1;
+		this->downforce = 0.1f;
 		theCharacter->jumpMomentumState = false;
 		if (someBool)
 		{
-			theCharacter->momentum = 1;
+			theCharacter->momentum = 1.0f;
 			someBool = false;
-			theCharacter->jumpMomentumX = 0;
+			theCharacter->jumpMomentumX = 0.0f;
 		}
 		
 	
@@ -45,11 +45,11 @@ void Physics::Gravitation(Collision *theCollision, PlayerObject *theCharacter)
 	if (!theCollision->isGrounded() || this->upforce > 0)
 	{
 
-		if (!theCollision->isGrounded() && this->downforce < 0.7 && this->upforce - this->downforce < 0.1)
+		if (!theCollision->isGrounded() && this->downforce < 0.7f && this->upforce - this->downforce < 0.1f)
 		{
-			this->downforce = this->downforce + 0.01;
+			this->downforce = this->downforce + 0.01f;
 		}
-		theCharacter->Translate(theCharacter->jumpMomentumX, (this->upforce - this->downforce)/2, 0.0);
+		theCharacter->Translate(theCharacter->jumpMomentumX, (this->upforce - this->downforce)/2, 0.0f);
 		theCharacter->yPos += (this->upforce - this->downforce)/2;
 		theCharacter->xPos += theCharacter->jumpMomentumX;
 	}

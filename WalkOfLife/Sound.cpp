@@ -9,6 +9,7 @@ Sound::Sound()
 
 Sound::~Sound()
 {
+	this->CleanupMp3();
 }
 
 void Sound::InitMp3()

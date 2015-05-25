@@ -128,7 +128,7 @@ bool RenderEngine::Init(){
 	//mainMenu.menuInit(gDeviceContext);
 
 	//SHADOWS
-	Shadows tempShadows(mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gDevice, gDeviceContext);
+	Shadows tempShadows((int)mainCamera.getWindowWidth(), (int)mainCamera.getWindowHeight(), gDevice, gDeviceContext);
 	shadows = tempShadows;
 	shadows.createShadowMap();
 
@@ -278,8 +278,8 @@ bool RenderEngine::InitWindow(){
 void RenderEngine::SetViewport()
 {
 	D3D11_VIEWPORT vp;
-	vp.Width = screen_Width;
-	vp.Height = screen_Height;
+	vp.Width = (float)screen_Width;
+	vp.Height = (float)screen_Height;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
@@ -1810,7 +1810,7 @@ void RenderEngine::MenuUpdate(float tt){
 	int input2 = 0;
 
 	int currentTabTemp = mainMenu.getCurrentTab();
-	int scrolltime = gTimer.TotalTime();
+	int scrolltime = (int)gTimer.TotalTime();
 	//if (gTimer.TotalTime() >= scrolltime + 1.0f)
 
 	if (gTimer.TotalTime() >= menuTime + 0.14f) // Om det gått 0.14 sec sen ditt senaste knapptryck
@@ -1902,7 +1902,7 @@ void RenderEngine::StartMenuUpdate(float tt){
 	int input3 = 0;
 
 	int currentTabTemp = StartMenu.getCurrentTab();
-	int scrolltime = gTimer.TotalTime();
+	int scrolltime = (int)gTimer.TotalTime();
 	//if (gTimer.TotalTime() >= scrolltime + 1.0f)
 
 	if (gTimer.TotalTime() >= menuTime + 0.14f) // Om det gått 0.14 sec sen ditt senaste knapptryck

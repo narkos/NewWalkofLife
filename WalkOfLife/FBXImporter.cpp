@@ -191,7 +191,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 		ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
 		bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bDesc.Usage = D3D11_USAGE_DEFAULT;
-		bDesc.ByteWidth = sizeof(VertexData)*(vertecies.size());
+		bDesc.ByteWidth = (UINT)(sizeof(VertexData)*(vertecies.size()));
 
 		D3D11_SUBRESOURCE_DATA data;
 		data.pSysMem = vertecies.data();//<--------

@@ -164,7 +164,7 @@ void OBJ::LoadObject(char* geometryFileName, char* materialFileName){
 		ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
 		bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bDesc.Usage = D3D11_USAGE_DEFAULT;
-		bDesc.ByteWidth = sizeof(Vertex)*(vertecies.size());
+		bDesc.ByteWidth = (UINT)(sizeof(Vertex)*(vertecies.size()));
 
 
 
@@ -172,7 +172,7 @@ void OBJ::LoadObject(char* geometryFileName, char* materialFileName){
 		ZeroMemory(&bDesc2, sizeof(D3D11_BUFFER_DESC));
 		bDesc2.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bDesc2.Usage = D3D11_USAGE_DEFAULT;
-		bDesc2.ByteWidth = sizeof(int)*(faceIndecies.size());
+		bDesc2.ByteWidth = (UINT)(sizeof(int)*(faceIndecies.size()));
 
 
 		D3D11_SUBRESOURCE_DATA data;

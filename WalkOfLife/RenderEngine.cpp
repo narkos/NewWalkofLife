@@ -283,17 +283,17 @@ bool RenderEngine::Init(){
 	hr = gDevice->CreateBuffer(&mbuffDesc, NULL, &matConstBuff);
 
 
-	//Normalmap buffer
-	D3D11_BUFFER_DESC cbbd;
-	ZeroMemory(&cbbd, sizeof(D3D11_BUFFER_DESC));
+	////Normalmap buffer
+	//D3D11_BUFFER_DESC cbbd;
+	//ZeroMemory(&cbbd, sizeof(D3D11_BUFFER_DESC));
 
-	cbbd.Usage = D3D11_USAGE_DEFAULT;
-	cbbd.ByteWidth = sizeof(cbPerObject);
-	cbbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbbd.CPUAccessFlags = 0;
-	cbbd.MiscFlags = 0;
+	//cbbd.Usage = D3D11_USAGE_DEFAULT;
+	//cbbd.ByteWidth = sizeof(cbPerObject);
+	//cbbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//cbbd.CPUAccessFlags = 0;
+	//cbbd.MiscFlags = 0;
 
-	gDevice->CreateBuffer(&cbbd, NULL, &cbPerObjectBuffer);
+	//gDevice->CreateBuffer(&cbbd, NULL, &cbPerObjectBuffer);
 
 
 
@@ -438,7 +438,7 @@ void RenderEngine::TextureFunc(){
 
 
 
-	DirectX::CreateWICTextureFromFile(gDevice, L"Textures/normalmap.dds", nullptr, &normalMap);
+	//DirectX::CreateWICTextureFromFile(gDevice, L"Textures/normalmap.dds", nullptr, &normalMap);
 	
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
@@ -542,8 +542,7 @@ void RenderEngine::Shaders(){
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	ShaderTest = gDevice->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gVertexLayout);
 	
@@ -1039,8 +1038,8 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetConstantBuffers(1, 1, &matConstBuff);
 	// END LIGHT BUFFER UPDATE
 	// normalmap buffer
-	gDeviceContext->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
-	gDeviceContext->PSSetConstantBuffers(4, 1, &cbPerObjectBuffer);
+	//gDeviceContext->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
+	//gDeviceContext->PSSetConstantBuffers(4, 1, &cbPerObjectBuffer);
 	//XMMATRIX WVP;		//Defined in .h file
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -1062,12 +1061,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	XMMATRIX currProjection;
 	XMMATRIX currView;
 
-	if (theCharacter[0].HasNormMap == true)
-		cbPerObj.hasNormMap = true;
-
-	theCharacter[0].HasNormMap = true;
-	if (theCharacter[0].HasNormMap == true && theCharacter[0].GetActive() == true)
-		gDeviceContext->PSSetShaderResources(2, 1, &normalMap);
 
 	if (viewPoint == 1)
 	{
@@ -1088,24 +1081,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	//######################################################################################################################################################
 	//###													SHADOW CASTING OBJECTS GOES HERE BELOW							  							 ###	
 	//######################################################################################################################################################
-
-	
-	for each (Platform var in theBinaryTree->testPlatforms->at(theCharacter->getDivision()))
-	{
-		
-		tex = intArrayTex[var.indexT];
-		gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-		gDeviceContext->IASetVertexBuffers(0, 1, &var.vertexBuffer, &vertexSize, &offset);
-
-		
-		var.CalculateWorld();
-		//var.material = MatPresets::Emerald;
-		//matProperties.Material = var.material;
-		//matProperties.Material.UseTexture = 0;
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-		UpdateMatricies(var.world, currView, currProjection);
-		gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
 
 	float tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
@@ -2275,7 +2250,7 @@ void RenderEngine::Release(){
 	gVertexShader->Release();
 	gPixelShader->Release();
 	gDeviceContext->Release();
-	cbPerObjectBuffer->Release();
+//	cbPerObjectBuffer->Release();
 
 	//Kill Lights
 	//delete testLight;

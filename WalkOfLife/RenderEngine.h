@@ -65,11 +65,9 @@ public:
 	void SetViewport();
 	virtual bool Init();
 	void Update(float dt, PlayerObject& theCharacter);
-<<<<<<< HEAD
-	void MenuUpdate(float tt);
-=======
+
 	void MenuUpdate(float tt, PlayerObject& theCharacter);
->>>>>>> origin/Master_25
+
 	void StartMenuUpdate(float tt);
 	void Render(PlayerObject* theCharacter);
 	virtual void Release();

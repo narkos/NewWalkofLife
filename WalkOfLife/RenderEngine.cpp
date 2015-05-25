@@ -77,7 +77,7 @@ bool RenderEngine::Init(){
 	testDynamicPlatforms = tempC;
 	//theHighScore.LoadHighScore();
 	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
-	theCustomImporter.ImportFBX(gDevice, "Objects/testFile9.bin");
+	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	intArrayTex = theCustomImporter.GetindexArray();
 	statez = CurrChar.getCharSate();
 

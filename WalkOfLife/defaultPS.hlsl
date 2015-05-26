@@ -78,12 +78,13 @@ float4 PS_main(VS_OUT input) : SV_Target
 
 		float4 emissive = Material.Emissive;
 		float4 ambient = GlobalAmbient*Material.Ambient;
+
 		float4 diffuse = lightCalcs.Diffuse* Material.Diffuse;
 		float4 specular = lightCalcs.Specular*Material.Specular;
 
 		float4 finalColor = (ambient + diffuse + specular) * Texdiffuse;
 
-		return finalColor;
+		return float4(finalColor);
 	}
 
 	///////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----/////-----

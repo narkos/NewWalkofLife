@@ -174,14 +174,14 @@ bool RenderEngine::Init(){
 
 
 	//Baby World Start Pos
-	resetXpos[0] = 4.0f;
-	resetYpos[0] = 9.0f;
+	//resetXpos[0] = 4.0f;
+	//resetYpos[0] = 9.0f;
 
-	resetXpos[1] = 200.0f;
-	resetYpos[1] = 20.0f;
+	//resetXpos[1] = 200.0f;
+	//resetYpos[1] = 20.0f;
 
-	resetXpos[2] = 364.0f;
-	resetYpos[2] = 20.0f;
+	//resetXpos[2] = 364.0f;
+	//resetYpos[2] = 20.0f;
 	
 	
 
@@ -591,10 +591,11 @@ void RenderEngine::Shaders(){
 	gDevice->CreateInputLayout(inputDescParticle, ARRAYSIZE(inputDescParticle), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gFakeBillboardLayout);
 
 
-	// Realese shaders
+	// Realese shaders :: Now realesing all , Oskar
 	pVS->Release();
 	pPS->Release();
 	pGS->Release();
+	pPS2->Release();
 }
 
 
@@ -644,26 +645,6 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		pBackBuffer->Release();
 
 
-		////DepthBuffer
-		//D3D11_TEXTURE2D_DESC depthStencilDesc;
-		//ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
-		//depthStencilDesc.Width = screen_Width;
-		//depthStencilDesc.Height = screen_Height;
-		//depthStencilDesc.MipLevels = 1;
-		//depthStencilDesc.ArraySize = 1;
-		//depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		//depthStencilDesc.SampleDesc.Count = 1;
-		//depthStencilDesc.SampleDesc.Quality = 0;
-		//depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-		//depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		//depthStencilDesc.CPUAccessFlags = 0;
-		//depthStencilDesc.MiscFlags = 0;
-
-		//HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
-		//HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, NULL, &gDepthStencilView);
-
-
-
 		//DepthBuffer
 		D3D11_TEXTURE2D_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -689,33 +670,7 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 
 		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
 
-		//NEEDED?
 
-		//D3D11_DEPTH_STENCIL_DESC dsDesc;
-		//ZeroMemory(&dsDesc, sizeof(dsDesc));
-		////Depth test settings
-		//dsDesc.DepthEnable = true;
-		//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		//dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		////Stencil tests
-		//dsDesc.StencilEnable = true;
-		//dsDesc.StencilReadMask = 0xFF;
-		//dsDesc.StencilWriteMask = 0xFF;
-		////Stencil operations - Pixel Front Facing
-		//dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		//dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		////Stencil operations - Pixel Back Facing
-		//dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		//dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-		//HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
-		//gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
-
-		
 		
 		// set the render target as the back buffer
 		gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
@@ -778,29 +733,21 @@ int RenderEngine::Run(){
 				{
 					theHighScore.Highscorespritebatch(gDevice, gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain);
 				}
-			//	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 			}
-			//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-
+			
 			else if (StartMenu.getstartmeny() == false)
 			{
 				theHighScore.setHSbool(false);
-				//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gSwapChain, gCounter.theAge.years);
-
+				
 				if (gCounter.theAge.years > 32 && Character2 == false)
 
 				{
 					Character2 = true;
-					//CurrChar.switchCharState(theCharacter1->xPos);
 					haschanged = true;
 					CurrChar.setCharState(8);
-					/*particleEffects[1].SetPosMatrix(theCharacter.pos);
-					particleEffects[1].Play();*/
-					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-
+				
 					theCharacters.at(8).xPos = theCharacters.at(0).xPos;
 					theCharacters.at(8).yPos = theCharacters.at(0).yPos + 2;
-					//theCharacters.at(8).SetDivision(theCharacters.at(0).getDivision());
 
 					soundIGotThis.PlayMp3();
 					soundIGotThis.daCapo();
@@ -810,15 +757,13 @@ int RenderEngine::Run(){
 				if (gCounter.theAge.years > 65 && Character3 == false)
 				{
 					Character3 = true;
-					//CurrChar.switchCharState(theCharacter1->xPos);
+			
 					haschanged = true;
 					CurrChar.setCharState(16);
-					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
-
+				
 					theCharacters.at(16).xPos = theCharacters.at(8).xPos;
 					theCharacters.at(16).yPos = theCharacters.at(8).yPos;
-					//theCharacters.at(16).SetDivision(theCharacters.at(8).getDivision());
-
+					
 					tempInt = rand() % 2;
 					if (tempInt == 0)
 					{
@@ -833,7 +778,6 @@ int RenderEngine::Run(){
 
 				}
 
-
 				if (mainMenu.getPause() == FALSE)
 				{
 
@@ -841,30 +785,23 @@ int RenderEngine::Run(){
 					{
 						fpscounter();
 
-						
-					//	switchAnimation(theCharacters.at(CurrChar.getCharSate()), CurrChar.getCharSate());
-						
-
 
 						if (CurrChar.getCharSate() == 0)
 						{
 							
 							Update(0.0f, theCharacters.at(0));
-							//switchAnimation(&theCharacters.at(0), 0);
+		
 							Render(&theCharacters.at(0));
 						}
 						else if (CurrChar.getCharSate() == 8)
 						{
-							//theCollision
-							//theCharacters.at(1).setVertexBuffer(theCharacters.at(2).GetVertexBuffer());
+
 							Update(0.0f, theCharacters.at(8));
-							//switchAnimation(&theCharacters.at(1), 1);
 							Render(&theCharacters.at(8));
 						}
 						else if (CurrChar.getCharSate() == 16)
 						{
 							Update(0.0f, theCharacters.at(16));
-							//switchAnimation(&theCharacters.at(2), 2);
 							Render(&theCharacters.at(16));
 						}
 						time3 = gTimer.TotalTime();
@@ -874,9 +811,6 @@ int RenderEngine::Run(){
 				if (mainMenu.getPause() == TRUE)
 				{
 
-					/*	scrolltime = gTimer.TotalTime();
-					if (gTimer.TotalTime() >= scrolltime+1.0f)*/
-				//	if (theHighScore.getHSbool() == FALSE)
 					{
 						if (CurrChar.getCharSate() == 0)
 						{
@@ -898,7 +832,6 @@ int RenderEngine::Run(){
 							
 							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 						}
-			
 
 					}
 
@@ -951,23 +884,26 @@ int tex = 0;
 void RenderEngine::Render(PlayerObject* theCharacter){
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
 
-	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos(), lightProp01.lights[0].Direction);	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
-	WVP = shadows.getLightWVP();	//Transpose the matrices (WVP To lights POV) to prepare them for the shader, For Shadow mapping in this case
-	//XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(shadows.getShadowWorld()));
+	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
+	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos(), lightProp01.lights[0].Direction);
+	//Transpose the matrices (WVP To lights POV) to prepare them for the shader, For Shadow mapping in this case
+	
+	WVP = shadows.getLightWVP();	
 	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
 	XMStoreFloat4x4(&perObjCBData.lightView, XMMatrixTranspose(shadows.getLightView()));
 	XMStoreFloat4x4(&perObjCBData.lightProjection, XMMatrixTranspose(shadows.getLightProjection()));
 
 	gDeviceContext->UpdateSubresource(gWorld, 0, NULL, &perObjCBData, 0, 0);
 	gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-	//gDeviceContext->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
-	//gDeviceContext->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
 
-	gDeviceContext->IASetInputLayout(gVertexLayout);	//Set the vertex input layout.
-	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	//Set the vertex and pixel shaders that will be used to render
+	//Set the vertex input layout.
+	gDeviceContext->IASetInputLayout(gVertexLayout);
+	//Set the vertex and pixel shaders that will be used to render
+	gDeviceContext->VSSetShader(gVertexShader, NULL, 0);	
 
 	//RENDER THE SHADOW MAP
-	drawScene(1, theCharacter);	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+	//Draws Entire Scene to Shadow map	// 1 = From lights POV. 2 = From mainCameras POV.
+	drawScene(1, theCharacter);	
 
 	shadows.setShaderResource();	//Set (SHADOW MAP) shader texture resource in the pixel shader.
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
@@ -995,8 +931,8 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
 	std::wstring xPos = std::to_wstring(theCharacter->xPos);
 	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	//std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring coins = std::to_wstring(theCharacter->getDivision());
+	std::wstring coins = std::to_wstring(gCounter.getCoin());
+	//std::wstring coins = std::to_wstring(theCharacter->getDivision());
 	std::wstring dass = std::to_wstring(fpsDisplay);
 	std::wstring name(L"FPS: ");
 	std::wstring year(L"\nYear: ");
@@ -1005,7 +941,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	std::wstring YYY(L"\nyPos: ");
 	std::wstring coin(L"\nCoins: ");
 	std::wstring nrOfDeaths(L"\nDeaths: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + XXX + xPos + YYY + yPos + coin + coins;
+	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + coin + coins;
 
 	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
 
@@ -1021,7 +957,6 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
 
 	spriteBatch->End();
-	//gSwapChain->Present(0, 0); //växla back/front buffer
 	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 	
 	///////////////////////////////////////////
@@ -1032,9 +967,6 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 
 	mainCamera.setPlayerXPos(theCharacter->xPos);
 	mainCamera.setPlayerYPos(theCharacter->yPos);
-
-	//WORLD
-	//XMMATRIX YRotation = XMMatrixRotationY(rot);
 
 	//The Camera Matrices are now defined in the camera class (mainCamera)
 
@@ -1136,21 +1068,21 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			{
 				tex = intArrayTex[theBinaryTree->collectables->at(i)[j].indexT];
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
 
-/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+				
+				//theBinaryTree->collectables->at(i)[j].material;
+				//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+				//matProperties.Material = MatPresets::BlinnBase;
+				//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
+				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-//theBinaryTree->collectables->at(i)[j].material;
-//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-//matProperties.Material = MatPresets::BlinnBase;
-//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
-gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
+				gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 			}
 		}
 	}
@@ -1177,7 +1109,7 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
 				gDeviceContext->Draw(theBinaryTree->platformsMoving->at(i)[j].nrElements * 3, 0);
-			}
+			}			
 		}
 	}
 
@@ -1207,7 +1139,7 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 			}
 		}
 	}
-
+	
 	tempDiv = -1.0f;
 	if (theCharacter->getDivision() == 0)
 	{
@@ -1231,45 +1163,41 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 			}
 		}
 	}
-
+	
 	//######################################################################################################################################################
 	//###						*NON* SHADOW CASTING OBJECTS GOES IN IF-STATEMENT HERE BELOW	(if (viewPoint == 2))					  				 ###	
 	//######################################################################################################################################################
-	if (viewPoint == 2)
+	gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
+	for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
+	{
+		for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
 		{
-			gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
-			for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
-			{
-				for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
-				{
-					tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
-					gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-					gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
+			tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
+			gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+			gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
 
-					theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
-					/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-					theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-					//theBinaryTree->renderObjects->at(i)[j].material.Emissive = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-					//theBinaryTree->renderObjects->at(i)[j].material
-					//theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
+			theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
+			/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+			theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+			//theBinaryTree->renderObjects->at(i)[j].material.Emissive = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			//theBinaryTree->renderObjects->at(i)[j].material
+			//theBinaryTree->renderObjects->at(i)[j].material.UseTexture = 1;
 
-					matProperties.Material = MatPresets::BlinnBase;
-					matProperties.Material.UseTexture = 1;
+			matProperties.Material = MatPresets::BlinnBase;
+			matProperties.Material.UseTexture = 1;
 
-					gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+			gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-					UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
+			UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
 
 
 
-					gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+			gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-					gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
-				}
-			}
+			gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
 		}
-	
+	}
 
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 
@@ -1832,19 +1760,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 	//TEMPORARY RESET FUNCTIONS
-	if (input == 12)
+	if (input == 8)
 	{
 		resetValues[0] = resetXpos[0];
 		resetValues[1] = resetYpos[0];
 		reset(&theCharacter, false);
 	}
-	if (input == 13)
+	if (input == 9)
 	{
 		resetValues[0] = resetXpos[1];
 		resetValues[1] = resetYpos[1];
 		reset(&theCharacter, false);
 	}
-	if (input == 14)
+	if (input == 10)
 	{
 		resetValues[0] = resetXpos[2];
 		resetValues[1] = resetYpos[2];
@@ -2393,17 +2321,8 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 	Character2 = false;
 	Character3 = false;
 	CurrChar.setCharState(CurrChar.getCharSate());
-	if (fullreset)
-	{
-		theCharacter->xPos = 4;
-		theCharacter->yPos = 6;
-	}
-	
-	else
-	{
-		theCharacter->xPos = resetValues[0];
-		theCharacter->yPos = resetValues[1];
-	}
+	theCharacter->xPos = 4;
+	theCharacter->yPos = 6;
 	theCharacter->Translate(0, 0, 0);
 	if (fullreset)
 	{

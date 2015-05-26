@@ -40,7 +40,7 @@ VS_OUT VS_main(VS_IN input)
 
 	output.Pos = mul(float4(input.Pos, 1.0f), WVP);
 	output.Tex = input.Tex;
-	output.Nor = (float4(input.Nor, 0.0f) );
+	output.Nor = mul(float4(input.Nor, 0.0f), InvWorld);
 	//output.tangent = mul(float4(input.tangent, 0.0f), WorldSpace);
 	output.wPos = mul(float4(input.Pos, 1.0f), WorldSpace);
 

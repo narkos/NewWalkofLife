@@ -246,7 +246,10 @@ protected:
 	IDXGISwapChain* gSwapChain = nullptr;
 	ID3D11DepthStencilView* gDepthStencilView = nullptr;
 	ID3D11DepthStencilState* gDepthStencilState = nullptr;
+	ID3D11DepthStencilState* gDepthStencilStateDisable = nullptr;
 	ID3D11Texture2D* depthStencilBuffer = nullptr;
+	ID3D11BlendState* gBlendStateTransparency = nullptr;
+
 
 	ID3D11Buffer* gVertexBuffer = nullptr;
 	ID3D11Buffer* gVertexBuffer2 = nullptr;

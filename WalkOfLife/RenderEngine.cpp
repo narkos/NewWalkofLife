@@ -80,35 +80,15 @@ bool RenderEngine::Init(){
 	BillboardTextureEffect *temp3 = new BillboardTextureEffect(gDevice, 8, 2.0f, 2.0f, 0.05f, "getCoinSprite_", ".png");
 	particleEffects.push_back(temp3);
 
-	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
-	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
-	//particleEffects.push_back(temp2);
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
-	//theHighScore.LoadHighScore();
-	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
+
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	intArrayTex = theCustomImporter.GetindexArray();
 	statez = CurrChar.getCharSate();
 
-	//D3D11_BUFFER_DESC bDesc;
-	//ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
-	//bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//bDesc.Usage = D3D11_USAGE_DEFAULT;
-	//bDesc.ByteWidth = sizeof(VertexData)*(vertecies.size());
-
-	//D3D11_SUBRESOURCE_DATA data;
-	//data.pSysMem = vertecies.data();//<--------
-	//HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &Tempidlebuffer);
-
-	//Tempidlebuffer = theCharacters.at(0).GetVertexBuffer();
-	//--
-	//theCharacters = &theCustomImporter.GetPlayers()[0];
-	//theCharacter2 = theCustomImporter.GetPlayers[1];
-	//theCharacter3 = theCustomImporter.GetPlayers[2];
-	//theCustomImporter.GetPlayers()[0]
 	for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
 	{
 		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
@@ -207,54 +187,6 @@ bool RenderEngine::Init(){
 
 
 	mainMenu.menuInit(gDeviceContext);
-
-	//theCharacters.at(0).xPos = 4;
-	//theCharacters.at(0).yPos = 9;
-	//
-	//theCharacters.at(0).setRunSpeed(0.08f);
-	//theCharacters.at(0).setJumpHeight(0.66f);
-	//theCharacters.at(0).setDash(2.0f);
-	//theCharacters.at(8).setRunSpeed(0.13f);
-	//theCharacters.at(8).setJumpHeight(0.68f);
-	//theCharacters.at(0).setDash(2.7f);
-	//theCharacters.at(16).setRunSpeed(0.05f);
-	//theCharacters.at(16).setJumpHeight(0.75f);
-	//
-
-
-
-	//// Set hit ray info
-	//theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	//theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	//theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
-
-	//theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	//theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
-	//theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
-
-
-	//Baby World Start Pos
-	/*resetXpos[0] = 4.0f;
-	resetYpos[0] = 9.0f;
-
-	resetXpos[1] = 200.0f;
-	resetYpos[1] = 20.0f;
-
-	resetXpos[2] = 364.0f;
-	resetYpos[2] = 20.0f;*/
-
-
-	
-
-	//highscore stuff
-	//theHighScore.AddScore(5, 2, 13);
-
-	//theHighScore.AddScore(2, 9, 3);
-	//theHighScore.AddScore(1, 2, 44);
-	////theHighScore.AddScore(1, 2, 1);
-	//theHighScore.ReOrganizeLists();
-	////Import
-
 
 	// Rotatation And transform Buffer
 	D3D11_BUFFER_DESC transformbuffer;
@@ -542,12 +474,7 @@ void RenderEngine::Shaders(){
 	ShaderTest = CompileShader(L"defaultVS.hlsl", "VS_main", "vs_5_0", &pVS);
 	ShaderTest = gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gVertexShader);
 
-	//create input layout (verified using vertex shader)
-	//D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	//};
+	// default input layout
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -563,22 +490,6 @@ void RenderEngine::Shaders(){
 	ID3DBlob* pPS2 = nullptr;
 	ShaderTest = CompileShader(L"simplePS.hlsl", "PS_main", "ps_5_0", &pPS2);
 	ShaderTest = gDevice->CreatePixelShader(pPS2->GetBufferPointer(), pPS2->GetBufferSize(), nullptr, &gPixelShader2);
-
-
-	////wireframe
-	//D3D11_INPUT_ELEMENT_DESC inputDescPosOnly[] = {
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	//};
-
-	//gDevice->CreateInputLayout(inputDescPosOnly, ARRAYSIZE(inputDescPosOnly), pVS->GetBufferPointer(), pVS->GetBufferSize(), &gWireFrameLayout);
-
-
-	//HRESULT hrWireFrameVS = CompileShader(L"WireFrameVS.hlsl", "main", "vs_5_0", &pVS);
-	//gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gWireFrameVertexShader);
-
-	//HRESULT hrWireFramePS = CompileShader(L"WireFramePS.hlsl", "main", "ps_5_0", &pPS);
-	//gDevice->CreatePixelShader(pPS->GetBufferPointer(), pPS->GetBufferSize(), nullptr, &gWireFramePixelShader);
-	
 
 	HRESULT hrParVS = CompileShader(L"bbVertexShader.hlsl", "main", "vs_5_0", &pVS);
 	gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &gFakeBillboardVertexShader);
@@ -650,26 +561,6 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 		pBackBuffer->Release();
 
 
-		////DepthBuffer
-		//D3D11_TEXTURE2D_DESC depthStencilDesc;
-		//ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
-		//depthStencilDesc.Width = screen_Width;
-		//depthStencilDesc.Height = screen_Height;
-		//depthStencilDesc.MipLevels = 1;
-		//depthStencilDesc.ArraySize = 1;
-		//depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		//depthStencilDesc.SampleDesc.Count = 1;
-		//depthStencilDesc.SampleDesc.Quality = 0;
-		//depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-		//depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		//depthStencilDesc.CPUAccessFlags = 0;
-		//depthStencilDesc.MiscFlags = 0;
-
-		//HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
-		//HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, NULL, &gDepthStencilView);
-
-
-
 		//DepthBuffer
 		D3D11_TEXTURE2D_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -687,6 +578,31 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 
 		HRESULT hr1 = gDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
 
+		// Default Depth Stencil State
+		D3D11_DEPTH_STENCIL_DESC dsDesc;
+		ZeroMemory(&dsDesc, sizeof(dsDesc));
+		//Depth test settings
+		dsDesc.DepthEnable = true;
+		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		//Stencil tests
+		dsDesc.StencilEnable = true;
+		dsDesc.StencilReadMask = 0xFF;
+		dsDesc.StencilWriteMask = 0xFF;
+		//Stencil operations - Pixel Front Facing
+		dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		//Stencil operations - Pixel Back Facing
+		dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
+		gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 1);
+
 		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 		ZeroMemory(&descDSV, sizeof(descDSV));
 		descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -695,36 +611,52 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 
 		HRESULT hr2 = gDevice->CreateDepthStencilView(depthStencilBuffer, &descDSV, &gDepthStencilView);
 
-		//NEEDED?
-
-		//D3D11_DEPTH_STENCIL_DESC dsDesc;
-		//ZeroMemory(&dsDesc, sizeof(dsDesc));
-		////Depth test settings
-		//dsDesc.DepthEnable = true;
-		//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		//dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		////Stencil tests
-		//dsDesc.StencilEnable = true;
-		//dsDesc.StencilReadMask = 0xFF;
-		//dsDesc.StencilWriteMask = 0xFF;
-		////Stencil operations - Pixel Front Facing
-		//dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		//dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		////Stencil operations - Pixel Back Facing
-		//dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		//dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		//dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-		//HRESULT hr3 = gDevice->CreateDepthStencilState(&dsDesc, &gDepthStencilState);
-		//gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
-
-		
-		
 		// set the render target as the back buffer
 		gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
+
+		// Depth Stencil Disable
+		D3D11_DEPTH_STENCIL_DESC dsDesc2;
+		ZeroMemory(&dsDesc, sizeof(dsDesc2));
+		//Depth test settings
+		dsDesc2.DepthEnable = false;
+		dsDesc2.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc2.DepthFunc = D3D11_COMPARISON_LESS;
+		//Stencil tests
+		dsDesc2.StencilEnable = true;
+		dsDesc2.StencilReadMask = 0xFF;
+		dsDesc2.StencilWriteMask = 0xFF;
+		//Stencil operations - Pixel Front Facing
+		dsDesc2.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc2.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		dsDesc2.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc2.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		//Stencil operations - Pixel Back Facing
+		dsDesc2.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc2.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		dsDesc2.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc2.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		hr3 = gDevice->CreateDepthStencilState(&dsDesc2, &gDepthStencilStateDisable);
+
+
+		D3D11_RENDER_TARGET_BLEND_DESC blendStateRTDesc;
+		blendStateRTDesc.BlendEnable = true;
+		blendStateRTDesc.SrcBlend = D3D11_BLEND_ONE;
+		blendStateRTDesc.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendStateRTDesc.BlendOp = D3D11_BLEND_OP_ADD;
+		blendStateRTDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendStateRTDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendStateRTDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendStateRTDesc.RenderTargetWriteMask = 0x0f;
+
+		D3D11_BLEND_DESC blendStateDesc;
+		ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
+		blendStateDesc.AlphaToCoverageEnable = false;
+		blendStateDesc.RenderTarget[0] = blendStateRTDesc;
+
+		hr3 = gDevice->CreateBlendState(&blendStateDesc, &gBlendStateTransparency);
+
+
 
 		return true; //returnerar att den HAR klarat av att skapa device och swapchain
 	}
@@ -1311,32 +1243,32 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 		spriteBatch->End();
 
-		// Age Meter
+		//// Age Meter
 
-		mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+		//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 
-		//PARTIKLEMOJSSSSSSSS!!
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
-		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
-		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
-		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+		////PARTIKLEMOJSSSSSSSS!!
+		//gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		//gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
+		//gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+		//gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
+		//gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
+		//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		for (int i = 0; i < particleEffects.size(); i++){
-			if (particleEffects[i]->playing == true){
-				particleEffects[i]->PlayBillboard(gTimer.TotalTime());
+		//for (int i = 0; i < particleEffects.size(); i++){
+		//	if (particleEffects[i]->playing == true){
+		//		particleEffects[i]->PlayBillboard(gTimer.TotalTime());
 
-				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
-				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
-				//particleEffects[i].SetPosMatrix(theCharacter->pos);
-				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
-				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
+		//		gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
+		//		gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
+		//		//particleEffects[i].SetPosMatrix(theCharacter->pos);
+		//		//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+		//		UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
+		//		gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
 
-				gDeviceContext->Draw(4, 0);
-			}
-		}
+		//		gDeviceContext->Draw(4, 0);
+		//	}
+		//}
 		gDeviceContext->VSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->GSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->PSSetShader(nullptr, nullptr, 0);

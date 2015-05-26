@@ -149,13 +149,15 @@ public:
 	bool haschanged = false;
 
 	//Light Shit
-	LightClass testLight[20];
+	
 	ID3D11Buffer* lightConstBuff;
 	XMFLOAT4 globalAmb;
 	LightProperties lightProp01;
+	Light currentMainLight[2];
 	XMFLOAT4 camPos;
 	//float camxPos;
 	//float camyPos;
+
 
 	float lightOffsetTest;
 

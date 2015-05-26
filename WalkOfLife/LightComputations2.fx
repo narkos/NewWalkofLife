@@ -101,10 +101,10 @@ LightingResult createPointLight(Light light, float3 V, float4 P, float4 N)
 
 }
 
-LightingResult createDirectional(Light light, float3 V, float4 P, float4 N)
+LightingResult createDirectional(Light light, float3 V, float4 P, float4 N, int redoLight)
 {
 	LightingResult result;
-	float3 L = -light.Direction.xyz;
+	float3 L = -light.Direction.xyz * redoLight;
 
 		result.Diffuse = calcDiffuse(light, L, N);
 	result.Specular = calcSpecular(light, V, L, N);
@@ -142,7 +142,11 @@ LightingResult ComputeLighting(float4 P, float4 N)
 		{
 		case L_DIRECTIONAL:
 		{
-			result = createDirectional(lights[i], V, P, N);
+			if (i != 0)
+			{
+				result = createDirectional(lights[i], V, P, N, 1);
+			}
+			
 		}
 		break;
 		case L_POINT:

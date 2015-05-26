@@ -177,12 +177,18 @@ bool RenderEngine::Init(){
 	resetXpos[0] = 4.0f;
 	resetYpos[0] = 9.0f;
 
-	resetXpos[1] = 200.0f;
-	resetYpos[1] = 20.0f;
+	resetXpos[1] = 300.0f;
+	resetYpos[1] = 40.0f;
 
-	resetXpos[2] = 557.0f;
-	resetYpos[2] = 20.0f;
-	
+	/*resetXpos[1] = 200.0f;
+	resetYpos[1] = 20.0f;*/
+
+	resetXpos[2] = 500.0f;
+	resetYpos[2] = 40.0f; 
+
+	//resetXpos[2] = 557.0f;
+	//resetYpos[2] = 20.0f;
+	//
 	
 
 	//SHADOWS
@@ -952,6 +958,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	//SHADOW MAPPING-----------////-----------////-----------////-----------////
 
 	shadows.renderSceneToShadowMap(XMMatrixIdentity(), lightProp01.lights[0].Position, mainCamera.getCameraXPos(), lightProp01.lights[0].Direction);	//It's put here in case the light would be moving. Otherwise it could be in the constant buffer for optimization
+	gDeviceContext->UpdateSubresource(lightConstBuff, 0, NULL, &lightProp01, 0, 0);
 	WVP = shadows.getLightWVP();	//Transpose the matrices (WVP To lights POV) to prepare them for the shader, For Shadow mapping in this case
 	//XMStoreFloat4x4(&perObjCBData.WorldSpace, XMMatrixTranspose(shadows.getShadowWorld()));
 	XMStoreFloat4x4(&perObjCBData.WVP, XMMatrixTranspose(WVP));
@@ -1090,6 +1097,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	matProperties.Material = MatPresets::BlinnBase;
 	matProperties.Material.UseTexture = 1;
+	gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 	//TEST CUSTOM FORMAT
 
 	//######################################################################################################################################################
@@ -1111,7 +1119,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
-				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->testPlatforms->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
@@ -1120,40 +1128,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		}
 	}
 
-	// Render Collectables
-	tempDiv = -1.0f;
-	if (theCharacter->getDivision() == 0)
-	{
-		tempDiv = 0.0f;
-	}
-
-	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
-
-	{
-		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
-		{
-			if (theBinaryTree->collectables->at(i)[j].GetActive())
-			{
-				tex = intArrayTex[theBinaryTree->collectables->at(i)[j].indexT];
-				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
-
-
-/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-
-//theBinaryTree->collectables->at(i)[j].material;
-//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-//matProperties.Material = MatPresets::BlinnBase;
-//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
-gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
-			}
-		}
-	}
 
 
 	//Render Moving Platforms
@@ -1172,7 +1146,7 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->platformsMoving->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
-				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->platformsMoving->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
@@ -1199,7 +1173,7 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadlyMoving->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
-				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->deadlyMoving->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
@@ -1208,35 +1182,16 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 		}
 	}
 
-	tempDiv = -1.0f;
-	if (theCharacter->getDivision() == 0)
-	{
-		tempDiv = 0.0f;
-	}
-	for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
-	{
-		for (int j = 0; j < theBinaryTree->deadly->at(i).size(); j++)
-		{
-			if (theBinaryTree->deadly->at(i)[j].GetActive())
-			{
-				tex = intArrayTex[theBinaryTree->deadly->at(i)[j].indexT];
-				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadly->at(i)[j].vertexBuffer, &vertexSize, &offset);
-
-				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(theBinaryTree->deadly->at(i)[j].world, currView, currProjection);
-				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
-
-				gDeviceContext->Draw(theBinaryTree->deadly->at(i)[j].nrElements * 3, 0);
-			}
-		}
-	}
+	
 
 	//######################################################################################################################################################
 	//###						*NON* SHADOW CASTING OBJECTS GOES IN IF-STATEMENT HERE BELOW	(if (viewPoint == 2))					  				 ###	
 	//######################################################################################################################################################
 	if (viewPoint == 2)
 		{
+			lightProp01.lights[0].Active = 0;
+			lightProp01.lights[2].Active = 1;
+			gDeviceContext->UpdateSubresource(lightConstBuff, 0, NULL, &lightProp01, 0, 0);
 			gDeviceContext->PSSetShader(gPixelShader2, nullptr, 0);
 			for (int i = 0; i < theBinaryTree->renderObjects->size(); i++)
 			{
@@ -1268,6 +1223,66 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 					gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
 				}
 			}
+			// Render Collectables
+			tempDiv = -1.0f;
+			if (theCharacter->getDivision() == 0)
+			{
+				tempDiv = 0.0f;
+			}
+
+			for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
+
+			{
+				for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
+				{
+					if (theBinaryTree->collectables->at(i)[j].GetActive())
+					{
+						tex = intArrayTex[theBinaryTree->collectables->at(i)[j].indexT];
+						gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
+
+
+						/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
+						theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
+
+						//theBinaryTree->collectables->at(i)[j].material;
+						//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
+						//matProperties.Material = MatPresets::BlinnBase;
+						//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+						//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+						UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
+						gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+						gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
+					}
+				}
+			}
+			tempDiv = -1.0f;
+			if (theCharacter->getDivision() == 0)
+			{
+				tempDiv = 0.0f;
+			}
+			for (int i = theCharacter->getDivision() + (int)tempDiv; i <= theCharacter->getDivision() + 1; i++)
+			{
+				for (int j = 0; j < theBinaryTree->deadly->at(i).size(); j++)
+				{
+					if (theBinaryTree->deadly->at(i)[j].GetActive())
+					{
+						tex = intArrayTex[theBinaryTree->deadly->at(i)[j].indexT];
+						gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
+						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadly->at(i)[j].vertexBuffer, &vertexSize, &offset);
+
+						//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+						UpdateMatricies(theBinaryTree->deadly->at(i)[j].world, currView, currProjection);
+						gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
+
+						gDeviceContext->Draw(theBinaryTree->deadly->at(i)[j].nrElements * 3, 0);
+					}
+				}
+			}
+			lightProp01.lights[0].Active = 1;
+			lightProp01.lights[2].Active = 0;
+			gDeviceContext->UpdateSubresource(lightConstBuff, 0, NULL, &lightProp01, 0, 0);
 		}
 	
 
@@ -1307,7 +1322,7 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
 		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
 		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
-
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
 		for (int i = 0; i < particleEffects.size(); i++){
 			if (particleEffects[i]->playing == true){
@@ -1316,7 +1331,7 @@ gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
 				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
 				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
 				//particleEffects[i].SetPosMatrix(theCharacter->pos);
-				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
 				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
 
@@ -1338,7 +1353,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		soundGonnaDie.PlayMp3();
 		soundGonnaDie.daCapo();
 		start = true;
-		soundBackground.PlayMp3();
+		//soundBackground.PlayMp3();
 		soundBackground.soundTime = gTimer.TotalTime();
 	}
 	
@@ -1346,7 +1361,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	{
 		soundBackground.daCapo();
 		soundBackground.StopMp3();
-		soundBackground.PlayMp3();
+		//soundBackground.PlayMp3();
 		soundBackground.soundTime = gTimer.TotalTime();
 	}
 
@@ -1949,7 +1964,15 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 	}
 
+	currentMainLight[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
+	currentMainLight[0].Type = l_Directional;
+	currentMainLight[0].Direction = XMFLOAT4(0.0f, -1.0f, 8.0f, 1.0f);
+	currentMainLight[0].Color = XMFLOAT4(Colors::Beige);
 
+	currentMainLight[1].Position = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	currentMainLight[1].Type = l_Directional;
+	currentMainLight[1].Direction = XMFLOAT4(-0.5f, -1.0f, 1.0f, 0.0f);
+	currentMainLight[1].Color = XMFLOAT4(Colors::Blue);
 
 	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
@@ -1961,8 +1984,8 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	lightProp01.lights[1].Position = XMFLOAT4(theCharacter.xPos, theCharacter.yPos, 0.0f, 1.0f);
 	lightProp01.lights[1].Color = XMFLOAT4(Colors::WhiteSmoke);
 	lightProp01.lights[1].AttConst = 0.2f;
-	lightProp01.lights[1].AttLinear = 0.3f;
-	lightProp01.lights[1].AttQuadratic = 0.5f;
+	lightProp01.lights[1].AttLinear = 0.4f;
+	lightProp01.lights[1].AttQuadratic = 0.4f;
 	lightProp01.lights[1].Range = 10.0f;
 
 	float moveL = 0.0f;
@@ -1975,13 +1998,10 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 
 
-		lightProp01.lights[2].Type = l_Directional;
-		lightProp01.lights[2].Color = XMFLOAT4(0.6f, 0.6f, 0.2f, 1.0f);
-		lightProp01.lights[2].Direction = XMFLOAT4(0.0f, -1.0f, -1.0f, 1.0f);
-		lightProp01.lights[2].AttConst = 0.3f;
-		lightProp01.lights[2].AttLinear = 0.2f;
-		lightProp01.lights[2].AttQuadratic = 0.5f;
-		lightProp01.lights[2].Range = 15.0f;
+	lightProp01.lights[2].Position = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	lightProp01.lights[2].Type = l_Directional;
+	lightProp01.lights[2].Direction = XMFLOAT4(-0.5f, -1.0f, -1.0f, 0.0f);
+	lightProp01.lights[2].Color = XMFLOAT4(Colors::Beige);
 
 	lightProp01.lights[3].Type = l_Point;
 	lightProp01.lights[3].Position = XMFLOAT4(20.0f, 10.0f, 0.0f, 1.0f);
@@ -2033,7 +2053,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	lightProp01.lights[5].Active = 0;
 	lightProp01.lights[6].Active = 0;
 	lightProp01.lights[7].Active = 0;
-	lightProp01.GlobalAmbient = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+	lightProp01.GlobalAmbient = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 
 	if (theCharacter.yPos < -20)
 	{
@@ -2407,8 +2427,8 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 
 void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 {
-	soundBackground.daCapo();
-	soundBackground.StopMp3();
+	//soundBackground.daCapo();
+	//soundBackground.StopMp3();
 	soundYoungDie.daCapo();
 	soundYoungDie.StopMp3();
 	soundManDie.daCapo();
@@ -2465,6 +2485,7 @@ void RenderEngine::LoadSounds()
 	soundBackground.InitMp3();
 	soundBackground.LoadMp3("song.mp3");
 	soundBackground.setVolume(-2000);
+	
 	soundGoingThisWay.InitMp3();
 	soundGoingThisWay.LoadMp3("GoingThisWay.wav");
 	soundGonnaDie.InitMp3();

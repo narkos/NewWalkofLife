@@ -248,13 +248,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 1000.0f);
-			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempP.material.Diffuse = KD;
-			tempP.material.Ambient = KA;
-			tempP.material.Specular = KS;
-			tempP.material.SpecPow = specularPowah;
-			tempP.nrElements = nrOfFaces;
-			tempP.indexT = mesnNumberInt;
+			Platform *tempP = new Platform(false, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP->material.Diffuse = KD;
+			tempP->material.Ambient = KA;
+			tempP->material.Specular = KS;
+			tempP->material.SpecPow = specularPowah;
+			tempP->nrElements = nrOfFaces;
+			tempP->indexT = mesnNumberInt;
 			mesnNumberInt++;
 			staticPlatforms.push_back(tempP);
 		}
@@ -262,13 +262,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
-			Platform tempP(false, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempP.material.Diffuse = KD;
-			tempP.material.Ambient = KA;
-			tempP.material.Specular = KS;
-			tempP.material.SpecPow = specularPowah;
-			tempP.nrElements = nrOfFaces;
-			tempP.indexT = mesnNumberInt;
+			Platform *tempP = new Platform(false, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP->material.Diffuse = KD;
+			tempP->material.Ambient = KA;
+			tempP->material.Specular = KS;
+			tempP->material.SpecPow = specularPowah;
+			tempP->nrElements = nrOfFaces;
+			tempP->indexT = mesnNumberInt;
 			mesnNumberInt++;
 			dynamicPlatforms.push_back(tempP);
 		}
@@ -276,25 +276,25 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
-			PlayerObject tempPlayer(meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
-			tempPlayer.material.Diffuse = KD;
-			tempPlayer.material.Ambient = KA;
-			tempPlayer.material.Specular = KS;
-			tempPlayer.material.SpecPow = specularPowah;
-			tempPlayer.nrElements = nrOfFaces;
-			tempPlayer.indexT = mesnNumberInt;
+			PlayerObject *tempPlayer = new PlayerObject(meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed); //importera speeden
+			tempPlayer->material.Diffuse = KD;
+			tempPlayer->material.Ambient = KA;
+			tempPlayer->material.Specular = KS;
+			tempPlayer->material.SpecPow = specularPowah;
+			tempPlayer->nrElements = nrOfFaces;
+			tempPlayer->indexT = mesnNumberInt;
 			mesnNumberInt++;
 			players.push_back(tempPlayer);
 		}
 		else if (meshType == 3){ //backgroundobj
-			GameObject tempO(meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, xInterval, yInterval, xSpeed, ySpeed);
-			tempO.material.Diffuse = KD;
-			tempO.material.Ambient = KA;
-			tempO.material.Specular = KS;
-			tempO.material.SpecPow = specularPowah;
-			tempO.xPos = centerX;
-			tempO.nrElements = nrOfFaces;
-			tempO.indexT = mesnNumberInt;
+			GameObject *tempO = new GameObject(meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, xInterval, yInterval, xSpeed, ySpeed);
+			tempO->material.Diffuse = KD;
+			tempO->material.Ambient = KA;
+			tempO->material.Specular = KS;
+			tempO->material.SpecPow = specularPowah;
+			tempO->xPos = centerX;
+			tempO->nrElements = nrOfFaces;
+			tempO->indexT = mesnNumberInt;
 
 			mesnNumberInt++;
 			backGroundObjects.push_back(tempO);
@@ -303,13 +303,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
-			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempC.material.Diffuse = KD;
-			tempC.material.Ambient = KA;
-			tempC.material.Specular = KS;
-			tempC.material.SpecPow = specularPowah;
-			tempC.nrElements = nrOfFaces;
-			tempC.indexT = mesnNumberInt;
+			CollectableObject *tempC = new CollectableObject(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempC->material.Diffuse = KD;
+			tempC->material.Ambient = KA;
+			tempC->material.Specular = KS;
+			tempC->material.SpecPow = specularPowah;
+			tempC->nrElements = nrOfFaces;
+			tempC->indexT = mesnNumberInt;
 
 			mesnNumberInt++;
 			staticCollectableObjects.push_back(tempC);
@@ -318,13 +318,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
-			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempP.material.Diffuse = KD;
-			tempP.material.Ambient = KA;
-			tempP.material.Specular = KS;
-			tempP.material.SpecPow = specularPowah;
-			tempP.nrElements = nrOfFaces;
-			tempP.indexT = mesnNumberInt;
+			Platform *tempP = new Platform(true, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, true, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP->material.Diffuse = KD;
+			tempP->material.Ambient = KA;
+			tempP->material.Specular = KS;
+			tempP->material.SpecPow = specularPowah;
+			tempP->nrElements = nrOfFaces;
+			tempP->indexT = mesnNumberInt;
 
 			mesnNumberInt++;
 			staticDeadlyObjects.push_back(tempP);
@@ -333,17 +333,17 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
-			Platform tempP(true, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempP.material.Diffuse = KD;
-			tempP.material.Ambient = KA;
-			tempP.material.Specular = KS;
-			tempP.material.SpecPow = specularPowah;
-			tempP.slamDirection = coinValue;
-			tempP.slamSpeedMultiplier = ySpeed;
-			tempP.slamWaitTime = xSpeed;
-			tempP.slamTimeOffset = xInterval;
-			tempP.nrElements = nrOfFaces;
-			tempP.indexT = mesnNumberInt;
+			Platform *tempP = new Platform(true, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempP->material.Diffuse = KD;
+			tempP->material.Ambient = KA;
+			tempP->material.Specular = KS;
+			tempP->material.SpecPow = specularPowah;
+			tempP->slamDirection = coinValue;
+			tempP->slamSpeedMultiplier = ySpeed;
+			tempP->slamWaitTime = xSpeed;
+			tempP->slamTimeOffset = xInterval;
+			tempP->nrElements = nrOfFaces;
+			tempP->indexT = mesnNumberInt;
 			mesnNumberInt++;
 			dynamicDeadlyObjects.push_back(tempP);
 		}
@@ -351,13 +351,13 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			BoundingBox bTemp;
 			bTemp.Center = XMFLOAT3(centerX, centerY, 0.0f);
 			bTemp.Extents = XMFLOAT3(extentX, extentY, 10.0f);
-			CollectableObject tempC(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
-			tempC.material.Diffuse = KD;
-			tempC.material.Ambient = KA;
-			tempC.material.Specular = KS;
-			tempC.material.SpecPow = specularPowah;
-			tempC.nrElements = nrOfFaces;		
-			tempC.indexT = mesnNumberInt;
+			CollectableObject *tempC = new CollectableObject(coinValue, timeValue, meshVertexBuffer, XMFLOAT3(0.0f, 0.0f, 0.0f), true, false, bTemp, xInterval, yInterval, xSpeed, ySpeed);
+			tempC->material.Diffuse = KD;
+			tempC->material.Ambient = KA;
+			tempC->material.Specular = KS;
+			tempC->material.SpecPow = specularPowah;
+			tempC->nrElements = nrOfFaces;
+			tempC->indexT = mesnNumberInt;
 
 			mesnNumberInt++;
 			dynamicCollectableObjects.push_back(tempC);

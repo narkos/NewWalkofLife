@@ -20,14 +20,14 @@ using namespace std;
 
 class FBXImporter{
 private:
-	vector<Platform> staticPlatforms;
-	vector<Platform> dynamicPlatforms;
-	vector<PlayerObject> players;
-	vector<GameObject> backGroundObjects;
-	vector<CollectableObject> staticCollectableObjects;
-	vector<Platform> staticDeadlyObjects; //använder denna som platformen ändå!
-	vector<Platform> dynamicDeadlyObjects;
-	vector<CollectableObject> dynamicCollectableObjects;
+	vector<Platform*> staticPlatforms;
+	vector<Platform*> dynamicPlatforms;
+	vector<PlayerObject*> players;
+	vector<GameObject*> backGroundObjects;
+	vector<CollectableObject*> staticCollectableObjects;
+	vector<Platform*> staticDeadlyObjects; //använder denna som platformen ändå!
+	vector<Platform*> dynamicDeadlyObjects;
+	vector<CollectableObject*> dynamicCollectableObjects;
 
 
 	struct FileInfo{
@@ -147,7 +147,7 @@ public:
 
 	void ImportFBX(ID3D11Device* gDevice, char* fileName);
 
-	vector<Platform> GetStaticPlatforms(){
+	vector<Platform*> GetStaticPlatforms(){
 		return staticPlatforms;
 	}
 
@@ -161,25 +161,25 @@ public:
 		return indexArray;
 	}
 
-	vector<Platform> GetDynamicPlatforms(){
+	vector<Platform*> GetDynamicPlatforms(){
 		return dynamicPlatforms;
 	}
-	vector<PlayerObject> GetPlayers(){
+	vector<PlayerObject*> GetPlayers(){
 		return players;
 	}
-	vector<GameObject> GetBackGroundObjects(){
+	vector<GameObject*> GetBackGroundObjects(){
 		return backGroundObjects;
 	}
-	vector<CollectableObject> GetStaticCollectableObjects(){
+	vector<CollectableObject*> GetStaticCollectableObjects(){
 		return staticCollectableObjects;
 	}
-	vector<Platform> GetStaticDeadlyObjects(){
+	vector<Platform*> GetStaticDeadlyObjects(){
 		return staticDeadlyObjects;
 	}
-	vector<Platform> GetDynamicDeadlyObjects(){
+	vector<Platform*> GetDynamicDeadlyObjects(){
 		return dynamicDeadlyObjects;
 	}
-	vector<CollectableObject> GetDynamicCollectableObject(){
+	vector<CollectableObject*> GetDynamicCollectableObject(){
 		return dynamicCollectableObjects;
 	}
 };

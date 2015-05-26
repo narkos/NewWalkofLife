@@ -362,16 +362,6 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 			mesnNumberInt++;
 			dynamicCollectableObjects.push_back(tempC);
 		}
-		//delete meshVertexBuffer
-
-		//for (int i = 0; i < nrOfAnimations; i++){
-
-		//}
-
-		//for (int i = 0; i < nrOfBones; i++){
-
-		//}
-		
 
 
 	}
@@ -389,6 +379,7 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 				std::string finalTexPath =cmpString3;
 
 				texNameArray.push_back(finalTexPath.c_str());
+				
 			}
 			else if (f > 0){
 				std::string finalTexPath1;
@@ -413,6 +404,8 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 					}
 			}
 			}
+			cmpString3 = NULL;
+			delete[]cmpString3;
 		}
 		for (int f = 0; f < testTexNameArray.size(); f++){
 			const char* cmpString3 = testTexNameArray[f].c_str();
@@ -422,6 +415,8 @@ void FBXImporter::ImportFBX(ID3D11Device* gDevice, char* fileName){
 				}
 
 			}
+			cmpString3 = NULL;
+			delete[]cmpString3;
 		}
 
 		int qbajs = 0;

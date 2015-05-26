@@ -80,35 +80,17 @@ bool RenderEngine::Init(){
 	BillboardTextureEffect *temp3 = new BillboardTextureEffect(gDevice, 8, 2.0f, 2.0f, 0.05f, "getCoinSprite_", ".png");
 	particleEffects.push_back(temp3);
 
-	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
-	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
-	//particleEffects.push_back(temp2);
+
 	Collision tempC(theCharacter1);
 	theCollision = &tempC;
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
-	//theHighScore.LoadHighScore();
-	//theCustomImporter.ImportFBX(gDevice, "Objects/121.bin");
+
 	theCustomImporter.ImportFBX(gDevice, "Objects/testFile.bin");
 	intArrayTex = theCustomImporter.GetindexArray();
 	statez = CurrChar.getCharSate();
 
-	//D3D11_BUFFER_DESC bDesc;
-	//ZeroMemory(&bDesc, sizeof(D3D11_BUFFER_DESC));
-	//bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//bDesc.Usage = D3D11_USAGE_DEFAULT;
-	//bDesc.ByteWidth = sizeof(VertexData)*(vertecies.size());
 
-	//D3D11_SUBRESOURCE_DATA data;
-	//data.pSysMem = vertecies.data();//<--------
-	//HRESULT VertexBufferChecker = gDevice->CreateBuffer(&bDesc, &data, &Tempidlebuffer);
-
-	//Tempidlebuffer = theCharacters.at(0).GetVertexBuffer();
-	//--
-	//theCharacters = &theCustomImporter.GetPlayers()[0];
-	//theCharacter2 = theCustomImporter.GetPlayers[1];
-	//theCharacter3 = theCustomImporter.GetPlayers[2];
-	//theCustomImporter.GetPlayers()[0]
 	for (int i = 0; i < theCustomImporter.GetStaticPlatforms().size(); i++)
 	{
 		theBinaryTree->AddPlatform(theCustomImporter.GetStaticPlatforms().at(i));
@@ -150,8 +132,6 @@ bool RenderEngine::Init(){
 	StartMenu.CreateTextures(gDevice);
 	//Font
 	Fonts();
-	//StartMenu.menuInit(gDeviceContext);
-	//mainMenu.menuInit(gDeviceContext);
 
 	theCharacters.at(0).xPos = 4;
 	theCharacters.at(0).yPos = 9;
@@ -173,18 +153,6 @@ bool RenderEngine::Init(){
 	theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
 
 
-	//Baby World Start Pos
-	//resetXpos[0] = 4.0f;
-	//resetYpos[0] = 9.0f;
-
-	//resetXpos[1] = 200.0f;
-	//resetYpos[1] = 20.0f;
-
-	//resetXpos[2] = 364.0f;
-	//resetYpos[2] = 20.0f;
-	
-	
-
 	//SHADOWS
 	Shadows tempShadows((int)mainCamera.getWindowWidth(), (int)mainCamera.getWindowHeight(), gDevice, gDeviceContext);
 	shadows = tempShadows;
@@ -201,54 +169,6 @@ bool RenderEngine::Init(){
 
 
 	mainMenu.menuInit(gDeviceContext);
-
-	//theCharacters.at(0).xPos = 4;
-	//theCharacters.at(0).yPos = 9;
-	//
-	//theCharacters.at(0).setRunSpeed(0.08f);
-	//theCharacters.at(0).setJumpHeight(0.66f);
-	//theCharacters.at(0).setDash(2.0f);
-	//theCharacters.at(8).setRunSpeed(0.13f);
-	//theCharacters.at(8).setJumpHeight(0.68f);
-	//theCharacters.at(0).setDash(2.7f);
-	//theCharacters.at(16).setRunSpeed(0.05f);
-	//theCharacters.at(16).setJumpHeight(0.75f);
-	//
-
-
-
-	//// Set hit ray info
-	//theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	//theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	//theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
-
-	//theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	//theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
-	//theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
-
-
-	//Baby World Start Pos
-	/*resetXpos[0] = 4.0f;
-	resetYpos[0] = 9.0f;
-
-	resetXpos[1] = 200.0f;
-	resetYpos[1] = 20.0f;
-
-	resetXpos[2] = 364.0f;
-	resetYpos[2] = 20.0f;*/
-
-
-	
-
-	//highscore stuff
-	//theHighScore.AddScore(5, 2, 13);
-
-	//theHighScore.AddScore(2, 9, 3);
-	//theHighScore.AddScore(1, 2, 44);
-	////theHighScore.AddScore(1, 2, 1);
-	//theHighScore.ReOrganizeLists();
-	////Import
-
 
 	// Rotatation And transform Buffer
 	D3D11_BUFFER_DESC transformbuffer;
@@ -284,20 +204,6 @@ bool RenderEngine::Init(){
 	mbuffDesc.CPUAccessFlags = 0;
 	mbuffDesc.MiscFlags = 0;
 	hr = gDevice->CreateBuffer(&mbuffDesc, NULL, &matConstBuff);
-
-
-	////Normalmap buffer
-	//D3D11_BUFFER_DESC cbbd;
-	//ZeroMemory(&cbbd, sizeof(D3D11_BUFFER_DESC));
-
-	//cbbd.Usage = D3D11_USAGE_DEFAULT;
-	//cbbd.ByteWidth = sizeof(cbPerObject);
-	//cbbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//cbbd.CPUAccessFlags = 0;
-	//cbbd.MiscFlags = 0;
-
-	//gDevice->CreateBuffer(&cbbd, NULL, &cbPerObjectBuffer);
-
 
 
 	return true; //om båda funkade så returnera true (y)
@@ -428,6 +334,7 @@ void RenderEngine::TextureFunc(){
 	vector<string> texNames = theCustomImporter.GettexNameArray();
 	RSWArray = new ID3D11ShaderResourceView*[texNames.size()];
 
+	texes = texNames.size();
 	std::wstring fest = L"Textures/ObjectTextures/";
 	for (int texIt = 0; texIt < texNames.size(); texIt++){
 
@@ -441,8 +348,6 @@ void RenderEngine::TextureFunc(){
 
 
 
-	//DirectX::CreateWICTextureFromFile(gDevice, L"Textures/normalmap.dds", nullptr, &normalMap);
-	
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter1.dds", nullptr, &Meter2);
@@ -981,11 +886,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
 	gDeviceContext->PSSetConstantBuffers(2, 1, &lightConstBuff);
 	gDeviceContext->PSSetConstantBuffers(1, 1, &matConstBuff);
-	// END LIGHT BUFFER UPDATE
-	// normalmap buffer
-	//gDeviceContext->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
-	//gDeviceContext->PSSetConstantBuffers(4, 1, &cbPerObjectBuffer);
-	//XMMATRIX WVP;		//Defined in .h file
+
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
 	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -1070,14 +971,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
 
-
-				/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-				theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-				
-				//theBinaryTree->collectables->at(i)[j].material;
-				//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-				//matProperties.Material = MatPresets::BlinnBase;
-				//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 				gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 				UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
@@ -2178,7 +2071,7 @@ void RenderEngine::StartMenuUpdate(float tt){
 
 void RenderEngine::Release(){
 
-	for (int i = 0; i < texes-11; i++)
+	for (int i = 0; i < texes; i++)
 	{
 		RSWArray[i]->Release();
 	}
@@ -2198,9 +2091,6 @@ void RenderEngine::Release(){
 
 	delete[] RSWArray;
 	matConstBuff->Release();
-	/*delete theCharacter1;
-	delete theCharacter2;
-	delete theCharacter3;*/
 	delete theBinaryTree;
 	theCharacters.clear();
 
@@ -2212,15 +2102,12 @@ void RenderEngine::Release(){
 	gDevice->Release();
 	depthStencilBuffer->Release();
 
-	//gVertexBuffer->Release();
+	
 	gVertexLayout->Release();
 	gVertexShader->Release();
 	gPixelShader->Release();
 	gDeviceContext->Release();
-//	cbPerObjectBuffer->Release();
 
-	//Kill Lights
-	//delete testLight;
 }
 
 void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic){// , bool isStatic, XMMATRIX startPosMatrix){
@@ -2236,26 +2123,20 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	OutputDebugStringA("\n");
 	if (type == 0)
 	{
-
 		theCharacter1 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(10, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-
-		//theCharacter1->CreateBBOXVertexBuffer(gDevice);
 		theCharacter1->nrElements = objectTest.GetNrElements();
-		//gameObjects.push_back(*theCharacter);
 	}
 
 	else if (type == 1)
 	{
 		if (isStatic == false){
 			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 3, 4.0f, 1.0f, 1.0f);
-			//testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 		else{
 			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox, 0, 0, 0, 0);
-			//testPlatform.CreateBBOXVertexBuffer(gDevice);
 			testPlatform.nrElements = objectTest.GetNrElements();
 			theBinaryTree->AddPlatform(testPlatform);
 		}
@@ -2264,22 +2145,15 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 	{
 		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 		theCharacter2->Scale(0.5f, 0.5f, 0.5f);
-		//theCharacter2->CreateBBOXVertexBuffer(gDevice);
 		theCharacter2->nrElements = objectTest.GetNrElements();
-		
-		/*Collision tempD(theCharacter2);
-		theCollision = &tempD;*/
-		//gameObjects.push_back(*theCharacter);
+
 	}
 	if (type == 5)
 	{
 		theCharacter3 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
-		//theCharacter3->CreateBBOXVertexBuffer(gDevice);
 		theCharacter3->nrElements = objectTest.GetNrElements();
-	/*	Collision tempDC(theCharacter3);
-		theCollision = &tempDC;*/
-		//gameObjects.push_back(*theCharacter);
+
 	}
 
 	else
@@ -2288,21 +2162,6 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 		object.nrElements = objectTest.GetNrElements();
 		theBinaryTree->AddObject(object);
 	}
-
-	//testObject.ObjName = objectTest.GetName();
-	//Fill buffers
-	//testObject.gameObjectIndex = gameObjectIndex; //används förtillfället vid frustum contains checken
-	//gameObjectIndex++;
-	//testObject.gVertexBuffer = *objectTest.GetVertexBuffer();
-
-
-	//testObject.verteciesPos = objectTest.GetVertexPositions();
-	//testObject.verteciesIndex = objectTest.GetIndecies();
-	//testObject.verteciesPosX = objectTest.GetVerticiesX();
-	//testObject.verteciesPosY = objectTest.GetVerticiesY();
-	//testObject.verteciesPosZ = objectTest.GetVerticiesZ();
-
-
 
 
 }
@@ -2343,10 +2202,6 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 			theBinaryTree->collectables->at(i).at(j).SetActive(true);
 		}
 
-	//	/*for (int j = 0; j < theBinaryTree->collectableMoving->at(i).size(); j++)
-	//	{
-	//		theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
-	//	}*/
 	}
 	resetValues[0] = resetXpos[0];
 	resetValues[1] = resetYpos[0];
@@ -2410,21 +2265,6 @@ void RenderEngine::LoadSounds()
 void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int switcher)
 {
 	static float time = 0.0f;
-	//float tajm = gTimer.TotalTime();
-	//if (loop == 1 && tajm + 0.2f > gTimer.TotalTime())
-	//{
-	//	theCharacter->setVertexBuffer(theCharacters.at(curr + 1).GetVertexBuffer());
-
-	//	tajm = gTimer.TotalTime();
-	//	loop= 2;
-	//	OutputDebugStringA("Enter loop 1");
-	//}
-	//if (loop == 2 && tajm + 0.2f > gTimer.TotalTime())
-	//{
-	//	theCharacter->setVertexBuffer(theCharacters.at(curr + 2).GetVertexBuffer());
-	//	tajm = gTimer.TotalTime();
-	//	loop = 1;
-	//	OutputDebugStringA("Enter loop 2");
 	//}
 	if (switcher == 0)
 	{
@@ -2474,19 +2314,5 @@ void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int swi
 		}
 		//theCharacter->setVertexBuffer(theCharacters.at(curr).GetVertexBuffer());
 	}
-	
-	//if (loop == 3 && tajm + 0.4f > gTimer.TotalTime())
-	//{
-	//	theCharacters.at(curr).setVertexBuffer(theCharacters.at(curr + 3).GetVertexBuffer());
-	//	tajm = gTimer.TotalTime();
-	//	loop = loop + 1;
-	//}
-	//if (loop == 4 && gTimer.TotalTime() >= tajm + 0.5f)
-	//{
-	//	theCharacters.at(curr).setVertexBuffer(theCharacters.at(curr + 4).GetVertexBuffer());
-	//	tajm = gTimer.TotalTime();
-	//	loop = loop + 1;
-	//}
-	//
 	
 }

@@ -6,13 +6,13 @@ BinaryTree::BinaryTree(int divisions, int pixelsPerDivision)
 	this->divisions = divisions;
 	this->pixelsPerdivision = pixelsPerDivision;
 	
-	this->testPlatforms = new std::vector<std::vector<Platform>>(22);
-	this->renderObjects = new std::vector<std::vector<GameObject>>(22);
-	this->collectables = new std::vector<std::vector<CollectableObject>>(22);
-	this->deadly = new std::vector<std::vector<Platform>>(22);
-	this->collectableMoving = new std::vector<std::vector<CollectableObject>>(22);
-	this->platformsMoving = new std::vector<std::vector<Platform>>(22);
-	this->deadlyMoving = new std::vector<std::vector<Platform>>(22);
+	this->testPlatforms = new std::vector<std::vector<Platform*>>(22);
+	this->renderObjects = new std::vector<std::vector<GameObject*>>(22);
+	this->collectables = new std::vector<std::vector<CollectableObject*>>(22);
+	this->deadly = new std::vector<std::vector<Platform*>>(22);
+	this->collectableMoving = new std::vector<std::vector<CollectableObject*>>(22);
+	this->platformsMoving = new std::vector<std::vector<Platform*>>(22);
+	this->deadlyMoving = new std::vector<std::vector<Platform*>>(22);
 
 }
 
@@ -28,22 +28,22 @@ BinaryTree::~BinaryTree()
 	this->deadlyMoving->clear();
 }
 
-void BinaryTree::AddPlatform(Platform thePlatform)
+void BinaryTree::AddPlatform(Platform* thePlatform)
 {
-	if (thePlatform.GetBBOX().Center.x < 9 * 0)
+	if (thePlatform->GetBBOX().Center.x < 9 * 0)
 	{
 		testPlatforms->at(0).push_back(thePlatform);
 	}
 
 	else
 	{
-		if (thePlatform.GetBBOX().Center.x > 9 * pixelsPerdivision)
+		if (thePlatform->GetBBOX().Center.x > 9 * pixelsPerdivision)
 			{
-				if (thePlatform.GetBBOX().Center.x > 14 * pixelsPerdivision)
+				if (thePlatform->GetBBOX().Center.x > 14 * pixelsPerdivision)
 				{
 						for (int i = 14; i < 20; i++)
 						{
-							if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+							if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 							{
 								testPlatforms->at(i).push_back(thePlatform);
 								break;
@@ -55,7 +55,7 @@ void BinaryTree::AddPlatform(Platform thePlatform)
 				{
 					for (int i = 9; i < 14; i++)
 					{
-						if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+						if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 						{
 							testPlatforms->at(i).push_back(thePlatform);
 							break;
@@ -66,11 +66,11 @@ void BinaryTree::AddPlatform(Platform thePlatform)
 
 			else
 			{
-				if (thePlatform.GetBBOX().Center.x > 4 * pixelsPerdivision)
+				if (thePlatform->GetBBOX().Center.x > 4 * pixelsPerdivision)
 				{
 					for (int i = 4; i < 9; i++)
 					{
-						if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+						if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 						{
 							testPlatforms->at(i).push_back(thePlatform);
 							break;
@@ -82,7 +82,7 @@ void BinaryTree::AddPlatform(Platform thePlatform)
 				{
 					for (int i = 0; i < 4; i++)
 					{
-						if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+						if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 						{
 							testPlatforms->at(i).push_back(thePlatform);
 							break;
@@ -96,22 +96,22 @@ void BinaryTree::AddPlatform(Platform thePlatform)
 	}
 
 	
-void BinaryTree::AddObject(GameObject theObject)
+void BinaryTree::AddObject(GameObject* theObject)
 {
-	if (theObject.xPos < 9 * 0)
+	if (theObject->xPos < 9 * 0)
 	{
 		renderObjects->at(0).push_back(theObject);
 	}
 
 	else
 	{
-		if (theObject.xPos > 9 * pixelsPerdivision)
+		if (theObject->xPos > 9 * pixelsPerdivision)
 		{
-			if (theObject.xPos > 14 * pixelsPerdivision)
+			if (theObject->xPos > 14 * pixelsPerdivision)
 			{
 				for (int i = 14; i < 20; i++)
 				{
-					if ((theObject.xPos >= i*pixelsPerdivision) && (theObject.xPos < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->xPos >= i*pixelsPerdivision) && (theObject->xPos < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						renderObjects->at(i).push_back(theObject);
 						break;
@@ -123,7 +123,7 @@ void BinaryTree::AddObject(GameObject theObject)
 			{
 				for (int i = 9; i < 14; i++)
 				{
-					if ((theObject.xPos >= i*pixelsPerdivision) && (theObject.xPos < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->xPos >= i*pixelsPerdivision) && (theObject->xPos < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						renderObjects->at(i).push_back(theObject);
 						break;
@@ -134,11 +134,11 @@ void BinaryTree::AddObject(GameObject theObject)
 
 		else
 		{
-			if (theObject.xPos > 4 * pixelsPerdivision)
+			if (theObject->xPos > 4 * pixelsPerdivision)
 			{
 				for (int i = 4; i < 9; i++)
 				{
-					if ((theObject.xPos  >= i*pixelsPerdivision) && (theObject.xPos < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->xPos >= i*pixelsPerdivision) && (theObject->xPos < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						renderObjects->at(i).push_back(theObject);
 						break;
@@ -150,7 +150,7 @@ void BinaryTree::AddObject(GameObject theObject)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if ((theObject.xPos >= i*pixelsPerdivision) && (theObject.xPos < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->xPos >= i*pixelsPerdivision) && (theObject->xPos < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						renderObjects->at(i).push_back(theObject);
 						break;
@@ -163,22 +163,22 @@ void BinaryTree::AddObject(GameObject theObject)
 
 }
 
-void BinaryTree::addCollectables(CollectableObject theObject)
+void BinaryTree::addCollectables(CollectableObject* theObject)
 {
-	if (theObject.GetBBOX().Center.x < 9 * 0)
+	if (theObject->GetBBOX().Center.x < 9 * 0)
 	{
 		collectables->at(0).push_back(theObject);
 	}
 
 	else
 	{
-		if (theObject.GetBBOX().Center.x > 9 * pixelsPerdivision)
+		if (theObject->GetBBOX().Center.x > 9 * pixelsPerdivision)
 		{
-			if (theObject.GetBBOX().Center.x > 14 * pixelsPerdivision)
+			if (theObject->GetBBOX().Center.x > 14 * pixelsPerdivision)
 			{
 				for (int i = 14; i < 20; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectables->at(i).push_back(theObject);
 						break;
@@ -190,7 +190,7 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 			{
 				for (int i = 9; i < 14; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectables->at(i).push_back(theObject);
 						break;
@@ -201,11 +201,11 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 
 		else
 		{
-			if (theObject.GetBBOX().Center.x > 4 * pixelsPerdivision)
+			if (theObject->GetBBOX().Center.x > 4 * pixelsPerdivision)
 			{
 				for (int i = 4; i < 9; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectables->at(i).push_back(theObject);
 						break;
@@ -217,7 +217,7 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectables->at(i).push_back(theObject);
 						break;
@@ -230,22 +230,22 @@ void BinaryTree::addCollectables(CollectableObject theObject)
 
 }
 
-void BinaryTree::addMovingCollectable(CollectableObject theObject)
+void BinaryTree::addMovingCollectable(CollectableObject* theObject)
 {
-	if (theObject.GetBBOX().Center.x < 9 * 0)
+	if (theObject->GetBBOX().Center.x < 9 * 0)
 	{
 		collectableMoving->at(0).push_back(theObject);
 	}
 
 	else
 	{
-		if (theObject.GetBBOX().Center.x > 9 * pixelsPerdivision)
+		if (theObject->GetBBOX().Center.x > 9 * pixelsPerdivision)
 		{
-			if (theObject.GetBBOX().Center.x > 14 * pixelsPerdivision)
+			if (theObject->GetBBOX().Center.x > 14 * pixelsPerdivision)
 			{
 				for (int i = 14; i < 20; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectableMoving->at(i).push_back(theObject);
 						break;
@@ -257,7 +257,7 @@ void BinaryTree::addMovingCollectable(CollectableObject theObject)
 			{
 				for (int i = 9; i < 14; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectableMoving->at(i).push_back(theObject);
 						break;
@@ -268,11 +268,11 @@ void BinaryTree::addMovingCollectable(CollectableObject theObject)
 
 		else
 		{
-			if (theObject.GetBBOX().Center.x > 4 * pixelsPerdivision)
+			if (theObject->GetBBOX().Center.x > 4 * pixelsPerdivision)
 			{
 				for (int i = 4; i < 9; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectableMoving->at(i).push_back(theObject);
 						break;
@@ -284,7 +284,7 @@ void BinaryTree::addMovingCollectable(CollectableObject theObject)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if ((theObject.GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((theObject->GetBBOX().Center.x >= i*pixelsPerdivision) && (theObject->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						collectableMoving->at(i).push_back(theObject);
 						break;
@@ -297,22 +297,22 @@ void BinaryTree::addMovingCollectable(CollectableObject theObject)
 
 }
 
-void BinaryTree::addMovingPlatforms(Platform thePlatform)
+void BinaryTree::addMovingPlatforms(Platform* thePlatform)
 {
-	if (thePlatform.GetBBOX().Center.x < 9 * 0)
+	if (thePlatform->GetBBOX().Center.x < 9 * 0)
 	{
 		platformsMoving->at(0).push_back(thePlatform);
 	}
 
 	else
 	{
-		if (thePlatform.GetBBOX().Center.x > 9 * pixelsPerdivision)
+		if (thePlatform->GetBBOX().Center.x > 9 * pixelsPerdivision)
 		{
-			if (thePlatform.GetBBOX().Center.x > 14 * pixelsPerdivision)
+			if (thePlatform->GetBBOX().Center.x > 14 * pixelsPerdivision)
 			{
 				for (int i = 14; i < 20; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						platformsMoving->at(i).push_back(thePlatform);
 						break;
@@ -324,7 +324,7 @@ void BinaryTree::addMovingPlatforms(Platform thePlatform)
 			{
 				for (int i = 9; i < 14; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						platformsMoving->at(i).push_back(thePlatform);
 						break;
@@ -335,11 +335,11 @@ void BinaryTree::addMovingPlatforms(Platform thePlatform)
 
 		else
 		{
-			if (thePlatform.GetBBOX().Center.x > 4 * pixelsPerdivision)
+			if (thePlatform->GetBBOX().Center.x > 4 * pixelsPerdivision)
 			{
 				for (int i = 4; i < 9; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						platformsMoving->at(i).push_back(thePlatform);
 						break;
@@ -351,7 +351,7 @@ void BinaryTree::addMovingPlatforms(Platform thePlatform)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						platformsMoving->at(i).push_back(thePlatform);
 						break;
@@ -365,22 +365,22 @@ void BinaryTree::addMovingPlatforms(Platform thePlatform)
 }
 
 
-void BinaryTree::addDeadlyMovingPlatform(Platform thePlatform)
+void BinaryTree::addDeadlyMovingPlatform(Platform* thePlatform)
 {
-	if (thePlatform.GetBBOX().Center.x < 9 * 0)
+	if (thePlatform->GetBBOX().Center.x < 9 * 0)
 	{
 		deadlyMoving->at(0).push_back(thePlatform);
 	}
 
 	else
 	{
-		if (thePlatform.GetBBOX().Center.x > 9 * pixelsPerdivision)
+		if (thePlatform->GetBBOX().Center.x > 9 * pixelsPerdivision)
 		{
-			if (thePlatform.GetBBOX().Center.x > 14 * pixelsPerdivision)
+			if (thePlatform->GetBBOX().Center.x > 14 * pixelsPerdivision)
 			{
 				for (int i = 14; i < 20; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadlyMoving->at(i).push_back(thePlatform);
 						break;
@@ -392,7 +392,7 @@ void BinaryTree::addDeadlyMovingPlatform(Platform thePlatform)
 			{
 				for (int i = 9; i < 14; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadlyMoving->at(i).push_back(thePlatform);
 						break;
@@ -403,11 +403,11 @@ void BinaryTree::addDeadlyMovingPlatform(Platform thePlatform)
 
 		else
 		{
-			if (thePlatform.GetBBOX().Center.x > 4 * pixelsPerdivision)
+			if (thePlatform->GetBBOX().Center.x > 4 * pixelsPerdivision)
 			{
 				for (int i = 4; i < 9; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadlyMoving->at(i).push_back(thePlatform);
 						break;
@@ -419,7 +419,7 @@ void BinaryTree::addDeadlyMovingPlatform(Platform thePlatform)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadlyMoving->at(i).push_back(thePlatform);
 						break;
@@ -432,22 +432,22 @@ void BinaryTree::addDeadlyMovingPlatform(Platform thePlatform)
 
 }
 
-void BinaryTree::addDeadlyPlatforms(Platform thePlatform)
+void BinaryTree::addDeadlyPlatforms(Platform* thePlatform)
 {
-	if (thePlatform.GetBBOX().Center.x < 9 * 0)
+	if (thePlatform->GetBBOX().Center.x < 9 * 0)
 	{
 		deadly->at(0).push_back(thePlatform);
 	}
 
 	else
 	{
-		if (thePlatform.GetBBOX().Center.x > 9 * pixelsPerdivision)
+		if (thePlatform->GetBBOX().Center.x > 9 * pixelsPerdivision)
 		{
-			if (thePlatform.GetBBOX().Center.x > 14 * pixelsPerdivision)
+			if (thePlatform->GetBBOX().Center.x > 14 * pixelsPerdivision)
 			{
 				for (int i = 14; i < 20; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadly->at(i).push_back(thePlatform);
 						break;
@@ -459,7 +459,7 @@ void BinaryTree::addDeadlyPlatforms(Platform thePlatform)
 			{
 				for (int i = 9; i < 14; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadly->at(i).push_back(thePlatform);
 						break;
@@ -470,11 +470,11 @@ void BinaryTree::addDeadlyPlatforms(Platform thePlatform)
 
 		else
 		{
-			if (thePlatform.GetBBOX().Center.x > 4 * pixelsPerdivision)
+			if (thePlatform->GetBBOX().Center.x > 4 * pixelsPerdivision)
 			{
 				for (int i = 4; i < 9; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadly->at(i).push_back(thePlatform);
 						break;
@@ -486,7 +486,7 @@ void BinaryTree::addDeadlyPlatforms(Platform thePlatform)
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if ((thePlatform.GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform.GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
+					if ((thePlatform->GetBBOX().Center.x >= i*pixelsPerdivision) && (thePlatform->GetBBOX().Center.x < (i*pixelsPerdivision) + pixelsPerdivision))
 					{
 						deadly->at(i).push_back(thePlatform);
 						break;

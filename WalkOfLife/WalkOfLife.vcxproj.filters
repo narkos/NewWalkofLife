@@ -75,9 +75,6 @@
     <ClCompile Include="Counters.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Obj.cpp">
-      <Filter>Source Files\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
@@ -132,9 +129,6 @@
       <Filter>Header Files\Main</Filter>
     </ClInclude>
     <ClInclude Include="Counters.h">
-      <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Obj.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="BoundingBox.h">

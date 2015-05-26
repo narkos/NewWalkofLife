@@ -30,10 +30,10 @@ public:
 	}
 
 
-	void TestCollision(vector<Platform> &platforms, vector<Platform> &platforms2, vector<Platform> &platforms3, PlayerObject &theCharacter);
-	bool TestCollisionDeadly(vector<Platform> &platforms, PlayerObject* player);
+	void TestCollision(vector<Platform*> platforms, vector<Platform*> platforms2, vector<Platform*> platforms3, PlayerObject *theCharacter);
+	bool TestCollisionDeadly(vector<Platform*> platforms, PlayerObject* player);
 
-	XMFLOAT2 TestCollision(vector<CollectableObject> &collectables, PlayerObject *theCharacter);
+	XMFLOAT2 TestCollision(vector<CollectableObject*> collectables, PlayerObject *theCharacter);
 
 	//void TestCollision(vector<Platform> platforms, vector<CollectableObject> collectables);
 

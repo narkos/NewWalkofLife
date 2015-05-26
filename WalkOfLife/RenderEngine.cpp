@@ -83,8 +83,8 @@ bool RenderEngine::Init(){
 	//BillboardTextureEffect temp2(gDevice, 5, 4.0f, 4.0f, 0.1f, "SpriteExplosion", ".png");
 	////temp2.SetPosMatrix(XMMatrixIdentity()); var den ska renderas!!!!
 	//particleEffects.push_back(temp2);
-	Collision tempC(theCharacter1);
-	theCollision = &tempC;
+	Collision *tempC = new Collision(theCharacter1);
+	theCollision = tempC;
 	testStaticPlatforms = tempC;
 	testDynamicPlatforms = tempC;
 	//theHighScore.LoadHighScore();
@@ -153,24 +153,24 @@ bool RenderEngine::Init(){
 	//StartMenu.menuInit(gDeviceContext);
 	//mainMenu.menuInit(gDeviceContext);
 
-	theCharacters.at(0).xPos = 4;
-	theCharacters.at(0).yPos = 9;
+	theCharacters.at(0)->xPos = 4;
+	theCharacters.at(0)->yPos = 9;
 
-	theCharacters.at(0).setRunSpeed(0.08f);
-	theCharacters.at(0).setJumpHeight(0.66f);
-	theCharacters.at(8).setRunSpeed(0.15f);
-	theCharacters.at(8).setJumpHeight(0.68f);
-	theCharacters.at(16).setRunSpeed(0.05f);
-	theCharacters.at(16).setJumpHeight(0.75f);
+	theCharacters.at(0)->setRunSpeed(0.08f);
+	theCharacters.at(0)->setJumpHeight(0.66f);
+	theCharacters.at(8)->setRunSpeed(0.15f);
+	theCharacters.at(8)->setJumpHeight(0.68f);
+	theCharacters.at(16)->setRunSpeed(0.05f);
+	theCharacters.at(16)->setJumpHeight(0.75f);
 
 	// Set hit ray info
-	theCharacters.at(0).SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
-	theCharacters.at(8).SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
-	theCharacters.at(16).SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
+	theCharacters.at(0)->SetRayOrigins(-0.3f, -1.0f, 0.6f, 3, 0.3f, 0.2f);
+	theCharacters.at(8)->SetRayOrigins(-0.5f, -1.0f, 1.0f, 5, 0.3f, 0.3f);
+	theCharacters.at(16)->SetRayOrigins(-0.3f, -1.0f, 1.0f, 5, 0.5f, 0.3f);
 
-	theCharacters.at(0).SetRayRanges(0.35f, 0.5f, 0.3f);
-	theCharacters.at(8).SetRayRanges(0.5f, 0.5f, 0.5f);
-	theCharacters.at(16).SetRayRanges(0.48f, 0.5f, 0.4f);
+	theCharacters.at(0)->SetRayRanges(0.35f, 0.5f, 0.3f);
+	theCharacters.at(8)->SetRayRanges(0.5f, 0.5f, 0.5f);
+	theCharacters.at(16)->SetRayRanges(0.48f, 0.5f, 0.4f);
 
 
 	//Baby World Start Pos
@@ -804,8 +804,8 @@ int RenderEngine::Run(){
 					particleEffects[1].Play();*/
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 
-					theCharacters.at(8).xPos = theCharacters.at(0).xPos;
-					theCharacters.at(8).yPos = theCharacters.at(0).yPos + 2;
+					theCharacters.at(8)->xPos = theCharacters.at(0)->xPos;
+					theCharacters.at(8)->yPos = theCharacters.at(0)->yPos + 2;
 					//theCharacters.at(8).SetDivision(theCharacters.at(0).getDivision());
 
 					soundIGotThis.PlayMp3();
@@ -821,8 +821,8 @@ int RenderEngine::Run(){
 					CurrChar.setCharState(16);
 					//theCharacter2->TranslateExact(theCharacter1->xPos, theCharacter1->yPos, 0);
 
-					theCharacters.at(16).xPos = theCharacters.at(8).xPos;
-					theCharacters.at(16).yPos = theCharacters.at(8).yPos;
+					theCharacters.at(16)->xPos = theCharacters.at(8)->xPos;
+					theCharacters.at(16)->yPos = theCharacters.at(8)->yPos;
 					//theCharacters.at(16).SetDivision(theCharacters.at(8).getDivision());
 
 					tempInt = rand() % 2;
@@ -855,23 +855,23 @@ int RenderEngine::Run(){
 						if (CurrChar.getCharSate() == 0)
 						{
 							
-							Update(0.0f, theCharacters.at(0));
+							Update(0.0f, *theCharacters.at(0));
 							//switchAnimation(&theCharacters.at(0), 0);
-							Render(&theCharacters.at(0));
+							Render(theCharacters.at(0));
 						}
 						else if (CurrChar.getCharSate() == 8)
 						{
 							//theCollision
 							//theCharacters.at(1).setVertexBuffer(theCharacters.at(2).GetVertexBuffer());
-							Update(0.0f, theCharacters.at(8));
+							Update(0.0f, *theCharacters.at(8));
 							//switchAnimation(&theCharacters.at(1), 1);
-							Render(&theCharacters.at(8));
+							Render(theCharacters.at(8));
 						}
 						else if (CurrChar.getCharSate() == 16)
 						{
-							Update(0.0f, theCharacters.at(16));
+							Update(0.0f, *theCharacters.at(16));
 							//switchAnimation(&theCharacters.at(2), 2);
-							Render(&theCharacters.at(16));
+							Render(theCharacters.at(16));
 						}
 						time3 = gTimer.TotalTime();
 					}
@@ -888,19 +888,19 @@ int RenderEngine::Run(){
 						{
 							
 							
-							MenuUpdate(0.0f, theCharacters.at(0));
+							MenuUpdate(0.0f, *theCharacters.at(0));
 
 							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 						}
 						else if (CurrChar.getCharSate() == 8)
 						{
 							//theCollision
-							MenuUpdate(0.0f, theCharacters.at(8));
+							MenuUpdate(0.0f, *theCharacters.at(8));
 							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 						}
 						else if (CurrChar.getCharSate() == 16)
 						{
-							MenuUpdate(0.0f, theCharacters.at(8));
+							MenuUpdate(0.0f, *theCharacters.at(8));
 							
 							mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
 						}
@@ -1113,17 +1113,17 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		for (int j = 0; j < theBinaryTree->testPlatforms->at(i).size(); j++)
 		{
-			if (theBinaryTree->testPlatforms->at(i)[j].GetActive())
+			if (theBinaryTree->testPlatforms->at(i)[j]->GetActive())
 			{
-				tex = intArrayTex[theBinaryTree->testPlatforms->at(i)[j].indexT];
+				tex = intArrayTex[theBinaryTree->testPlatforms->at(i)[j]->indexT];
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(i)[j].vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->testPlatforms->at(i)[j]->vertexBuffer, &vertexSize, &offset);
 
 				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(theBinaryTree->testPlatforms->at(i)[j].world, currView, currProjection);
+				UpdateMatricies(theBinaryTree->testPlatforms->at(i)[j]->world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-				gDeviceContext->Draw(theBinaryTree->testPlatforms->at(i)[j].nrElements * 3, 0);
+				gDeviceContext->Draw(theBinaryTree->testPlatforms->at(i)[j]->nrElements * 3, 0);
 			}
 		}
 	}
@@ -1140,17 +1140,17 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		for (int j = 0; j < theBinaryTree->platformsMoving->at(i).size(); j++)
 		{
-			if (theBinaryTree->platformsMoving->at(i)[j].GetActive())
+			if (theBinaryTree->platformsMoving->at(i)[j]->GetActive())
 			{
-				tex = intArrayTex[theBinaryTree->platformsMoving->at(i)[j].indexT];
+				tex = intArrayTex[theBinaryTree->platformsMoving->at(i)[j]->indexT];
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->platformsMoving->at(i)[j].vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->platformsMoving->at(i)[j]->vertexBuffer, &vertexSize, &offset);
 
 				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(theBinaryTree->platformsMoving->at(i)[j].world, currView, currProjection);
+				UpdateMatricies(theBinaryTree->platformsMoving->at(i)[j]->world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-				gDeviceContext->Draw(theBinaryTree->platformsMoving->at(i)[j].nrElements * 3, 0);
+				gDeviceContext->Draw(theBinaryTree->platformsMoving->at(i)[j]->nrElements * 3, 0);
 			}
 		}
 	}
@@ -1167,17 +1167,17 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 		for (int j = 0; j < theBinaryTree->deadlyMoving->at(i).size(); j++)
 		{
-			if (theBinaryTree->deadlyMoving->at(i)[j].GetActive())
+			if (theBinaryTree->deadlyMoving->at(i)[j]->GetActive())
 			{
-				tex = intArrayTex[theBinaryTree->deadlyMoving->at(i)[j].indexT];
+				tex = intArrayTex[theBinaryTree->deadlyMoving->at(i)[j]->indexT];
 				gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadlyMoving->at(i)[j].vertexBuffer, &vertexSize, &offset);
+				gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadlyMoving->at(i)[j]->vertexBuffer, &vertexSize, &offset);
 
 				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(theBinaryTree->deadlyMoving->at(i)[j].world, currView, currProjection);
+				UpdateMatricies(theBinaryTree->deadlyMoving->at(i)[j]->world, currView, currProjection);
 				gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-				gDeviceContext->Draw(theBinaryTree->deadlyMoving->at(i)[j].nrElements * 3, 0);
+				gDeviceContext->Draw(theBinaryTree->deadlyMoving->at(i)[j]->nrElements * 3, 0);
 			}
 		}
 	}
@@ -1197,12 +1197,12 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			{
 				for (int j = 0; j < theBinaryTree->renderObjects->at(i).size(); j++)
 				{
-					tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j].indexT];
+					tex = intArrayTex[theBinaryTree->renderObjects->at(i)[j]->indexT];
 					gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-					gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j].vertexBuffer, &vertexSize, &offset);
+					gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->renderObjects->at(i)[j]->vertexBuffer, &vertexSize, &offset);
 
 
-					theBinaryTree->renderObjects->at(i)[j].CalculateWorld();
+					theBinaryTree->renderObjects->at(i)[j]->CalculateWorld();
 					/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
 					theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
 					//theBinaryTree->renderObjects->at(i)[j].material.Emissive = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -1214,13 +1214,13 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 					gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-					UpdateMatricies(theBinaryTree->renderObjects->at(i)[j].world, CamView, CamProjection);
+					UpdateMatricies(theBinaryTree->renderObjects->at(i)[j]->world, CamView, CamProjection);
 
 
 
 					gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-					gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j].nrElements * 3, 0);
+					gDeviceContext->Draw(theBinaryTree->renderObjects->at(i)[j]->nrElements * 3, 0);
 				}
 			}
 			// Render Collectables
@@ -1235,11 +1235,11 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			{
 				for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
 				{
-					if (theBinaryTree->collectables->at(i)[j].GetActive())
+					if (theBinaryTree->collectables->at(i)[j]->GetActive())
 					{
-						tex = intArrayTex[theBinaryTree->collectables->at(i)[j].indexT];
+						tex = intArrayTex[theBinaryTree->collectables->at(i)[j]->indexT];
 						gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
+						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j]->vertexBuffer, &vertexSize, &offset);
 
 
 						/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
@@ -1250,10 +1250,10 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 						//matProperties.Material = MatPresets::BlinnBase;
 						//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 						//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-						UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
+						UpdateMatricies(theBinaryTree->collectables->at(i)[j]->world, currView, currProjection);
 						gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-						gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j].nrElements * 3, 0);
+						gDeviceContext->Draw(theBinaryTree->collectables->at(i)[j]->nrElements * 3, 0);
 					}
 				}
 			}
@@ -1266,17 +1266,17 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 			{
 				for (int j = 0; j < theBinaryTree->deadly->at(i).size(); j++)
 				{
-					if (theBinaryTree->deadly->at(i)[j].GetActive())
+					if (theBinaryTree->deadly->at(i)[j]->GetActive())
 					{
-						tex = intArrayTex[theBinaryTree->deadly->at(i)[j].indexT];
+						tex = intArrayTex[theBinaryTree->deadly->at(i)[j]->indexT];
 						gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
-						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadly->at(i)[j].vertexBuffer, &vertexSize, &offset);
+						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->deadly->at(i)[j]->vertexBuffer, &vertexSize, &offset);
 
 						//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-						UpdateMatricies(theBinaryTree->deadly->at(i)[j].world, currView, currProjection);
+						UpdateMatricies(theBinaryTree->deadly->at(i)[j]->world, currView, currProjection);
 						gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
-						gDeviceContext->Draw(theBinaryTree->deadly->at(i)[j].nrElements * 3, 0);
+						gDeviceContext->Draw(theBinaryTree->deadly->at(i)[j]->nrElements * 3, 0);
 					}
 				}
 			}
@@ -1396,42 +1396,42 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		
 		for (int j = 0; j < theBinaryTree->platformsMoving->at(i).size(); j++)
 			{
-				theBinaryTree->platformsMoving->at(i)[j].PatrolInterval(gTimer.TotalTime());
-				theBinaryTree->platformsMoving->at(i)[j].UpdateBBOX();
-				theBinaryTree->platformsMoving->at(i)[j].CalculateWorld();
+				theBinaryTree->platformsMoving->at(i)[j]->PatrolInterval(gTimer.TotalTime());
+				theBinaryTree->platformsMoving->at(i)[j]->UpdateBBOX();
+				theBinaryTree->platformsMoving->at(i)[j]->CalculateWorld();
 			}
 		
 	}
 
 	if (theCharacter.getDivision() != 0)
 	{
-		testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), theCharacter);
-		testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), theCharacter);
+		testStaticPlatforms->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision() - 1), &theCharacter);
+		testDynamicPlatforms->TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision() - 1), &theCharacter);
 	}
 
 	else
 	{
-		testStaticPlatforms.TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theCharacter);
-		testDynamicPlatforms.TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theCharacter);
+		testStaticPlatforms->TestCollision(theBinaryTree->testPlatforms->at(theCharacter.getDivision()), theBinaryTree->testPlatforms->at(theCharacter.getDivision() + 1), theBinaryTree->testPlatforms->at(theCharacter.getDivision()), &theCharacter);
+		testDynamicPlatforms->TestCollision(theBinaryTree->platformsMoving->at(theCharacter.getDivision()), theBinaryTree->platformsMoving->at(theCharacter.getDivision() + 1), theBinaryTree->platformsMoving->at(theCharacter.getDivision()), &theCharacter);
 
 	}
 
-	if (testDynamicPlatforms.isGrounded() == true || testStaticPlatforms.isGrounded() == true)
+	if (testDynamicPlatforms->isGrounded() == true || testStaticPlatforms->isGrounded() == true)
 		theCollision->SetGrounded(true);
 	else
 		theCollision->SetGrounded(false);
 
-	if (testDynamicPlatforms.rightValid() == false || testStaticPlatforms.rightValid() == false)
+	if (testDynamicPlatforms->rightValid() == false || testStaticPlatforms->rightValid() == false)
 		theCollision->SetRightValid(false);
 	else
 		theCollision->SetRightValid(true);
 
-	if (testDynamicPlatforms.leftValid() == false || testStaticPlatforms.leftValid() == false)
+	if (testDynamicPlatforms->leftValid() == false || testStaticPlatforms->leftValid() == false)
 		theCollision->SetLeftValid(false);
 	else
 		theCollision->SetLeftValid(true);
 
-	if (testDynamicPlatforms.upValid() == false || testStaticPlatforms.upValid() == false)
+	if (testDynamicPlatforms->upValid() == false || testStaticPlatforms->upValid() == false)
 		theCollision->SetUpValid(false);
 	else
 		theCollision->SetUpValid(true);
@@ -1702,9 +1702,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 	if (input == 5)
 	{
-		theCharacters.at(0).xPos = theCharacter.xPos;
-		theCharacters.at(0).yPos = theCharacter.yPos;
-		theCharacters.at(0).SetDivision(theCharacter.getDivision());
+		theCharacters.at(0)->xPos = theCharacter.xPos;
+		theCharacters.at(0)->yPos = theCharacter.yPos;
+		theCharacters.at(0)->SetDivision(theCharacter.getDivision());
 
 		CurrChar.setCharState(0);
 		statez = CurrChar.getCharSate();
@@ -1713,9 +1713,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 	if (input == 6)
 	{
-		theCharacters.at(8).xPos = theCharacter.xPos;
-		theCharacters.at(8).yPos = theCharacter.yPos;
-		theCharacters.at(8).SetDivision( theCharacter.getDivision());
+		theCharacters.at(8)->xPos = theCharacter.xPos;
+		theCharacters.at(8)->yPos = theCharacter.yPos;
+		theCharacters.at(8)->SetDivision(theCharacter.getDivision());
 		CurrChar.setCharState(8);
 		statez = CurrChar.getCharSate();
 		return;
@@ -1723,9 +1723,9 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 	}
 	if (input == 7)
 	{
-		theCharacters.at(16).xPos = theCharacter.xPos;
-		theCharacters.at(16).yPos = theCharacter.yPos;
-		theCharacters.at(16).SetDivision ( theCharacter.getDivision());
+		theCharacters.at(16)->xPos = theCharacter.xPos;
+		theCharacters.at(16)->yPos = theCharacter.yPos;
+		theCharacters.at(16)->SetDivision(theCharacter.getDivision());
 		CurrChar.setCharState(16);
 		statez = CurrChar.getCharSate();
 		return;
@@ -1915,17 +1915,17 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 				int poop = 0;
 				if (o == theCharacter.getDivision() || o == theCharacter.getDivision() +1 || o == theCharacter.getDivision() -1 && theCharacter.getDivision() > 0)
 				{
-					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 1);
-					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
-					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+					theBinaryTree->deadlyMoving->at(o)[i]->SlamaJamma(gTimer.TotalTime(), 1);
+					theBinaryTree->deadlyMoving->at(o)[i]->UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i]->CalculateWorld();
 				
 				}
 				
 				else
 				{
-					theBinaryTree->deadlyMoving->at(o)[i].SlamaJamma(gTimer.TotalTime(), 0);
-					theBinaryTree->deadlyMoving->at(o)[i].UpdateBBOX();
-					theBinaryTree->deadlyMoving->at(o)[i].CalculateWorld();
+					theBinaryTree->deadlyMoving->at(o)[i]->SlamaJamma(gTimer.TotalTime(), 0);
+					theBinaryTree->deadlyMoving->at(o)[i]->UpdateBBOX();
+					theBinaryTree->deadlyMoving->at(o)[i]->CalculateWorld();
 				}
 		
 
@@ -1948,19 +1948,19 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision()).size(); i++)
 	{
-		theBinaryTree->collectables->at(theCharacter.getDivision()).at(i).rotate();
+		theBinaryTree->collectables->at(theCharacter.getDivision()).at(i)->rotate();
 	}
 
 	for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision() + 1).size(); i++)
 	{
-		theBinaryTree->collectables->at(theCharacter.getDivision() + 1).at(i).rotate();
+		theBinaryTree->collectables->at(theCharacter.getDivision() + 1).at(i)->rotate();
 	}
 
 	if (theCharacter.getDivision() != 0)
 	{
 		for (int i = 0; i < theBinaryTree->collectables->at(theCharacter.getDivision() - 1).size(); i++)
 		{
-			theBinaryTree->collectables->at(theCharacter.getDivision() - 1).at(i).rotate();
+			theBinaryTree->collectables->at(theCharacter.getDivision() - 1).at(i)->rotate();
 		}
 	}
 
@@ -2341,89 +2341,6 @@ void RenderEngine::Release(){
 	//delete testLight;
 }
 
-void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic){// , bool isStatic, XMMATRIX startPosMatrix){
-	static int gameObjectIndex = 0;
-	OBJ objectTest(gDev);
-	//Load obj
-	objectTest.LoadObject(geometryFileName, materialFileName);
-
-	//Test if filename is correct
-	OutputDebugStringA(geometryFileName);
-	OutputDebugStringA("\n");
-	OutputDebugStringA(materialFileName);
-	OutputDebugStringA("\n");
-	if (type == 0)
-	{
-
-		theCharacter1 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(10, 9,0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-
-		//theCharacter1->CreateBBOXVertexBuffer(gDevice);
-		theCharacter1->nrElements = objectTest.GetNrElements();
-		//gameObjects.push_back(*theCharacter);
-	}
-
-	else if (type == 1)
-	{
-		if (isStatic == false){
-			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, false, *objectTest.theBoundingBox, 3, 4.0f, 1.0f, 1.0f);
-			//testPlatform.CreateBBOXVertexBuffer(gDevice);
-			testPlatform.nrElements = objectTest.GetNrElements();
-			
-			theBinaryTree->AddPlatform(testPlatform);
-		}
-		else{
-			Platform testPlatform(false, *objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, *objectTest.theBoundingBox, 0, 0, 0, 0);
-			//testPlatform.CreateBBOXVertexBuffer(gDevice);
-			testPlatform.nrElements = objectTest.GetNrElements();
-			theBinaryTree->AddPlatform(testPlatform);
-		}
-	}
-	if (type == 4)
-	{
-		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-		theCharacter2->Scale(0.5f, 0.5f, 0.5f);
-		//theCharacter2->CreateBBOXVertexBuffer(gDevice);
-		theCharacter2->nrElements = objectTest.GetNrElements();
-		
-		/*Collision tempD(theCharacter2);
-		theCollision = &tempD;*/
-		//gameObjects.push_back(*theCharacter);
-	}
-	if (type == 5)
-	{
-		theCharacter3 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-
-		//theCharacter3->CreateBBOXVertexBuffer(gDevice);
-		theCharacter3->nrElements = objectTest.GetNrElements();
-	/*	Collision tempDC(theCharacter3);
-		theCollision = &tempDC;*/
-		//gameObjects.push_back(*theCharacter);
-	}
-
-	else
-	{
-		GameObject object(*objectTest.GetVertexBuffer(), XMFLOAT3(0, 0, 0), true, true, 0, 0, 0, 0);
-		object.nrElements = objectTest.GetNrElements();
-		theBinaryTree->AddObject(object);
-	}
-
-	//testObject.ObjName = objectTest.GetName();
-	//Fill buffers
-	//testObject.gameObjectIndex = gameObjectIndex; //används förtillfället vid frustum contains checken
-	//gameObjectIndex++;
-	//testObject.gVertexBuffer = *objectTest.GetVertexBuffer();
-
-
-	//testObject.verteciesPos = objectTest.GetVertexPositions();
-	//testObject.verteciesIndex = objectTest.GetIndecies();
-	//testObject.verteciesPosX = objectTest.GetVerticiesX();
-	//testObject.verteciesPosY = objectTest.GetVerticiesY();
-	//testObject.verteciesPosZ = objectTest.GetVerticiesZ();
-
-
-
-
-}
 
 void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 {
@@ -2468,7 +2385,7 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 	{
 		for (int j = 0; j < theBinaryTree->collectables->at(i).size(); j++)
 		{
-			theBinaryTree->collectables->at(i).at(j).SetActive(true);
+			theBinaryTree->collectables->at(i).at(j)->SetActive(true);
 		}
 
 	//	/*for (int j = 0; j < theBinaryTree->collectableMoving->at(i).size(); j++)
@@ -2559,7 +2476,7 @@ void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int swi
 	{
 		if ((gTimer.TotalTime() - time) >= 0.12f)
 		{
-			theCharacter->setVertexBuffer(theCharacters.at(statez + 1).GetVertexBuffer());
+			theCharacter->setVertexBuffer(theCharacters.at(statez + 1)->GetVertexBuffer());
 			if (statez < CurrChar.getCharSate()+4)
 				statez = statez + 1;
 			if (statez == CurrChar.getCharSate() + 4)
@@ -2573,7 +2490,7 @@ void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int swi
 	{
 		if ((gTimer.TotalTime() - time) >= 0.10f)
 		{
-			theCharacter->setVertexBuffer(theCharacters.at(curr + 5).GetVertexBuffer());
+			theCharacter->setVertexBuffer(theCharacters.at(curr + 5)->GetVertexBuffer());
 			
 
 			time += 0.15f;
@@ -2584,7 +2501,7 @@ void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int swi
 	{
 		if ((gTimer.TotalTime() - time) >= 0.10f)
 		{
-			theCharacter->setVertexBuffer(theCharacters.at(curr + 6).GetVertexBuffer());
+			theCharacter->setVertexBuffer(theCharacters.at(curr + 6)->GetVertexBuffer());
 
 
 			time += 0.15f;
@@ -2596,7 +2513,7 @@ void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int swi
 	{
 		if ((gTimer.TotalTime() - time) >= 0.10f)
 		{
-			theCharacter->setVertexBuffer(theCharacters.at(curr+7).GetVertexBuffer());
+			theCharacter->setVertexBuffer(theCharacters.at(curr + 7)->GetVertexBuffer());
 
 
 			time += 0.15f;

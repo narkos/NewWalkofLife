@@ -31,7 +31,7 @@
 #include "PlayerObject.h"
 #include "GameTimer.h"
 #include "Counters.h"
-#include "Obj.h"
+
 #include "Light.h"
 #include "Sound.h"
 #include "Extra DirectXLibs\Inc\DDSTextureLoader.h"
@@ -83,7 +83,7 @@ public:
 	//animation
 	void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int switcher);
 
-	std::vector<PlayerObject> theCharacters;
+	std::vector<PlayerObject*> theCharacters;
 	Sound soundOldJump1;
 	Sound soundOldJump2;
 	Sound soundOldJump3;
@@ -114,11 +114,11 @@ public:
 	BinaryTree *theBinaryTree;
 	//Quadtree *theQuadtree;
 	Collision* theCollision;
-	Collision testStaticPlatforms, testDynamicPlatforms;
-	Collision tempD;
+	Collision *testStaticPlatforms, *testDynamicPlatforms;
+	//Collision *tempD;
 	//Collision* theCollision2;
 	//Collision* theCollision3;
-	OBJ theOBJ;
+	
 	Physics thePhysics;
 	FBXImporter theCustomImporter;
 	HighScore theHighScore;
@@ -167,7 +167,7 @@ public:
 	ID3D11Buffer* Tempidlebuffer = nullptr;
 	MaterialProperties matProperties;
 	//Import Functions
-	void ImportObj(char* geometryFileName, char* materialFileName, ID3D11Device* gDev, int type, bool isStatic);// , bool isStatic, XMMATRIX startPosMatrix);
+	
 	//Struct for objLoader
 	//struct GameObjects{
 	//	int gameObjectIndex;

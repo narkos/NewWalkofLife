@@ -135,7 +135,6 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Menuclass.cpp" />
-    <ClCompile Include="Obj.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="RenderEngine.cpp" />
@@ -164,7 +163,6 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Menuclass.h" />
-    <ClInclude Include="Obj.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayerObject.h" />

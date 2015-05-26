@@ -80,6 +80,13 @@ public:
 	bool winning = false;
 	float tajmerz = 0;
 
+	// Render states functions
+	void RenderEngine::setDepthStencilOff();
+	void RenderEngine::setDepthStencilOn();
+	void RenderEngine::setAlphaBlendingOff();
+	void RenderEngine::setAlphaBlendingOn();
+	
+
 	//animation
 	void RenderEngine::switchAnimation(PlayerObject* theCharacter, int curr, int switcher);
 
@@ -245,11 +252,12 @@ protected:
 	ID3D11RenderTargetView* gBackRufferRenderTargetView = nullptr;
 	IDXGISwapChain* gSwapChain = nullptr;
 	ID3D11DepthStencilView* gDepthStencilView = nullptr;
+
+	ID3D11Texture2D* depthStencilBuffer = nullptr;
 	ID3D11DepthStencilState* gDepthStencilState = nullptr;
 	ID3D11DepthStencilState* gDepthStencilStateDisable = nullptr;
-	ID3D11Texture2D* depthStencilBuffer = nullptr;
 	ID3D11BlendState* gBlendStateTransparency = nullptr;
-
+	ID3D11BlendState* gBlendStateDefault = nullptr;
 
 	ID3D11Buffer* gVertexBuffer = nullptr;
 	ID3D11Buffer* gVertexBuffer2 = nullptr;

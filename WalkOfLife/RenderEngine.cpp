@@ -664,6 +664,33 @@ bool RenderEngine::InitDirect3D(HWND hWindow){
 	return false; //det gick inte att skapa device och swapchain, snyft :'(
 }
 
+
+void RenderEngine::setDepthStencilOff()
+{
+	gDeviceContext->OMSetDepthStencilState(gDepthStencilStateDisable, 1);
+	return;
+}
+
+void RenderEngine::setDepthStencilOn()
+{
+	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 1);
+	return;
+}
+
+void RenderEngine::setAlphaBlendingOff()
+{
+	float blendFactors[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	gDeviceContext->OMSetBlendState(gBlendStateTransparency, blendFactors, 0xffffffff);
+	return;
+}
+
+void RenderEngine::setAlphaBlendingOn()
+{
+	float blendFactors[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	gDeviceContext->OMSetBlendState(gBlendStateDefault, blendFactors, 0xffffffff);
+	return;
+}
+
 // MESSAGE HANDLER
 
 LRESULT RenderEngine::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
@@ -917,18 +944,16 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	//rot += 0.01;
 
 	float clearColor[] = { 0.15f, 0.6f, 1.0f, 0.2f };
-	gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
+	//gDeviceContext->OMSetBlendState(0, 0, 0xffffffff);
+	
 	gDeviceContext->OMSetRenderTargets(1, &gBackRufferRenderTargetView, gDepthStencilView);
 	gDeviceContext->ClearRenderTargetView(gBackRufferRenderTargetView, clearColor);
-	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
+	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	
 	
-
-	//gSwapChain->Present(0, 0); //växla back/front buffer
 	
-	
-	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
+	//gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 	///////////////////////////////////////////
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
@@ -1209,7 +1234,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 
 		// Draw Text
-
+		setAlphaBlendingOn();
+		setDepthStencilOff();
 		spriteBatch->Begin();
 
 		std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
@@ -1245,30 +1271,35 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 		//// Age Meter
 
-		//mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+		mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 
-		////PARTIKLEMOJSSSSSSSS!!
-		//gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		//gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
-		//gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
-		//gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
-		//gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
-		//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		//for (int i = 0; i < particleEffects.size(); i++){
-		//	if (particleEffects[i]->playing == true){
-		//		particleEffects[i]->PlayBillboard(gTimer.TotalTime());
 
-		//		gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
-		//		gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
-		//		//particleEffects[i].SetPosMatrix(theCharacter->pos);
-		//		//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-		//		UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
-		//		gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
+		//PARTIKLEMOJSSSSSSSS!!
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
+		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 
-		//		gDeviceContext->Draw(4, 0);
-		//	}
-		//}
+		for (int i = 0; i < particleEffects.size(); i++){
+			if (particleEffects[i]->playing == true){
+				particleEffects[i]->PlayBillboard(gTimer.TotalTime());
+
+				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
+				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
+				//particleEffects[i].SetPosMatrix(theCharacter->pos);
+				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
+				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(4, 0);
+			}
+		}
+		setAlphaBlendingOff();
+		setDepthStencilOn();
+
 		gDeviceContext->VSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->GSSetShader(nullptr, nullptr, 0);
 		gDeviceContext->PSSetShader(nullptr, nullptr, 0);

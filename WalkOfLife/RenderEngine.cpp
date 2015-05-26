@@ -991,47 +991,16 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->ClearDepthStencilView(gDepthStencilView, D3D11_CLEAR_DEPTH/* | D3D11_CLEAR_STENCIL*/, 1.0f, 0);
 
 	
-	// Draw Text
 	
-	spriteBatch->Begin();
 
-	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
-	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
-	std::wstring xPos = std::to_wstring(theCharacter->xPos);
-	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	//std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring dass = std::to_wstring(fpsDisplay);
-	std::wstring name(L"FPS: ");
-	std::wstring year(L"\nYear: ");
-	std::wstring month(L"\nMonth: ");
-	std::wstring XXX(L"\nxPos: ");
-	std::wstring YYY(L"\nyPos: ");
-	std::wstring coin(L"\nCoins: ");
-	std::wstring nrOfDeaths(L"\nDeaths: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + coin + coins;
-
-	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
-
-	
-	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
-
-	if (gCounter.theAge.years == 100){
-
-		AMAZING_SUPER_UTE_DASS = Gameover.c_str();
-
-	}
-
-	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
-
-	spriteBatch->End();
 	//gSwapChain->Present(0, 0); //växla back/front buffer
-	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 	
+	
+	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
 	///////////////////////////////////////////
 
 	gDeviceContext->IASetInputLayout(gVertexLayout);
-	gDeviceContext->OMSetDepthStencilState(gDepthStencilState, 0);
+
 
 
 	mainCamera.setPlayerXPos(theCharacter->xPos);
@@ -1240,16 +1209,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 						tex = intArrayTex[theBinaryTree->collectables->at(i)[j].indexT];
 						gDeviceContext->PSSetShaderResources(0, 1, &RSWArray[tex]);
 						gDeviceContext->IASetVertexBuffers(0, 1, &theBinaryTree->collectables->at(i)[j].vertexBuffer, &vertexSize, &offset);
-
-
-						/*theBinaryTree->renderObjects->at(i)[j].material = MatPresets::Emerald;
-						theBinaryTree->renderObjects->at(i)[j].material.SpecPow = 38.0f;*/
-
-						//theBinaryTree->collectables->at(i)[j].material;
-						//theBinaryTree->collectables->at(i)[j].material.UseTexture = 1;
-						//matProperties.Material = MatPresets::BlinnBase;
-						//matProperties.Material.Emissive = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-						//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 						UpdateMatricies(theBinaryTree->collectables->at(i)[j].world, currView, currProjection);
 						gDeviceContext->VSSetConstantBuffers(0, 1, &gWorld);
 
@@ -1316,6 +1275,46 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 	if (viewPoint == 2)		//If object only should be rendered from cameras POV, and therefore not to the shadow map to cast shadows.
 	{
+
+		// Draw Text
+
+		spriteBatch->Begin();
+
+		std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
+		std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
+		std::wstring xPos = std::to_wstring(theCharacter->xPos);
+		std::wstring yPos = std::to_wstring(theCharacter->yPos);
+		//std::wstring coins = std::to_wstring(gCounter.getCoin());
+		std::wstring coins = std::to_wstring(gCounter.getCoin());
+		std::wstring dass = std::to_wstring(fpsDisplay);
+		std::wstring name(L"FPS: ");
+		std::wstring year(L"\nYear: ");
+		std::wstring month(L"\nMonth: ");
+		std::wstring XXX(L"\nxPos: ");
+		std::wstring YYY(L"\nyPos: ");
+		std::wstring coin(L"\nCoins: ");
+		std::wstring nrOfDeaths(L"\nDeaths: ");
+		std::wstring superutedass = name + dass + year + yearCount + month + monthCount + coin + coins;
+
+		std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
+
+
+		const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
+
+		if (gCounter.theAge.years == 100){
+
+			AMAZING_SUPER_UTE_DASS = Gameover.c_str();
+
+		}
+
+		spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+
+		spriteBatch->End();
+
+		// Age Meter
+
+		mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
+
 		//PARTIKLEMOJSSSSSSSS!!
 		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
@@ -1963,16 +1962,6 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 			theBinaryTree->collectables->at(theCharacter.getDivision() - 1).at(i).rotate();
 		}
 	}
-
-	currentMainLight[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
-	currentMainLight[0].Type = l_Directional;
-	currentMainLight[0].Direction = XMFLOAT4(0.0f, -1.0f, 8.0f, 1.0f);
-	currentMainLight[0].Color = XMFLOAT4(Colors::Beige);
-
-	currentMainLight[1].Position = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	currentMainLight[1].Type = l_Directional;
-	currentMainLight[1].Direction = XMFLOAT4(-0.5f, -1.0f, 1.0f, 0.0f);
-	currentMainLight[1].Color = XMFLOAT4(Colors::Blue);
 
 	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;

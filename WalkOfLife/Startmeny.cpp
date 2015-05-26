@@ -4,7 +4,31 @@ Startmenu::Startmenu()
 {
 
 }
+void Startmenu::Menurelease()
+{
+	RutTex1->Release();
+	RutTex12->Release();
+	RutTex2->Release();
+	RutTex22->Release();
+	RutTex3->Release();
+	RutTex32->Release();
+//	RutTex4->Release();
+//	RutTex42->Release();
 
+
+
+	Walkoflife->Release();
+	
+
+	HSbox->Release();
+	
+	blackscreen->Release();
+	
+
+//	DIKeyboard->Release();
+//	DIMouse->Release();
+
+}
 void Startmenu::setstartmeny(bool set)
 {
 	startmenyactive = set;
@@ -24,7 +48,7 @@ void Startmenu::CreateTextures(ID3D11Device* gDevice)
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/High_2.dds", nullptr, &RutTex22);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_1.dds", nullptr, &RutTex3);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_2.dds", nullptr, &RutTex32);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/matare.dds", nullptr, &RutTex4);
+//	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/matare.dds", nullptr, &RutTex4);
 	
 	/////
 

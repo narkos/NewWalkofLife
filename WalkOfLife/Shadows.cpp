@@ -15,9 +15,9 @@ Shadows::Shadows(int winWidth, int winHeight, ID3D11Device* gDevice, ID3D11Devic
 Shadows::~Shadows(){
 	this->gDevice->Release();
 	this->gDeviceContext->Release();
-//	this->sRenderTargetTexture->Release();
-//	this->sShaderResourceView->Release();
-//	this->sDepthStencilView->Release();
+	this->sRenderTargetTexture->Release();
+	this->sShaderResourceView->Release();
+	this->sDepthStencilView->Release();
 }
 
 void Shadows::createShadowMap()

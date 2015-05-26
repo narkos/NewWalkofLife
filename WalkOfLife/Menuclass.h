@@ -75,7 +75,7 @@ public:
 	void setwin(bool set);
 	
 	bool getwin();
-	
+	void Menurelease();
 	void gameover(ID3D11DeviceContext* gDeviceContext, float width, float height, IDXGISwapChain* gSwapChain, bool HS, bool reply);
 	
 private:
@@ -93,8 +93,8 @@ private:
 	ID3D11ShaderResourceView* RutTex22 = nullptr;
 	ID3D11ShaderResourceView* RutTex3 = nullptr;
 	ID3D11ShaderResourceView* RutTex32 = nullptr;
-	ID3D11ShaderResourceView* RutTex4 = nullptr;
-	ID3D11ShaderResourceView* RutTex42 = nullptr;
+	//ID3D11ShaderResourceView* RutTex4 = nullptr;
+//	ID3D11ShaderResourceView* RutTex42 = nullptr;
 	ID3D11ShaderResourceView* Replay = nullptr;
 	ID3D11ShaderResourceView* Replay2 = nullptr;
 	

@@ -33,7 +33,7 @@ public:
 	void menuInit(ID3D11DeviceContext* gDeviceContext);
 	void scrollUp();
 	void scrollDown();
-	
+	void Menurelease();
 	void CreateTextures(ID3D11Device* gDevice);
 	std::unique_ptr<DirectX::SpriteBatch> StartspriteBatch1;
 	std::unique_ptr<DirectX::SpriteBatch> StartspriteBatch2;
@@ -75,8 +75,8 @@ private:
 	ID3D11ShaderResourceView* RutTex22 = nullptr;
 	ID3D11ShaderResourceView* RutTex3 = nullptr;
 	ID3D11ShaderResourceView* RutTex32 = nullptr;
-	ID3D11ShaderResourceView* RutTex4 = nullptr;
-	ID3D11ShaderResourceView* RutTex42 = nullptr;
+	//ID3D11ShaderResourceView* RutTex4 = nullptr;
+	//ID3D11ShaderResourceView* RutTex42 = nullptr;
 	ID3D11ShaderResourceView* HSbox = nullptr;
 
 

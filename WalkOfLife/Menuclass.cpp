@@ -5,6 +5,41 @@ Menu::Menu()
 
 
 }
+void Menu::Menurelease()
+{
+	RutTex1->Release();
+	RutTex12->Release();
+	RutTex2->Release();
+	RutTex22->Release();
+	RutTex3->Release();
+	RutTex32->Release();
+//	RutTex4->Release();
+	//RutTex42->Release();
+	Replay->Release();
+	Replay2->Release();
+
+	Meter->Release();
+	Meter1->Release();
+	Meter2->Release();
+	Meter3->Release();
+	Meter4->Release();
+	Meter5->Release();
+	Meter6->Release();
+	Meter7->Release();
+	Meter8->Release();
+	Meter9->Release();
+	Meter10->Release();
+	Meter11->Release();
+
+	HSbox->Release();
+	GO_over->Release();
+	blackscreen->Release();
+	deathscreen->Release();
+
+	//DIKeyboard->Release();
+//	DIMouse->Release();
+
+}
 
 void Menu::CreateTextures(ID3D11Device* gDevice)
 { 
@@ -14,7 +49,7 @@ void Menu::CreateTextures(ID3D11Device* gDevice)
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/High_2.dds", nullptr, &RutTex22);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_1.dds", nullptr, &RutTex3);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Exit_2.dds", nullptr, &RutTex32);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/matare.dds", nullptr, &RutTex4);
+	//DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/matare.dds", nullptr, &RutTex4);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Highscorebox6.dds", nullptr, &HSbox);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/rePlay_1.dds", nullptr, &Replay);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/rePlay_2.dds", nullptr, &Replay2);

@@ -125,8 +125,8 @@ public:
 	GameTimer gTimer;
 	Counters gCounter;
 	PlayerObject* theCharacter1;
-	PlayerObject* theCharacter2;
-	PlayerObject* theCharacter3;
+	//PlayerObject* theCharacter2;
+//	PlayerObject* theCharacter3;
 	int texes = 0;
 	Camera mainCamera;
 	Shadows shadows;
@@ -246,29 +246,29 @@ protected:
 	ID3D11DepthStencilState* gDepthStencilState = nullptr;
 	ID3D11Texture2D* depthStencilBuffer = nullptr;
 
-	ID3D11Buffer* gVertexBuffer = nullptr;
-	ID3D11Buffer* gVertexBuffer2 = nullptr;
+	//ID3D11Buffer* gVertexBuffer = nullptr;
+	//ID3D11Buffer* gVertexBuffer2 = nullptr;
 	ID3D11Buffer* gWorld;
 	ID3D11Buffer* shadowBuffer = nullptr;
 
 	ID3D11SamplerState* sampState1 = nullptr;
 
-	ID3D11ShaderResourceView* gTextureView = nullptr;
+	//ID3D11ShaderResourceView* gTextureView = nullptr;
 	
 	ID3D11ShaderResourceView** RSWArray = nullptr;
-	ID3D11ShaderResourceView* normalMap = nullptr;
+	//ID3D11ShaderResourceView* normalMap = nullptr;
 
 
 	ID3D11InputLayout* gVertexLayout = nullptr;
 	ID3D11VertexShader* gVertexShader = nullptr;
 	ID3D11PixelShader* gPixelShader = nullptr;
 	ID3D11PixelShader* gPixelShader2 = nullptr;
-	ID3D11GeometryShader* gGeometryShader = nullptr;
+	//ID3D11GeometryShader* gGeometryShader = nullptr;
 
 
-	ID3D11VertexShader* gWireFrameVertexShader = nullptr;
-	ID3D11PixelShader* gWireFramePixelShader = nullptr;
-	ID3D11InputLayout* gWireFrameLayout = nullptr;
+	//ID3D11VertexShader* gWireFrameVertexShader = nullptr;
+	//ID3D11PixelShader* gWireFramePixelShader = nullptr;
+	//ID3D11InputLayout* gWireFrameLayout = nullptr;
 
 	ID3D11VertexShader* gFakeBillboardVertexShader = nullptr;
 	ID3D11GeometryShader* gFakeBillboardGeometryShader = nullptr;
@@ -277,18 +277,7 @@ protected:
 	vector<int> intArrayTex;
 	////
 	//std::unique_ptr<DirectX::SpriteBatch> MeterSpriteBatch;
-	ID3D11ShaderResourceView* Meter = nullptr;
-	ID3D11ShaderResourceView* Meter1 = nullptr;
-	ID3D11ShaderResourceView* Meter2 = nullptr;
-	ID3D11ShaderResourceView* Meter3 = nullptr;
-	ID3D11ShaderResourceView* Meter4 = nullptr;
-	ID3D11ShaderResourceView* Meter5 = nullptr;
-	ID3D11ShaderResourceView* Meter6 = nullptr;
-	ID3D11ShaderResourceView* Meter7 = nullptr;
-	ID3D11ShaderResourceView* Meter8 = nullptr;
-	ID3D11ShaderResourceView* Meter9 = nullptr;
-	ID3D11ShaderResourceView* Meter10 = nullptr;
-	ID3D11ShaderResourceView* Meter11 = nullptr;
+	
 	void Meterfunc();
 	float meterwidth = mainCamera.getWindowWidth();
 	//////////////////////Anton

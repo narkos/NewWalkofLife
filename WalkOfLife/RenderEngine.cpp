@@ -443,7 +443,7 @@ void RenderEngine::TextureFunc(){
 
 	//DirectX::CreateWICTextureFromFile(gDevice, L"Textures/normalmap.dds", nullptr, &normalMap);
 	
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
+	/*DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter_org.dds", nullptr, &Meter);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter.dds", nullptr, &Meter1);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter1.dds", nullptr, &Meter2);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter2.dds", nullptr, &Meter3);
@@ -454,7 +454,7 @@ void RenderEngine::TextureFunc(){
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter7.dds", nullptr, &Meter8);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter8.dds", nullptr, &Meter9);
 	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter9.dds", nullptr, &Meter10);
-	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter10.dds", nullptr, &Meter11);
+	DirectX::CreateDDSTextureFromFile(gDevice, L"Textures/Meter10.dds", nullptr, &Meter11);*/
 
 
 }
@@ -986,40 +986,7 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	
 	// Draw Text
 	
-	spriteBatch->Begin();
-
-	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
-	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
-	std::wstring xPos = std::to_wstring(theCharacter->xPos);
-	std::wstring yPos = std::to_wstring(theCharacter->yPos);
-	//std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring coins = std::to_wstring(gCounter.getCoin());
-	std::wstring dass = std::to_wstring(fpsDisplay);
-	std::wstring name(L"FPS: ");
-	std::wstring year(L"\nYear: ");
-	std::wstring month(L"\nMonth: ");
-	std::wstring XXX(L"\nxPos: ");
-	std::wstring YYY(L"\nyPos: ");
-	std::wstring coin(L"\nCoins: ");
-	std::wstring nrOfDeaths(L"\nDeaths: ");
-	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + coin + coins;
-
-	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
-
 	
-	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
-
-	if (gCounter.theAge.years == 100){
-
-		AMAZING_SUPER_UTE_DASS = Gameover.c_str();
-
-	}
-
-	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
-
-	spriteBatch->End();
-	//gSwapChain->Present(0, 0); //växla back/front buffer
-	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 	
 	///////////////////////////////////////////
 
@@ -1062,6 +1029,40 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
 
 	drawScene(2, theCharacter);	// 1 = From lights POV. 2 = From mainCameras POV.
+	spriteBatch->Begin();
+
+	std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
+	std::wstring monthCount = std::to_wstring(gCounter.theAge.months);
+	std::wstring xPos = std::to_wstring(theCharacter->xPos);
+	std::wstring yPos = std::to_wstring(theCharacter->yPos);
+	//std::wstring coins = std::to_wstring(gCounter.getCoin());
+	std::wstring coins = std::to_wstring(gCounter.getCoin());
+	std::wstring dass = std::to_wstring(fpsDisplay);
+	std::wstring name(L"FPS: ");
+	std::wstring year(L"\nYear: ");
+	std::wstring month(L"\nMonth: ");
+	std::wstring XXX(L"\nxPos: ");
+	std::wstring YYY(L"\nyPos: ");
+	std::wstring coin(L"\nCoins: ");
+	std::wstring nrOfDeaths(L"\nDeaths: ");
+	std::wstring superutedass = name + dass + year + yearCount + month + monthCount + coin + coins;
+
+	std::wstring Gameover(L"\nGAME OVER MOTHERFUCKER!! ");
+
+
+	const wchar_t* AMAZING_SUPER_UTE_DASS = superutedass.c_str();
+
+	if (gCounter.theAge.years == 100){
+
+		AMAZING_SUPER_UTE_DASS = Gameover.c_str();
+
+	}
+
+	spritefont->DrawString(spriteBatch.get(), AMAZING_SUPER_UTE_DASS, DirectX::SimpleMath::Vector2(0, 10));
+
+	spriteBatch->End();
+	//gSwapChain->Present(0, 0); //växla back/front buffer
+	mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
 	if (mainMenu.getPause() == TRUE)
 	{
 		mainMenu.ActiveMenu(gDeviceContext, mainCamera.getWindowWidth(), mainCamera.getWindowHeight(), gSwapChain, theHighScore.getHSbool(), mainMenu.getreplay());
@@ -2140,6 +2141,7 @@ void RenderEngine::MenuUpdate(float tt, PlayerObject& theCharacter){
 					}
 					else if (mainMenu.getCurrentTab() == 3)
 					{
+						this->Release();
 						PostMessage(hWindow, WM_QUIT, 0, 0);
 					}
 				}
@@ -2282,23 +2284,14 @@ void RenderEngine::Release(){
 	}
 		
 	
-	Meter->Release();
-	Meter2->Release();
-	Meter3->Release();
-	Meter4->Release();
-	Meter5->Release();
-	Meter6->Release();
-	Meter7->Release();
-	Meter8->Release();
-	Meter9->Release();
-	Meter10->Release();
-	Meter11->Release();
+	
 
 	delete[] RSWArray;
 	matConstBuff->Release();
-	/*delete theCharacter1;
-	delete theCharacter2;
-	delete theCharacter3;*/
+	delete theCharacter1;
+	
+	//delete theCharacter2;
+//	delete theCharacter3;
 	delete theBinaryTree;
 	theCharacters.clear();
 
@@ -2309,12 +2302,51 @@ void RenderEngine::Release(){
 
 	gDevice->Release();
 	depthStencilBuffer->Release();
-
+	lightConstBuff->Release();
 	//gVertexBuffer->Release();
 	gVertexLayout->Release();
 	gVertexShader->Release();
 	gPixelShader->Release();
 	gDeviceContext->Release();
+	mainMenu.Menurelease();
+	StartMenu.Menurelease();
+	gDevice->Release();
+	gDeviceContext->Release();
+	gBackRufferRenderTargetView->Release();
+	gSwapChain->Release();
+	gDepthStencilView->Release();
+	//gDepthStencilState->Release();
+	depthStencilBuffer->Release();
+
+	//gVertexBuffer->Release();
+	//gVertexBuffer2->Release();
+	gWorld->Release();
+	shadowBuffer->Release();
+
+	sampState1->Release();
+
+//	gTextureView->Release();
+	
+
+	
+//	normalMap->Release();
+
+
+	gVertexLayout->Release();
+	gVertexShader->Release();
+	gPixelShader->Release();
+	gPixelShader2->Release();
+//	gGeometryShader->Release();
+
+
+	//gWireFrameVertexShader->Release();
+	//gWireFramePixelShader->Release();
+	//gWireFrameLayout->Release();
+
+	gFakeBillboardVertexShader->Release();
+	gFakeBillboardGeometryShader->Release();
+	gFakeBillboardPixelShader->Release();
+	gFakeBillboardLayout->Release();
 //	cbPerObjectBuffer->Release();
 
 	//Kill Lights
@@ -2358,27 +2390,27 @@ void RenderEngine::ImportObj(char* geometryFileName, char* materialFileName, ID3
 			theBinaryTree->AddPlatform(testPlatform);
 		}
 	}
-	if (type == 4)
-	{
-		theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
-		theCharacter2->Scale(0.5f, 0.5f, 0.5f);
-		//theCharacter2->CreateBBOXVertexBuffer(gDevice);
-		theCharacter2->nrElements = objectTest.GetNrElements();
-		
-		/*Collision tempD(theCharacter2);
-		theCollision = &tempD;*/
-		//gameObjects.push_back(*theCharacter);
-	}
-	if (type == 5)
-	{
-		theCharacter3 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+	//if (type == 4)
+	//{
+	//	theCharacter2 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
+	//	theCharacter2->Scale(0.5f, 0.5f, 0.5f);
+	//	//theCharacter2->CreateBBOXVertexBuffer(gDevice);
+	//	theCharacter2->nrElements = objectTest.GetNrElements();
+	//	
+	//	/*Collision tempD(theCharacter2);
+	//	theCollision = &tempD;*/
+	//	//gameObjects.push_back(*theCharacter);
+	//}
+	//if (type == 5)
+	//{
+	//	theCharacter3 = new PlayerObject(*objectTest.GetVertexBuffer(), XMFLOAT3(4, 9, 0), true, false, BoundingBox(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)), 0, 0, 0.1f, 0.6f);
 
-		//theCharacter3->CreateBBOXVertexBuffer(gDevice);
-		theCharacter3->nrElements = objectTest.GetNrElements();
-	/*	Collision tempDC(theCharacter3);
-		theCollision = &tempDC;*/
-		//gameObjects.push_back(*theCharacter);
-	}
+	//	//theCharacter3->CreateBBOXVertexBuffer(gDevice);
+	//	theCharacter3->nrElements = objectTest.GetNrElements();
+	///*	Collision tempDC(theCharacter3);
+	//	theCollision = &tempDC;*/
+	//	//gameObjects.push_back(*theCharacter);
+	//}
 
 	else
 	{

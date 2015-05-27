@@ -985,14 +985,8 @@ void RenderEngine::Render(PlayerObject* theCharacter){
 	//gDeviceContext->PSSetConstantBuffers(4, 1, &cbPerObjectBuffer);
 	//XMMATRIX WVP;		//Defined in .h file
 
-	gDeviceContext->IASetInputLayout(gVertexLayout);
-	gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
-	gDeviceContext->GSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->HSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->DSSetShader(nullptr, nullptr, 0);
-	gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
-	gDeviceContext->PSSetSamplers(0, 1, &sampState1);
+	//PARTIKLEMOJSSSSSSSS!!
+	
 
 	drawScene(2, theCharacter);	// 1 = From lights POV. 2 = From mainCameras POV.
 	if (mainMenu.getPause() == TRUE)
@@ -1234,8 +1228,46 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 	{
 
 		// Draw Text
+		
+
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
+		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
+		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
+		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
+		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+		gDeviceContext->PSSetSamplers(0, 1, &sampState1);
+		//setDepthStencilOff();
+		//setAlphaBlendingOn();
+		for (int i = 0; i < particleEffects.size(); i++){
+			if (particleEffects[i]->playing == true){
+				particleEffects[i]->PlayBillboard(gTimer.TotalTime());
+
+				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
+				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
+				//particleEffects[i].SetPosMatrix(theCharacter->pos);
+				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+				UpdateMatricies(particleEffects[i]->GetPosMatrix(), CamView, CamProjection);
+				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
+
+				gDeviceContext->Draw(4, 0);
+			}
+		}
+
 		setAlphaBlendingOn();
 		setDepthStencilOff();
+		//setAlphaBlendingOff();
+		//setDepthStencilOn();
+		gDeviceContext->IASetInputLayout(gVertexLayout);
+		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
+		gDeviceContext->GSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->HSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->DSSetShader(nullptr, nullptr, 0);
+		gDeviceContext->PSSetShader(gPixelShader, nullptr, 0);
+		gDeviceContext->PSSetSamplers(0, 1, &sampState1);
+
+
 		spriteBatch->Begin();
 
 		std::wstring yearCount = std::to_wstring(gCounter.theAge.years);
@@ -1275,28 +1307,8 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 
 
-		//PARTIKLEMOJSSSSSSSS!!
-		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		gDeviceContext->IASetInputLayout(gFakeBillboardLayout);
-		gDeviceContext->VSSetShader(gFakeBillboardVertexShader, nullptr, 0);
-		gDeviceContext->GSSetShader(gFakeBillboardGeometryShader, nullptr, 0);
-		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
-		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
+		
 
-		for (int i = 0; i < particleEffects.size(); i++){
-			if (particleEffects[i]->playing == true){
-				particleEffects[i]->PlayBillboard(gTimer.TotalTime());
-
-				gDeviceContext->PSSetShaderResources(0, 1, particleEffects[i]->GetCurrRSV());
-				gDeviceContext->IASetVertexBuffers(0, 1, particleEffects[i]->GetVertexBuffer(), &vertexSize, &offset);
-				//particleEffects[i].SetPosMatrix(theCharacter->pos);
-				//gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
-				UpdateMatricies(particleEffects[i]->GetPosMatrix(), currView, currProjection);
-				gDeviceContext->GSSetConstantBuffers(0, 1, &gWorld);
-
-				gDeviceContext->Draw(4, 0);
-			}
-		}
 		setAlphaBlendingOff();
 		setDepthStencilOn();
 

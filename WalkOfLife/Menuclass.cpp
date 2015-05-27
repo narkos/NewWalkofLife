@@ -323,7 +323,7 @@ int Menu::menuInput(HWND hWindow)
 
 	
 
-	if (keyboardState[DIK_ESCAPE] & 0x80)						//Shuts the window when the ESCAPE key is pressed
+	if (keyboardState[DIK_L] & 0x80)						//Shuts the window when the ESCAPE key is pressed
 	{
 		PostMessage(hWindow, WM_DESTROY, 0, 0);
 	}

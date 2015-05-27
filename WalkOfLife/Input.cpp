@@ -45,11 +45,6 @@ int Input::detectInput(HWND hWindow)
 	//DIMouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseCurrentState);
 	DIKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
 
-	//if (keyboardState[DIK_ESCAPE] & 0x80)						//Shuts the window when the ESCAPE key is pressed
-	//{
-	//	PostMessage(hWindow, WM_DESTROY, 0, 0);
-	//}
-
 	if (keyboardState[DIK_LEFT] && 0x80 || keyboardState[DIK_A] && 0x80)		//Moves left when the A key or the LEFT arrow is pressed
 
 	{
@@ -64,8 +59,7 @@ int Input::detectInput(HWND hWindow)
 	}
 
 
-	else if (keyboardState[DIK_G] && 0x80)
-
+	else if (keyboardState[DIK_P] && 0x80)
 	{
 		return 3;
 	}

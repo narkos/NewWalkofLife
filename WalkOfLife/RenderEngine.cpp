@@ -30,7 +30,7 @@ cbPerObject cbPerObj;
 // CONSTRUCTOR
 
 RenderEngine::RenderEngine(HINSTANCE hInstance, std::string name, UINT scrW, UINT scrH){
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	this->hInstance = hInstance;
 	applicationName = name;
 	screen_Width = (UINT)mainCamera.getWindowWidth();
@@ -157,18 +157,12 @@ bool RenderEngine::Init(){
 	resetXpos[0] = 4.0f;
 	resetYpos[0] = 9.0f;
 
-	resetXpos[1] = 300.0f;
-	resetYpos[1] = 40.0f;
+	resetXpos[1] = 200.0f;
+	resetYpos[1] = 20.0f;
 
-	/*resetXpos[1] = 200.0f;
-	resetYpos[1] = 20.0f;*/
+	resetXpos[2] = 370.0f;
+	resetYpos[2] = 20.0f; 
 
-	resetXpos[2] = 500.0f;
-	resetYpos[2] = 40.0f; 
-
-	//resetXpos[2] = 557.0f;
-	//resetYpos[2] = 20.0f;
-	//
 	
 
 	//SHADOWS
@@ -1237,8 +1231,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		gDeviceContext->PSSetShader(gFakeBillboardPixelShader, nullptr, 0);
 		gDeviceContext->UpdateSubresource(matConstBuff, 0, nullptr, &matProperties, 0, 0);
 		gDeviceContext->PSSetSamplers(0, 1, &sampState1);
-		//setDepthStencilOff();
-		//setAlphaBlendingOn();
+
 		for (int i = 0; i < particleEffects.size(); i++){
 			if (particleEffects[i]->playing == true){
 				particleEffects[i]->PlayBillboard(gTimer.TotalTime());
@@ -1256,8 +1249,7 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 
 		setAlphaBlendingOn();
 		setDepthStencilOff();
-		//setAlphaBlendingOff();
-		//setDepthStencilOn();
+
 		gDeviceContext->IASetInputLayout(gVertexLayout);
 		gDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		gDeviceContext->VSSetShader(gVertexShader, nullptr, 0);
@@ -1304,10 +1296,6 @@ void RenderEngine::drawScene(int viewPoint, PlayerObject* theCharacter)
 		//// Age Meter
 
 		mainMenu.Meterfunc(gDeviceContext, mainCamera.getWindowWidth(), gCounter.theAge.years);
-
-
-
-		
 
 		setAlphaBlendingOff();
 		setDepthStencilOn();
@@ -1476,26 +1464,27 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadly->at(theCharacter.getDivision()), &theCharacter))
 	{
-		reset(&theCharacter, true);
 		mainMenu.setPause(true);
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
+		reset(&theCharacter, true);
+
 	}
 
 	if (theCollision->TestCollisionDeadly(theBinaryTree->deadlyMoving->at(theCharacter.getDivision()), &theCharacter) == true)
 	{
-		reset(&theCharacter, true);
 		mainMenu.setPause(true);
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
+		reset(&theCharacter, true);
 	}
 
 	if (gCounter.theAge.years > 99)
 	{
-		reset(&theCharacter, true);
 		mainMenu.setPause(true);
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
+		
 	}
 
 	if (theCharacter.xPos > 557 && theCharacter.xPos < 565 && theCharacter.yPos > 5 && theCharacter.yPos < 11)
@@ -1512,6 +1501,7 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		mainMenu.setPause(true);
 		mainMenu.setreplay(true);
 		mainMenu.setgameover(true);
+		reset(&theCharacter, true);
 		}
 		
 	}
@@ -1938,9 +1928,10 @@ void RenderEngine::Update(float dt, PlayerObject& theCharacter)
 		}
 	}
 
-	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), 60.0f, 0.0f, 1.0f);
+
+	lightProp01.lights[0].Position = XMFLOAT4(mainCamera.getCameraXPos(), (mainCamera.getCameraYPos()+30), 0.0f, 1.0f);
 	lightProp01.lights[0].Type = l_Directional;
-	lightProp01.lights[0].Direction = XMFLOAT4(0.0f, 0.0f, 8.0f, 1.0f);
+	lightProp01.lights[0].Direction = XMFLOAT4(2.0f, 0.0f, 5.0f, 1.0f);
 	lightProp01.lights[0].Color = XMFLOAT4(Colors::Beige);
 
 
@@ -2402,11 +2393,24 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 	start = false;
 	Character2 = false;
 	Character3 = false;
-	CurrChar.setCharState(CurrChar.getCharSate());
+	CurrChar.setCharState(0);
 	if (fullreset)
 	{
+
+		theCharacters.at(0).xPos = 4;
+		theCharacters.at(0).yPos = 9;
+
+		theCharacters.at(8).xPos = 4;
+		theCharacters.at(8).yPos = 9;
+
+		theCharacters.at(16).xPos = 4;
+		theCharacters.at(16).yPos = 9;
+
 		theCharacter->xPos = 4;
 		theCharacter->yPos = 6;
+		theCharacter->setDivision(0);
+		CurrChar.setCharState(0);
+		statez = CurrChar.getCharSate();
 	}
 	
 	else
@@ -2415,10 +2419,7 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 		theCharacter->yPos = resetValues[1];
 	}
 	theCharacter->Translate(0, 0, 0);
-	if (fullreset)
-	{
-		theCharacter->setDivision(0);
-	}
+
 	
 	theCharacter->momentum = 0;
 	theCharacter->jumpMomentumX = 0;
@@ -2434,11 +2435,6 @@ void RenderEngine::reset(PlayerObject* theCharacter, bool fullreset)
 		{
 			theBinaryTree->collectables->at(i).at(j).SetActive(true);
 		}
-
-	//	/*for (int j = 0; j < theBinaryTree->collectableMoving->at(i).size(); j++)
-	//	{
-	//		theBinaryTree->testPlatforms->at(i).at(j).SetActive(true);
-	//	}*/
 	}
 	resetValues[0] = resetXpos[0];
 	resetValues[1] = resetYpos[0];
